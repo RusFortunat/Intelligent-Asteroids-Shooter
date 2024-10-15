@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="280.0" prefWidth="409.0"
+            xmlns="http://javafx.com/javafx/11.0.14-internal"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="root.intelligentasteroidsshooter.SinglePlayerController">
+   <children>
+      <ImageView fitHeight="96.0" fitWidth="102.0" layoutX="70.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../pictures/GH10gFgbYAIxcGe.jpg" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="106.0" fitWidth="91.0" layoutX="240.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../pictures/aipic.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="145.0" layoutY="26.0" minWidth="-Infinity" prefHeight="28.0" prefWidth="136.0" scaleX="2.0" scaleY="2.0" scaleZ="2.0" text="Choose the game mode" />
+      <Button onAction="#onSinglePlayerButtonClick" layoutX="77.0" layoutY="212.0" mnemonicParsing="false" text="Single Player" />
+      <Button onAction="#onTrainAIButtonClick" layoutX="245.0" layoutY="212.0" mnemonicParsing="false" text="Train your AI" />
+      <Label fx:id="bauarbeitenText"/>
+   </children>
+</AnchorPane>

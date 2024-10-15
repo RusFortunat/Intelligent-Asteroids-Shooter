@@ -36,19 +36,19 @@ public abstract class Character {
         this.character.setTranslateY(this.character.getTranslateY() + this.movement.getY());
 
         if (this.character.getTranslateX() < 0) {
-            this.character.setTranslateX(this.character.getTranslateX() + IntelligentAsteroidsShooter.WIDTH);
+            this.character.setTranslateX(this.character.getTranslateX() + SinglePlayerView.WIDTH);
         }
 
-        if (this.character.getTranslateX() > IntelligentAsteroidsShooter.WIDTH) {
-            this.character.setTranslateX(this.character.getTranslateX() % IntelligentAsteroidsShooter.WIDTH);
+        if (this.character.getTranslateX() > SinglePlayerView.WIDTH) {
+            this.character.setTranslateX(this.character.getTranslateX() % SinglePlayerView.WIDTH);
         }
 
         if (this.character.getTranslateY() < 0) {
-            this.character.setTranslateY(this.character.getTranslateY() + IntelligentAsteroidsShooter.HEIGHT);
+            this.character.setTranslateY(this.character.getTranslateY() + SinglePlayerView.HEIGHT);
         }
 
-        if (this.character.getTranslateY() > IntelligentAsteroidsShooter.HEIGHT) {
-            this.character.setTranslateY(this.character.getTranslateY() % IntelligentAsteroidsShooter.HEIGHT);
+        if (this.character.getTranslateY() > SinglePlayerView.HEIGHT) {
+            this.character.setTranslateY(this.character.getTranslateY() % SinglePlayerView.HEIGHT);
         }
     }
 
@@ -63,13 +63,9 @@ public abstract class Character {
     }
 
     public void decelerate() {
-        double changeX = Math.cos(Math.toRadians(this.character.getRotate()));
-        double changeY = Math.sin(Math.toRadians(this.character.getRotate()));
-
-        changeX *= 0.05;
-        changeY *= 0.05;
-
-        this.movement = this.movement.add(-changeX, -changeY);
+        double newX = -0.1*this.movement.getX();
+        double newY = -0.1*this.movement.getY();
+        this.movement = this.movement.add(newX,newY);
     }
 
     public boolean collide(Character other) {
