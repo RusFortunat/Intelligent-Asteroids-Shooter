@@ -63,13 +63,9 @@ public abstract class Character {
     }
 
     public void decelerate() {
-        double changeX = Math.cos(Math.toRadians(this.character.getRotate()));
-        double changeY = Math.sin(Math.toRadians(this.character.getRotate()));
-
-        changeX *= 0.05;
-        changeY *= 0.05;
-
-        this.movement = this.movement.add(-changeX, -changeY);
+        double newX = -0.1*this.movement.getX();
+        double newY = -0.1*this.movement.getY();
+        this.movement = this.movement.add(newX,newY);
     }
 
     public boolean collide(Character other) {

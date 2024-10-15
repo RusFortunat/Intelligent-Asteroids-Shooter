@@ -1,10 +1,13 @@
 package root.mac_version_of_api;
 
 import javafx.application.Application;
-//import javafx.fxml.FXMLLoader;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
-import javafx.scene.shape.Polygon;
+import javafx.scene.control.Button;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
@@ -66,6 +69,7 @@ public class IntelligentAsteroidsShooter extends Application {
         //System.out.println("We got to the AnimationTimer");
 
         new AnimationTimer() {
+            int score = 0;
 
             @Override
             public void handle(long now) {
@@ -101,12 +105,6 @@ public class IntelligentAsteroidsShooter extends Application {
                 asteroids.forEach(asteroid -> asteroid.move());
                 projectiles.forEach(projectile -> projectile.move());
 
-                // stop the game
-                asteroids.forEach(asteroid -> {
-                    if (ship.collide(asteroid)) {
-                        stop();
-                    }
-                });
 
                 // removing projectiles and asteroids
                 projectiles.forEach(projectile -> {
@@ -117,7 +115,8 @@ public class IntelligentAsteroidsShooter extends Application {
                         }
                     });
                     if(!projectile.isAlive()) {
-                        text.setText("Points: " + points.addAndGet(1000));
+                        score += points.addAndGet(1000);
+                        text.setText("Points: " + score);
                     }
                 });
 
@@ -144,6 +143,45 @@ public class IntelligentAsteroidsShooter extends Application {
                         pane.getChildren().add(asteroid.getCharacter());
                     }
                 }
+
+                // stop the game
+                asteroids.forEach(asteroid -> {
+                    if (ship.collide(asteroid)) {
+                        stop();
+                        GridPane myPane = new GridPane();
+                        myPane.setHgap(20);
+                        myPane.setVgap(20);
+                        myPane.setAlignment(Pos.CENTER);
+                        myPane.setPadding(new Insets (20,20,20,20));
+                        myPane.setPrefSize(WIDTH/3, HEIGHT/6);
+                        Text finalScore = new Text("Your final score: " + score);
+                        myPane.add(finalScore,1,0);
+                        Text question = new Text("Repeat Game?");
+                        HBox buttons = new HBox();
+                        buttons.setSpacing(50);
+                        Button repeatGame = new Button("Yes");
+                        Button closeGame = new Button("No");
+                        buttons.getChildren().addAll(repeatGame, closeGame);
+                        myPane.add(question,1,1);
+                        myPane.add(buttons,1,2);
+
+                        Scene askForNewGame = new Scene(myPane,320,240);
+                        Stage newStage = new Stage();
+
+                        repeatGame.setOnAction((event)->{
+                            newStage.close();
+                            window.close();
+                        });
+
+                        closeGame.setOnAction((event)->{
+                            newStage.close();
+                            window.close();
+                        });
+
+                        newStage.setScene(askForNewGame);
+                        newStage.show();
+                    }
+                });
             }
         }.start();
 
