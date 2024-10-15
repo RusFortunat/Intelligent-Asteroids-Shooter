@@ -1,1 +1,1 @@
-I have to use different JDK on my mac m1, because for some reason openJDK 23 can't run JavaFX 17.0.6. Using graalvm-jdk-17 seems to resolve the issue. 
+This is a branch that I made for working from my Mac M1. For whatever reason, I have to use older JDK on my mac, because fo openJDK 23 can't run JavaFX 17.0.6, and getting a newer JavaFX 23 version as a stand-alone .dmg installer also seems to be not possible. The project on this branch runs on graalvm-jdk-17 JDK.
