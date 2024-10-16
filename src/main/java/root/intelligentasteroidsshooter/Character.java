@@ -1,19 +1,22 @@
 package root.intelligentasteroidsshooter;
 
 import javafx.geometry.Point2D;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 
 public abstract class Character {
-
     private Polygon character;
     private Point2D movement;
     private boolean alive;
 
-    public Character(Polygon polygon, int x, int y) {
+    public Character(Polygon polygon, Color color, int x, int y) {
         this.character = polygon;
         this.character.setTranslateX(x);
         this.character.setTranslateY(y);
+        this.character.setFill(color);
         this.alive = true;
 
         this.movement = new Point2D(0, 0);

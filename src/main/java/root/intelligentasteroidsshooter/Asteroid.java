@@ -1,5 +1,7 @@
 package root.intelligentasteroidsshooter;
 
+import javafx.scene.paint.Color;
+
 import java.util.Random;
 
 public class Asteroid extends Character {
@@ -7,7 +9,7 @@ public class Asteroid extends Character {
     private double rotationalMovement;
 
     public Asteroid(int x, int y) {
-        super(new PolygonFactory().createPolygon(), x, y);
+        super(new PolygonFactory().createPolygon(), Color.DARKGRAY, x, y);
 
         Random rnd = new Random();
 

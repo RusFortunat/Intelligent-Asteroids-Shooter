@@ -2,12 +2,14 @@ package root.intelligentasteroidsshooter;
 
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.scene.paint.Color;
 
 import java.io.IOException;
 import java.util.*;
@@ -21,12 +23,23 @@ public class SinglePlayerView {
 
     public void start(Stage singlePlayer) throws IOException {
         Pane pane = new Pane();
+        Image backgroundFile = new Image("C:\\Users\\mrusl\\Desktop\\Java Projects\\Intelligent-Asteroids-Shooter\\src\\main\\resources\\root\\intelligentasteroidsshooter\\stars.jpg");
+        BackgroundImage myBI= new BackgroundImage(backgroundFile, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
+                BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        Background paneBackgr = new Background(myBI);
         Text text = new Text(10, 20, "Points: 0");
+        text.setFill(Color.WHITE);
         pane.getChildren().add(text);
         pane.setPrefSize(WIDTH, HEIGHT);
+        pane.setBackground(paneBackgr);
 
-        Ship ship = new Ship(WIDTH / 2, HEIGHT / 2);
-        pane.getChildren().add(ship.getCharacter());
+        //Image imageForShip = new Image("file:pepeShip.jpg"); // doesn't render the image, shrug
+        Image imageForShip = new Image("C:\\Users\\mrusl\\Desktop\\Java Projects\\Intelligent-Asteroids-Shooter\\src\\main\\resources\\root\\intelligentasteroidsshooter\\pepeShip.jpg");
+        ImageView shipImage = new ImageView(imageForShip);
+        shipImage.setScaleX(0.1);
+        shipImage.setScaleY(0.1);
+        Ship ship = new Ship(shipImage,WIDTH / 2, HEIGHT / 2);
+        pane.getChildren().add(ship.getShip());
         //System.out.println("Ship added");
 
         List<Projectile> projectiles = new ArrayList<>();
@@ -34,7 +47,7 @@ public class SinglePlayerView {
         List<Asteroid> asteroids = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             Random rnd = new Random();
-            Asteroid asteroid = new Asteroid(rnd.nextInt(WIDTH / 3), rnd.nextInt(HEIGHT));
+            Asteroid asteroid = new Asteroid(rnd.nextInt(WIDTH), rnd.nextInt(HEIGHT));
             asteroids.add(asteroid);
         }
         //System.out.println("Asteroids and ship are created");
@@ -81,8 +94,12 @@ public class SinglePlayerView {
 
                 if (pressedKeys.getOrDefault(KeyCode.SPACE, false) && projectiles.size() < 10) {
                     // we shoot
-                    Projectile projectile = new Projectile((int) ship.getCharacter().getTranslateX(), (int) ship.getCharacter().getTranslateY());
-                    projectile.getCharacter().setRotate(ship.getCharacter().getRotate());
+                    double changeX = 25*Math.cos(Math.toRadians(ship.getShip().getRotate()));
+                    double changeY = 25*Math.sin(Math.toRadians(ship.getShip().getRotate()));
+                    int x = (int )(ship.getShip().getLayoutX() + WIDTH/2 + changeX);
+                    int y = (int) (ship.getShip().getLayoutY() + 1.25*HEIGHT/2 + changeY); // this has to scale with images size and Pane sizes
+                    Projectile projectile = new Projectile(x, y);
+                    projectile.getCharacter().setRotate(ship.getShip().getRotate());
                     projectiles.add(projectile);
 
                     projectile.accelerate();
@@ -125,10 +142,10 @@ public class SinglePlayerView {
                 // add new asteroids
                 if(Math.random() < 0.005) {
                     Asteroid asteroid = new Asteroid(WIDTH, HEIGHT);
-                    if(!asteroid.collide(ship)) {
-                        asteroids.add(asteroid);
-                        pane.getChildren().add(asteroid.getCharacter());
-                    }
+                    //if(!asteroid.collide(ship)) {
+                    //    asteroids.add(asteroid);
+                    //    pane.getChildren().add(asteroid.getCharacter());
+                    //}
                 }
 
                 // stop the game
