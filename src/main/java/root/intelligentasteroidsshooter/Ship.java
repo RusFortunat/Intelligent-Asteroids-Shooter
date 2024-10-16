@@ -9,6 +9,7 @@ import javafx.scene.shape.Shape;
 //public class Ship extends Character {
 public class Ship {
     private ImageView shipImage;
+    private Hitbox hitBox;
     private Point2D movement;
     private boolean alive;
 
@@ -23,7 +24,7 @@ public class Ship {
         this.shipImage = imageFile;
         this.shipImage.setLayoutX(0);
         this.shipImage.setLayoutY(-50);
-        System.out.println("getLayoutBounds"+ shipImage.getLayoutBounds());
+        //System.out.println("getLayoutBounds"+ shipImage.getLayoutBounds());
 
         this.alive = true;
 
