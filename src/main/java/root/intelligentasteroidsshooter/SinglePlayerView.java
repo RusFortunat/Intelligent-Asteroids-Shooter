@@ -1,12 +1,15 @@
 package root.intelligentasteroidsshooter;
 
 import javafx.animation.AnimationTimer;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -16,8 +19,7 @@ public class SinglePlayerView {
     public static int WIDTH = 500;
     public static int HEIGHT = 400;
 
-    public Parent getView(){
-        //FXMLLoader fxmlLoader = new FXMLLoader(IntelligentAsteroidsShooter.class.getResource("hello-view.fxml"));
+    public void start(Stage singlePlayer) throws IOException {
         Pane pane = new Pane();
         Text text = new Text(10, 20, "Points: 0");
         pane.getChildren().add(text);
@@ -57,6 +59,7 @@ public class SinglePlayerView {
         //System.out.println("We got to the AnimationTimer");
 
         new AnimationTimer() {
+            int score = 0;
 
             @Override
             public void handle(long now) {
@@ -92,14 +95,6 @@ public class SinglePlayerView {
                 asteroids.forEach(asteroid -> asteroid.move());
                 projectiles.forEach(projectile -> projectile.move());
 
-                // stop the game
-                asteroids.forEach(asteroid -> {
-                    if (ship.collide(asteroid)) {
-                        stop();
-                        askToPlayAgain();
-                    }
-                });
-
                 // removing projectiles and asteroids
                 projectiles.forEach(projectile -> {
                     asteroids.forEach(asteroid -> {
@@ -109,10 +104,10 @@ public class SinglePlayerView {
                         }
                     });
                     if(!projectile.isAlive()) {
-                        text.setText("Points: " + points.addAndGet(1000));
+                        score += points.addAndGet(1000);
+                        text.setText("Points: " + score);
                     }
                 });
-
                 projectiles.stream()
                         .filter(projectile -> !projectile.isAlive())
                         .forEach(projectile -> pane.getChildren().remove(projectile.getCharacter()));
@@ -127,7 +122,6 @@ public class SinglePlayerView {
                         .filter(asteroid -> !asteroid.isAlive())
                         .collect(Collectors.toList()));
 
-
                 // add new asteroids
                 if(Math.random() < 0.005) {
                     Asteroid asteroid = new Asteroid(WIDTH, HEIGHT);
@@ -136,6 +130,19 @@ public class SinglePlayerView {
                         pane.getChildren().add(asteroid.getCharacter());
                     }
                 }
+
+                // stop the game
+                asteroids.forEach(asteroid -> {
+                    if (ship.collide(asteroid)) {
+                        stop();
+                        singlePlayer.close();
+                        try{
+                            System.out.println("Did we get here?");
+                            showScoreAndAskToPlayAgain(score);
+                            System.out.println("Restart window executed");
+                        }catch(Exception e){e.getMessage();}
+                    }
+                });
             }
         }.start();
 
@@ -149,10 +156,22 @@ public class SinglePlayerView {
             }
         }.start();
 
-        return pane;
+        singlePlayer.setScene(scene);
+        singlePlayer.show();
     }
 
-    public void askToPlayAgain(){
+    public void showScoreAndAskToPlayAgain(int score) throws IOException{
+        System.out.println("inside showScoreAndAskToPlayAgain");
+        FXMLLoader restartView = new FXMLLoader(IntelligentAsteroidsShooter.class.getResource("restart-view.fxml"));
+        Scene restartScene = new Scene(restartView.load());
+        System.out.println("Scene loaded");
+        RestartViewController restartController = restartView.getController();
+        restartController.setLabels(score);
+        System.out.println("Labels set");
 
+        Stage restartStage = new Stage();
+        restartStage.setScene(restartScene);
+        System.out.println("Stage set and scene forwarded to it");
+        restartStage.show();
     }
 }

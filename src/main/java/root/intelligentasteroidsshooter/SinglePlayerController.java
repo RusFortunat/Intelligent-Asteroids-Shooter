@@ -1,10 +1,13 @@
 package root.intelligentasteroidsshooter;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class SinglePlayerController {
     @FXML
@@ -13,13 +16,10 @@ public class SinglePlayerController {
     SinglePlayerView game = new SinglePlayerView();
 
     @FXML
-    protected void onSinglePlayerButtonClick() {
-        Pane pane = new Pane();
-        pane.getChildren().addAll(game.getView());
-        Scene singleGameScene = new Scene(pane);
-        Stage singleGameWindow = new Stage();
-        singleGameWindow.setScene(singleGameScene);
-        singleGameWindow.show();
+    protected void onSinglePlayerButtonClick() throws IOException {
+        Stage singlePlayer = new Stage();
+        SinglePlayerView singlePlayerView = new SinglePlayerView();
+        singlePlayerView.start(singlePlayer);
     }
 
     @FXML

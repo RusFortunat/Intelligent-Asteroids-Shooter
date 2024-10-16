@@ -11,12 +11,12 @@
    <children>
       <ImageView fitHeight="96.0" fitWidth="102.0" layoutX="70.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../../../pictures/GH10gFgbYAIxcGe.jpg" />
+            <Image url="@pepega.jpg" />
          </image>
       </ImageView>
       <ImageView fitHeight="106.0" fitWidth="91.0" layoutX="240.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../../../pictures/aipic.png" />
+            <Image url="@AIpic.png" />
          </image>
       </ImageView>
       <Label layoutX="145.0" layoutY="26.0" minWidth="-Infinity" prefHeight="28.0" prefWidth="136.0" scaleX="2.0" scaleY="2.0" scaleZ="2.0" text="Choose the game mode" />
