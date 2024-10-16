@@ -3,6 +3,7 @@ package root.intelligentasteroidsshooter;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.layout.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -34,8 +35,9 @@ public class SinglePlayerView {
         pane.setBackground(paneBackgr);
 
         //Image imageForShip = new Image("file:pepeShip.jpg"); // doesn't render the image, shrug
-        Image imageForShip = new Image("C:\\Users\\mrusl\\Desktop\\Java Projects\\Intelligent-Asteroids-Shooter\\src\\main\\resources\\root\\intelligentasteroidsshooter\\pepeShip.jpg");
+        Image imageForShip = new Image("C:\\Users\\mrusl\\Desktop\\Java Projects\\Intelligent-Asteroids-Shooter\\src\\main\\resources\\root\\intelligentasteroidsshooter\\pepeShip_nobackgr.png");
         ImageView shipImage = new ImageView(imageForShip);
+        //shipImage.setBlendMode(BlendMode.EXCLUSION);
         shipImage.setScaleX(0.1);
         shipImage.setScaleY(0.1);
         Ship ship = new Ship(shipImage,WIDTH / 2, HEIGHT / 2);
