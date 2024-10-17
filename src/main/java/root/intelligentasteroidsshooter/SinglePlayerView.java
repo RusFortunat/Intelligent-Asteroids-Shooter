@@ -179,9 +179,9 @@ public class SinglePlayerView {
                         stop();
                         singlePlayer.close();
                         try{
-                            System.out.println("Did we get here?");
+                            //System.out.println("Did we get here?");
                             showScoreAndAskToPlayAgain(score);
-                            System.out.println("Restart window executed");
+                            //System.out.println("Restart window executed");
                         }catch(Exception e){e.getMessage();}
                     }
                 });
@@ -203,17 +203,27 @@ public class SinglePlayerView {
     }
 
     public void showScoreAndAskToPlayAgain(int score) throws IOException{
-        System.out.println("inside showScoreAndAskToPlayAgain");
+        //System.out.println("inside showScoreAndAskToPlayAgain");
         FXMLLoader restartView = new FXMLLoader(IntelligentAsteroidsShooter.class.getResource("restart-view.fxml"));
         Scene restartScene = new Scene(restartView.load());
-        System.out.println("Scene loaded");
+        //System.out.println("Scene loaded");
         RestartViewController restartController = restartView.getController();
         restartController.setLabels(score);
-        System.out.println("Labels set");
+
+        RecordTable recordTable = new RecordTable("jdbc:h2:./record-table-database");
+        // here you need to write a code for displaying a table and offering to enter a name if the score is high
+        // if the length of the table is less than 10, always record it, if not, then first check the scores
+        // prompt to write a name only if the score is higher than any of the first
+        // update the window immediately after the name was entered and display the new entry with a different color
 
         Stage restartStage = new Stage();
         restartStage.setScene(restartScene);
-        System.out.println("Stage set and scene forwarded to it");
+        //System.out.println("Stage set and scene forwarded to it");
         restartStage.show();
+    }
+
+    private boolean compareScores(){
+        // code here
+        return false;
     }
 }
