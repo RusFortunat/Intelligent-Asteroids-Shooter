@@ -1,23 +1,27 @@
 package root.intelligentasteroidsshooter;
 
+import javafx.geometry.Point2D;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 
 import java.util.Random;
 
-public class Asteroid extends Character {
-
+public class Asteroid extends ImageMotion{
     private double rotationalMovement;
 
-    public Asteroid(int x, int y) {
-        super(new PolygonFactory().createPolygon(), Color.DARKGRAY, x, y);
+    public Asteroid(ImageView imageFile, double scale, int x, int y) {
+        super(imageFile,scale,x,y);
 
         Random rnd = new Random();
 
-        super.getCharacter().setRotate(rnd.nextInt(360));
+        int rotation = rnd.nextInt(360);
+        this.getHitbox().getPolygon().setRotate(rotation);
+        this.getImage().setRotate(rotation);
 
         int accelerationAmount = 1 + rnd.nextInt(10);
         for (int i = 0; i < accelerationAmount; i++) {
-            accelerate();
+            super.accelerate();
         }
 
         this.rotationalMovement = 0.5 - rnd.nextDouble();
@@ -26,6 +30,7 @@ public class Asteroid extends Character {
     @Override
     public void move() {
         super.move();
-        super.getCharacter().setRotate(super.getCharacter().getRotate() + rotationalMovement);
+        super.getImage().setRotate(super.getImage().getRotate() + rotationalMovement);
+        super.getHitbox().getPolygon().setRotate(super.getHitbox().getPolygon().getRotate() + rotationalMovement);
     }
 }
