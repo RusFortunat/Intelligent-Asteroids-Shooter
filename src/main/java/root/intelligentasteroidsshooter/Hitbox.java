@@ -37,7 +37,7 @@ public class Hitbox {
         }
 
         if (this.polygon.getTranslateX() > SinglePlayerView.WIDTH) {
-            this.polygon.setTranslateX(this.polygon.getTranslateX() % SinglePlayerView.WIDTH);
+            this.polygon.setTranslateX(this.polygon.getTranslateX() - SinglePlayerView.WIDTH);
         }
 
         if (this.polygon.getTranslateY() < 0) {
@@ -45,7 +45,7 @@ public class Hitbox {
         }
 
         if (this.polygon.getTranslateY() > SinglePlayerView.HEIGHT) {
-            this.polygon.setTranslateY(this.polygon.getTranslateY() % SinglePlayerView.HEIGHT);
+            this.polygon.setTranslateY(this.polygon.getTranslateY() - SinglePlayerView.HEIGHT);
         }
     }
 

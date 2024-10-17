@@ -54,7 +54,7 @@ public abstract class ImageMotion {
         }
 
         if (this.image.getLayoutX() > SinglePlayerView.WIDTH/2.0 ) {
-            this.image.setLayoutX(this.image.getLayoutX() % SinglePlayerView.WIDTH);
+            this.image.setLayoutX(this.image.getLayoutX() - SinglePlayerView.WIDTH);
         }
 
         if (this.image.getLayoutY() < - SinglePlayerView.HEIGHT/2.0 - scale*this.image.getImage().getHeight()) {
@@ -62,7 +62,7 @@ public abstract class ImageMotion {
         }
 
         if (this.image.getLayoutY() > SinglePlayerView.HEIGHT/2) {
-            this.image.setLayoutY(this.image.getLayoutY() % SinglePlayerView.HEIGHT);
+            this.image.setLayoutY(this.image.getLayoutY() - SinglePlayerView.HEIGHT);
         }
     }
 

@@ -4,10 +4,11 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import java.sql.SQLException;
 
 import java.io.IOException;
 
-public class IntelligentAsteroidsShooter extends Application {
+public class IntelligentAsteroidsShooter extends Application  {
 
     @Override
     public void start(Stage window) throws IOException {
@@ -20,7 +21,7 @@ public class IntelligentAsteroidsShooter extends Application {
         window.show();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException{
         launch();
     }
 }

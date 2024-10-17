@@ -32,7 +32,7 @@ public class SinglePlayerView {
         text.setFill(Color.WHITE);
         pane.getChildren().add(text);
         pane.setPrefSize(WIDTH, HEIGHT);
-        pane.setBackground(paneBackgr);
+        //pane.setBackground(paneBackgr);
 
         Image imageForShip = new Image("C:\\Users\\mrusl\\Desktop\\Java Projects\\Intelligent-Asteroids-Shooter\\src\\main\\resources\\root\\intelligentasteroidsshooter\\pepeShip_nobackgr.png");
         ImageView shipImage = new ImageView(imageForShip);
@@ -65,7 +65,7 @@ public class SinglePlayerView {
 
         asteroids.forEach(asteroid -> {
             pane.getChildren().add(asteroid.getImage());
-            //pane.getChildren().add(asteroid.getHitbox().getPolygon());
+            pane.getChildren().add(asteroid.getHitbox().getPolygon());
         });
         System.out.println("Ship and asteroids added to pane");
 
@@ -169,7 +169,7 @@ public class SinglePlayerView {
                     if(!asteroid.collide(ship.getHitbox())) {
                         asteroids.add(asteroid);
                         pane.getChildren().add(asteroid.getImage());
-                        //pane.getChildren().add(asteroid.getHitbox().getPolygon());
+                        pane.getChildren().add(asteroid.getHitbox().getPolygon());
                     }
                 }
 
