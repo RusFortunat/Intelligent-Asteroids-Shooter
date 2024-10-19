@@ -1,10 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="300.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.intelligentasteroidsshooter.ChooseFighterController">
+<AnchorPane fx:id="chooseFighterPane" prefHeight="450.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.intelligentasteroidsshooter.ChooseFighterController">
    <children>
-      <Label layoutX="246.0" layoutY="42.0" text="Choose your fighter:" />
+
+      <Button fx:id="SWButton" layoutX="247.0" layoutY="216.0" mnemonicParsing="false" onAction="#onSWButtonClick" prefHeight="25.0" prefWidth="112.0" text="Millennium Falke" />
+      <Button fx:id="pepeButton" layoutX="439.0" layoutY="216.0" mnemonicParsing="false" onAction="#onPepeButtonClick" text="Giant Pepe Head" />
+      <Button fx:id="STButton" layoutX="27.0" layoutY="216.0" mnemonicParsing="false" onAction="#onSTButtonClick" text="USS Enterprise NCC-1701-D" />
+
+      <ImageView fitHeight="117.0" fitWidth="132.0" layoutX="434.0" layoutY="82.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@pepeShip_nobackgr.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="234.0" layoutY="66.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@falcon_no_bgr.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="36.0" layoutY="66.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@start-treck-removebg-preview.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="35.0" fitWidth="165.0" layoutX="369.0" layoutY="370.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@space_bar.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="68.0" fitWidth="150.0" layoutX="137.0" layoutY="341.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@arrows_keyboard.png" />
+         </image>
+      </ImageView>
+
+      <Label fx:id="chooseFighterText" layoutX="174.0" layoutY="14.0" text="Choose your fighter:">
+         <font>
+            <Font size="28.0" />
+         </font>
+      </Label>
+      <Label fx:id="controls" layoutX="29.0" layoutY="271.0" text="Controls:">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+
+      <Label fx:id="up" layoutX="145.0" layoutY="310.0" text="accelerate">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="down" layoutX="162.0" layoutY="409.0" text="brake">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="left" layoutX="50.0" layoutY="373.0" text="rotate left">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="right" layoutX="239.0" layoutY="373.0" text="rotate right">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="space" layoutX="429.0" layoutY="341.0" text="shoot">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+
    </children>
 </AnchorPane>

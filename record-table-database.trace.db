@@ -181,3 +181,174 @@ CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [421
 2024-10-19 16:48:00 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
 CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-19 20:42:50 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-19 20:43:20 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-19 20:43:20 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-19 20:43:20 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-19 21:13:44 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-19 21:14:36 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-19 22:55:09 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-19 23:13:07 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-19 23:13:13 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-19 23:13:13 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-19 23:13:13 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-19 23:14:41 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-19 23:15:45 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-19 23:16:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-19 23:22:14 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-19 23:22:44 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-19 23:22:44 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-19 23:22:44 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-19 23:24:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-19 23:31:02 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-19 23:32:57 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-19 23:43:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-19 23:44:31 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-19 23:51:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 00:03:07 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 00:32:33 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 00:35:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 00:35:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 00:35:19 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 00:35:19 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 00:35:19 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 00:36:48 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 00:40:22 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 00:46:19 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 00:46:54 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 00:48:27 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 00:51:21 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 00:51:48 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 00:51:48 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 00:51:48 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 00:54:16 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 00:54:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 00:54:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 00:54:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 00:56:56 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 00:57:13 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 00:57:13 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 00:57:13 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 01:00:21 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 01:00:28 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 01:00:28 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 01:00:28 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 01:01:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 01:01:35 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 01:01:35 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 01:01:35 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-20 01:03:53 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]

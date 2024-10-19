@@ -13,10 +13,13 @@ public class IntelligentAsteroidsShooter extends Application  {
     @Override
     public void start(Stage window) throws IOException {
         FXMLLoader startView = new FXMLLoader(IntelligentAsteroidsShooter.class.getResource("start-view.fxml"));
-
         Scene startScene = new Scene(startView.load());
+        StartViewController startViewController = startView.getController();
+        startViewController.setBackground();
+        startViewController.setChooseModeLabel();
+        startViewController.setLangugeLabel();
 
-        window.setTitle("Our asteroids shooter!");
+        window.setTitle("Intelligent Asteroids Shooter");
         window.setScene(startScene);
         window.show();
     }

@@ -21,11 +21,11 @@ public class Hitbox {
     }
 
     public void turnLeft() {
-        this.polygon.setRotate(this.polygon.getRotate() - 5);
+        this.polygon.setRotate(this.polygon.getRotate() - 3);
     }
 
     public void turnRight() {
-        this.polygon.setRotate(this.polygon.getRotate() + 5);
+        this.polygon.setRotate(this.polygon.getRotate() + 3);
     }
 
     public void move() {

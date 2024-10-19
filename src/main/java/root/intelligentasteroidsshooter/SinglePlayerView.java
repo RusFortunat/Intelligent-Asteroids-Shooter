@@ -1,6 +1,5 @@
 package root.intelligentasteroidsshooter;
 
-import com.sun.security.jgss.GSSUtil;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -21,18 +20,16 @@ import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import java.util.stream.*;
-
-import static java.util.stream.Collectors.toMap;
 
 public class SinglePlayerView {
 
     public static int WIDTH = 500;
     public static int HEIGHT = 400;
 
-    public void start(Stage singlePlayer) throws IOException {
+    public void start(Stage singlePlayer, String chosenImage) throws IOException {
         Pane pane = new Pane();
-        Image backgroundFile = new Image("C:\\Users\\mrusl\\Desktop\\Java Projects\\Intelligent-Asteroids-Shooter\\src\\main\\resources\\root\\intelligentasteroidsshooter\\stars.jpg");
+        Image backgroundFile = new Image("C:\\Users\\mrusl\\Desktop\\Java Projects\\Intelligent-Asteroids-Shooter" +
+                "\\src\\main\\resources\\root\\intelligentasteroidsshooter\\space2.gif"); // doesn't render without full path
         BackgroundImage myBI= new BackgroundImage(backgroundFile, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
                 BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         Background paneBackgr = new Background(myBI);
@@ -44,13 +41,11 @@ public class SinglePlayerView {
         pane.setPrefSize(WIDTH, HEIGHT);
         pane.setBackground(paneBackgr);
 
-        Image imageForShip = new Image("C:\\Users\\mrusl\\Desktop\\Java Projects\\Intelligent-Asteroids-Shooter\\src\\main\\resources\\root\\intelligentasteroidsshooter\\pepeShip_nobackgr.png");
+        Image imageForShip = new Image(chosenImage);
         ImageView shipImage = new ImageView(imageForShip);
         double scale = 0.12;
         shipImage.setScaleX(scale);
         shipImage.setScaleY(scale);
-        //System.out.println("ship size: " + 0.5*shipImage.getImage().getWidth());
-        //Ship ship = new Ship(shipImage,WIDTH / 2, HEIGHT / 2);
         Ship ship = new Ship(shipImage, scale,0, 0);
         pane.getChildren().add(ship.getImage());
         //pane.getChildren().add(ship.getHitbox().getPolygon());
@@ -58,7 +53,8 @@ public class SinglePlayerView {
 
         List<Projectile> projectiles = new ArrayList<>();
 
-        Image imageForAsteroid = new Image("C:\\Users\\mrusl\\Desktop\\Java Projects\\Intelligent-Asteroids-Shooter\\src\\main\\resources\\root\\intelligentasteroidsshooter\\asteroid_nobackgr.png");
+        Image imageForAsteroid = new Image("C:\\Users\\mrusl\\Desktop\\Java Projects\\Intelligent-Asteroids-Shooter" +
+                "\\src\\main\\resources\\root\\intelligentasteroidsshooter\\asteroid_nobackgr.png");
         List<Asteroid> asteroids = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             ImageView asteroidImage = new ImageView(imageForAsteroid);
@@ -78,14 +74,10 @@ public class SinglePlayerView {
             pane.getChildren().add(asteroid.getImage());
             //pane.getChildren().add(asteroid.getHitbox().getPolygon());
         });
-        //System.out.println("Ship and asteroids added to pane");
-
-        AtomicInteger points = new AtomicInteger();
 
         Scene scene = new Scene(pane);
 
         Map<KeyCode, Boolean> pressedKeys = new HashMap<>();
-
         scene.setOnKeyPressed(event -> {
             pressedKeys.put(event.getCode(), Boolean.TRUE);
         });
@@ -94,12 +86,11 @@ public class SinglePlayerView {
             pressedKeys.put(event.getCode(), Boolean.FALSE);
         });
 
-        //System.out.println("We got to the AnimationTimer");
-
+        AtomicInteger points = new AtomicInteger(); // to count points
         RecordHolders newPlayer = new RecordHolders("futureRecordHolder?", "0");
         Timer forProjectiles = new Timer();
         forProjectiles.setStart(Instant.now());
-        //System.out.println("Time before AnimationTimer: " + forProjectiles.getStart());
+
         new AnimationTimer() {
 
             @Override
@@ -114,13 +105,13 @@ public class SinglePlayerView {
 
                 if(pressedKeys.getOrDefault(KeyCode.UP, false)) {
                     ship.accelerate();
-                    //System.out.println("Duration.between(Instant.now(), forProjectiles.getStart()).toMillis(): " + Duration.between(Instant.now(), forProjectiles.getStart()).toMillis());
                 }
 
                 if(pressedKeys.getOrDefault(KeyCode.DOWN, false)) {
                     ship.decelerate();
                 }
 
+                // shoot!
                 if (pressedKeys.getOrDefault(KeyCode.SPACE, false) && projectiles.size() < 10
                         && Duration.between(forProjectiles.getStart(), Instant.now()).toMillis() > 100 ) { // 1 shot per 0.5sec
                     // we shoot
@@ -139,11 +130,12 @@ public class SinglePlayerView {
                     pane.getChildren().add(projectile.getPolygon());
                 }
 
+                // move objects
                 ship.move();
                 asteroids.forEach(asteroid -> asteroid.move());
                 projectiles.forEach(projectile -> projectile.move());
 
-                // removing projectiles and asteroids
+                // removing colliding projectiles and asteroids
                 projectiles.forEach(projectile -> {
                     asteroids.forEach(asteroid -> {
                         if(projectile.collide(asteroid.getHitbox())) {
@@ -156,33 +148,32 @@ public class SinglePlayerView {
                 });
                 projectiles.stream()
                         .filter(projectile -> !projectile.isAlive())
-                        .forEach(projectile -> pane.getChildren().remove(projectile.getPolygon()));
+                        .forEach(projectile -> pane.getChildren().remove(projectile.getPolygon())); // remove from the pane
                 projectiles.removeAll(projectiles.stream()
                         .filter(projectile -> !projectile.isAlive())
-                        .collect(Collectors.toList()));
-
+                        .collect(Collectors.toList())); // remove from the projectiles list
                 asteroids.stream()
                         .filter(asteroid -> !asteroid.isAlive())
                         .forEach(asteroid ->{
                             pane.getChildren().remove(asteroid.getImage());
-                            pane.getChildren().remove(asteroid.getHitbox().getPolygon());
+                            pane.getChildren().remove(asteroid.getHitbox().getPolygon()); // remove from the pane
                         } );
                 asteroids.removeAll(asteroids.stream()
                         .filter(asteroid -> !asteroid.isAlive())
-                        .collect(Collectors.toList()));
+                        .collect(Collectors.toList())); // remove from the asteroids list
 
-                // add new asteroids
+                // add new asteroids randomly at the edges of the screen, if they don't collide with the ship
                 if(Math.random() < 0.01) {
                     ImageView asteroidImage = new ImageView(imageForAsteroid);
                     Random rnd = new Random();
                     double rangeMin = 0.1;
                     double rangeMax = 0.2;
-                    double size = rangeMin + (rangeMax - rangeMin) * rnd.nextDouble();
+                    double size = rangeMin + (rangeMax - rangeMin) * rnd.nextDouble(); // restrict asteroids size in this range
                     asteroidImage.setScaleX(size);
                     asteroidImage.setScaleY(size);
                     Asteroid asteroid = new Asteroid(asteroidImage, size,
-                            rnd.nextInt(-3*WIDTH/4, -WIDTH/4),
-                            rnd.nextInt(-3*HEIGHT/4, -HEIGHT/4));
+                            rnd.nextInt(-4*WIDTH/5, -WIDTH/5),
+                            rnd.nextInt(-4*HEIGHT/5, -HEIGHT/5));
                     if(!asteroid.collide(ship.getHitbox())) {
                         asteroids.add(asteroid);
                         pane.getChildren().add(asteroid.getImage());
@@ -190,22 +181,20 @@ public class SinglePlayerView {
                     }
                 }
 
-                // stop the game
+                // stop the game when ship and asteroids collide
                 asteroids.forEach(asteroid -> {
                     if (ship.collide(asteroid.getHitbox())) {
                         stop();
                         singlePlayer.close();
                         try{
-                            //System.out.println("Did we get here?");
                             showScoreAndAskToPlayAgain(newPlayer.getPoints());
-                            //System.out.println("Restart window executed");
                         }catch(Exception e){e.getMessage();}
                     }
                 });
             }
         }.start();
 
-        projectiles.forEach(projectile -> projectile.move());
+        //projectiles.forEach(projectile -> projectile.move());
 
         new AnimationTimer() {
 
@@ -223,8 +212,10 @@ public class SinglePlayerView {
         //System.out.println("inside showScoreAndAskToPlayAgain");
         FXMLLoader restartView = new FXMLLoader(IntelligentAsteroidsShooter.class.getResource("restart-view.fxml"));
         Scene restartScene = new Scene(restartView.load());
+        restartScene.getStylesheets().add("tableStyle.css");
         //System.out.println("Scene loaded");
         RestartViewController restartController = restartView.getController();
+        restartController.setBackground();
         restartController.setLabels(score);
 
         RecordTableDB recordTableDB = new RecordTableDB("jdbc:h2:./record-table-database");

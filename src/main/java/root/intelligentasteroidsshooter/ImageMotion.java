@@ -57,12 +57,12 @@ public abstract class ImageMotion {
 
     public void turnLeft() {
         this.hitbox.turnLeft();
-        this.image.setRotate(this.image.getRotate() - 5);
+        this.image.setRotate(this.image.getRotate() - 3);
     }
 
     public void turnRight() {
         this.hitbox.turnRight();
-        this.image.setRotate(this.image.getRotate() + 5);
+        this.image.setRotate(this.image.getRotate() + 3);
     }
 
     public void move() {

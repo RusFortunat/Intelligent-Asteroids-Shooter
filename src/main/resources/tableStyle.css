@@ -1,3 +1,10 @@
+
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
 .table-view .scroll-bar * {
     -fx-min-width: 0;
     -fx-pref-width: 0;

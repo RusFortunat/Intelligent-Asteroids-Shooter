@@ -1,30 +1,42 @@
 package root.intelligentasteroidsshooter;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.List;
 
 public class RestartViewController {
-    private String newRecordName;
-
     @FXML
     private Label scoreText;
     @FXML
     private HBox newRecord;
     public Button yesButton;
     public Button closeButton;
-
     @FXML
     private TextField recordName;
-
     @FXML
     private TableView<RecordHolders> recordTable;
+    @FXML
+    private AnchorPane restartPane;
+    @FXML
+    private Label recordTableLabel;
+    @FXML
+    private Label yourName;
+    @FXML
+    private Label question;
+
+    private String newRecordName;
 
     public RestartViewController(){
         this.recordTable = new TableView<>();
@@ -67,14 +79,19 @@ public class RestartViewController {
         column1.setCellValueFactory( new PropertyValueFactory<>("name"));
         column2.setCellValueFactory( new PropertyValueFactory<>("score"));
 
+        recordTable.setStyle("-fx-background-color: transparent; -fx-text-fill: white; "
+                + "-fx-base: rgba(56, 176, 209, 0); ");
         recordTable.getColumns().add(column1);
         recordTable.getColumns().add(column2);
         column1.prefWidthProperty().bind(recordTable.widthProperty().multiply(0.49));
         column2.prefWidthProperty().bind(recordTable.widthProperty().multiply(0.49));
-        column1.setStyle( "-fx-alignment: CENTER; -fx-font-size: 14px;");
-        column2.setStyle( "-fx-alignment: CENTER; -fx-font-size: 14px;");
+        column1.setStyle( "-fx-alignment: CENTER; -fx-font-size: 14px; -fx-text-fill: white;");
+        column2.setStyle( "-fx-alignment: CENTER; -fx-font-size: 14px; -fx-text-fill: white;");
         column1.setResizable(false);
         column2.setResizable(false);
+        column1.setSortable(false);
+        column2.setSortable(false);
+        column1.getStyleClass().add("tableStyle.css");
 
         for(int i = 0; i < names.size(); i++){
             RecordHolders recordHolder = new RecordHolders(names.get(i), scores.get(i));
@@ -93,7 +110,12 @@ public class RestartViewController {
                 super.updateItem(row, empty);
                 if (row != null){
                     if(row.getName().equals(newRecordName)) {
-                        setStyle("-fx-text-fill: red !important;"); // doesn't work for whatever reason, even with !important flag
+                        // none of this worked
+                        //this.setTextFill(Color.RED);
+                        //setText(row.getName());
+                        //setText(row.getScore());
+                        //setStyle("red-column");
+                        //this.setStyle("-fx-text-fill: red !important;"); // doesn't work for whatever reason, even with !important flag
                         setStyle("-fx-background-color: #F08080;");
                     } else {
                         setStyle("");
@@ -105,29 +127,43 @@ public class RestartViewController {
 
     @FXML
     protected void onYesButtonClick() throws Exception {
-        yesButton.setOnMousePressed(e->{
-            if(e.getButton()== MouseButton.PRIMARY){
-                Stage stage = (Stage) yesButton.getScene().getWindow();
-                stage.close();
-                Stage singlePlayer = new Stage();
-                SinglePlayerView singlePlayerView = new SinglePlayerView();
-                try{
-                    singlePlayerView.start(singlePlayer);
-                }catch(Exception ex){
-                    System.out.println(ex.getMessage());
-                }
-            }
-        });
+        FXMLLoader chooseFighterView = new FXMLLoader(IntelligentAsteroidsShooter.class.getResource("choose-fighter.fxml"));
+        try{
+            Scene chooseFighterScene = new Scene(chooseFighterView.load());
+            ChooseFighterController startViewController = chooseFighterView.getController();
+            startViewController.setBackground();
+
+            Stage chooseFighter = new Stage();
+            chooseFighter.setScene(chooseFighterScene);
+            chooseFighter.show();
+        }catch(Exception em){
+            System.out.printf(em.getMessage());
+        }
+        Stage stage = (Stage) yesButton.getScene().getWindow();
+        stage.close();
     }
 
     @FXML
     protected void onCloseButtonClick() {
-        closeButton.setOnMousePressed(e->{
-            if(e.getButton()== MouseButton.PRIMARY){
-                Stage stage = (Stage) closeButton.getScene().getWindow();
-                stage.close();
-            }
-        });
+        Stage stage = (Stage) closeButton.getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    protected void setBackground(){
+        Image backgroundFile = new Image("C:\\Users\\mrusl\\Desktop\\Java Projects\\Intelligent-Asteroids-Shooter" +
+                "\\src\\main\\resources\\root\\intelligentasteroidsshooter\\stars_moving.gif"); // doesn't render without full path
+        BackgroundImage myBI= new BackgroundImage(backgroundFile, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
+                BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        //BackgroundFill myBF = new BackgroundFill(Color.BLUEVIOLET, new CornerRadii(1),
+        //        new Insets(0.0,0.0,0.0,0.0));// or null for the padding
+        Background paneBackgr = new Background(myBI);
+        restartPane.setBackground(paneBackgr);
+        recordTableLabel.setTextFill(Color.WHITE);
+        scoreText.setTextFill(Color.WHITE);
+        yourName.setTextFill(Color.WHITE);
+        question.setTextFill(Color.WHITE);
+        //recordName.setStyle("-fx-text-fill: white;");
     }
 
     public TextField getName(){return recordName;}

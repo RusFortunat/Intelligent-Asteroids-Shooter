@@ -7,25 +7,48 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="409.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.intelligentasteroidsshooter.StartViewController">
    <children>
-      <ImageView fitHeight="96.0" fitWidth="102.0" layoutX="67.0" layoutY="225.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@pepega.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="106.0" fitWidth="91.0" layoutX="237.0" layoutY="225.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@AIpic.png" />
-         </image>
-      </ImageView>
-      <Label layoutX="139.0" layoutY="168.0" minWidth="-Infinity" prefHeight="28.0" prefWidth="136.0" scaleX="2.0" scaleY="2.0" scaleZ="2.0" text="Choose the game mode" />
-      <Button layoutX="74.0" layoutY="337.0" mnemonicParsing="false" onAction="#onSinglePlayerButtonClick" text="Single Player" />
-      <Button layoutX="242.0" layoutY="337.0" mnemonicParsing="false" onAction="#onTrainAIButtonClick" text="Train your AI" />
-      <Label fx:id="bauarbeitenText" />
-      <Label layoutX="279.0" layoutY="10.0" text="Language">
-         <font>
-            <Font size="16.0" />
-         </font>
-      </Label>
-      <ChoiceBox layoutX="354.0" layoutY="10.0" prefHeight="25.0" prefWidth="40.0" />
+      <Pane fx:id="startViewPane" layoutY="-2.0" prefHeight="409.0" prefWidth="409.0">
+         <children>
+            <Button fx:id="singlePlayerButton" layoutX="61.0" layoutY="336.0" mnemonicParsing="false" onAction="#onSinglePlayerButtonClick" text="Single Player">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Button>
+            <Button fx:id="trainAIButton" layoutX="238.0" layoutY="336.0" mnemonicParsing="false" onAction="#onTrainAIButtonClick" text="Train your AI">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Button>
+
+            <ChoiceBox layoutX="355.0" layoutY="18.0" prefHeight="25.0" prefWidth="40.0" />
+      
+            <Label fx:id="language" layoutX="265.0" layoutY="17.0" text="Language">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="106.0" fitWidth="112.0" layoutX="244.0" layoutY="217.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@AIpic.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="110.0" fitWidth="112.0" layoutX="62.0" layoutY="216.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@pepega.jpg" />
+               </image>
+            </ImageView>
+      
+            <Label fx:id="chooseMode" layoutX="55.0" layoutY="161.0" minWidth="-Infinity" prefHeight="40.0" prefWidth="300.0" text="Choose the game mode">
+               <font>
+                  <Font size="28.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="87.0" fitWidth="364.0" layoutX="23.0" layoutY="72.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@main_title.png" />
+               </image>
+            </ImageView>
+         </children></Pane>
+
    </children>
 </AnchorPane>
