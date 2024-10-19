@@ -17,13 +17,34 @@ public abstract class ImageMotion {
         this.scale = scale;
         double imageWidth = 0.5*scale*imageFile.getImage().getWidth();
         double imageHeight = 0.5*scale*imageFile.getImage().getHeight();
-        //System.out.println("imageWidth " + imageWidth + "; imageHeight" + imageHeight);
-        this.image.setLayoutX(x + 0.25*imageWidth); // Polygon and ImageView coordinates diverge, have to search for these numbers to ensure overlap
-        this.image.setLayoutY(y - 1.75*imageHeight);
-        Polygon squarePolygon = new Polygon(-imageWidth, -imageHeight,
-                imageWidth, -imageHeight,
-                imageWidth, imageHeight,
-                -imageWidth, imageHeight);
+        //System.out.println("imageWidth: " + imageWidth);
+        //System.out.println("imageWidth: " + imageHeight);
+        // Polygon and ImageView coordinates diverge, have to search for these numbers by hand to ensure overlap
+        // as a gamer myself -- I *hate* when hitboxes are wrong!
+        if(imageWidth < 25){
+            this.image.setLayoutX(x + 2.0*imageWidth);
+            this.image.setLayoutY(y - 0*imageHeight);
+        }else if(imageWidth < 30){
+            this.image.setLayoutX(x + 1.7*imageWidth);
+            this.image.setLayoutY(y - 0.05*imageHeight);
+        }else if(imageWidth < 35){
+            this.image.setLayoutX(x + 1.47*imageWidth);
+            this.image.setLayoutY(y - 0*imageHeight);
+        }else if(imageWidth < 40){
+            this.image.setLayoutX(x + 1.35*imageWidth);
+            this.image.setLayoutY(y - 0*imageHeight);
+        }else if(imageWidth < 50){
+            this.image.setLayoutX(x + 1.25*imageWidth);
+            this.image.setLayoutY(y - 0*imageHeight);
+        }else{
+            this.image.setLayoutX(x + 0.22*imageWidth);
+            this.image.setLayoutY(y - 0.9*imageHeight);
+        }
+        // i mage hitboxes a bit smaller due to irregular shape of asteroids
+        Polygon squarePolygon = new Polygon(-0.75*imageWidth, -0.75*imageHeight,
+                0.75*imageWidth, -0.75*imageHeight,
+                0.75*imageWidth, 0.75*imageHeight,
+                -0.75*imageWidth, 0.75*imageHeight);
         this.hitbox = new Hitbox(squarePolygon, Color.BLACK,
                 (int)(x + SinglePlayerView.WIDTH/2.0),
                 (int)(y + SinglePlayerView.HEIGHT/2.0 )); // square

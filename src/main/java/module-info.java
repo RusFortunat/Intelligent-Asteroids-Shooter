@@ -4,6 +4,7 @@ module root.intelligentasteroidsshooter {
 
     requires com.dlsc.formsfx;
     requires java.sql;
+    requires jdk.security.jgss;
 
     opens root.intelligentasteroidsshooter to javafx.fxml;
     exports root.intelligentasteroidsshooter;

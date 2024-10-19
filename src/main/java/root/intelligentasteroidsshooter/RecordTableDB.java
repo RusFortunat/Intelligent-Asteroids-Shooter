@@ -27,10 +27,6 @@ public class RecordTableDB {
             }
         }
 
-        /*while(recordScores.size() < 10){
-            recordScores.add("99999,EMPTY,0");
-        }*/ // decided to display this in the table itself
-
         return recordScores;
     }
 

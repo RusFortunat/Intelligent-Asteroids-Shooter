@@ -3,25 +3,29 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="280.0" prefWidth="409.0"
-            xmlns="http://javafx.com/javafx/11.0.14-internal"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="root.intelligentasteroidsshooter.SinglePlayerController">
+<AnchorPane prefHeight="400.0" prefWidth="409.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.intelligentasteroidsshooter.StartViewController">
    <children>
-      <ImageView fitHeight="96.0" fitWidth="102.0" layoutX="70.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="96.0" fitWidth="102.0" layoutX="67.0" layoutY="225.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@pepega.jpg" />
          </image>
       </ImageView>
-      <ImageView fitHeight="106.0" fitWidth="91.0" layoutX="240.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="106.0" fitWidth="91.0" layoutX="237.0" layoutY="225.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@AIpic.png" />
          </image>
       </ImageView>
-      <Label layoutX="145.0" layoutY="26.0" minWidth="-Infinity" prefHeight="28.0" prefWidth="136.0" scaleX="2.0" scaleY="2.0" scaleZ="2.0" text="Choose the game mode" />
-      <Button onAction="#onSinglePlayerButtonClick" layoutX="77.0" layoutY="212.0" mnemonicParsing="false" text="Single Player" />
-      <Button onAction="#onTrainAIButtonClick" layoutX="245.0" layoutY="212.0" mnemonicParsing="false" text="Train your AI" />
-      <Label fx:id="bauarbeitenText"/>
+      <Label layoutX="139.0" layoutY="168.0" minWidth="-Infinity" prefHeight="28.0" prefWidth="136.0" scaleX="2.0" scaleY="2.0" scaleZ="2.0" text="Choose the game mode" />
+      <Button layoutX="74.0" layoutY="337.0" mnemonicParsing="false" onAction="#onSinglePlayerButtonClick" text="Single Player" />
+      <Button layoutX="242.0" layoutY="337.0" mnemonicParsing="false" onAction="#onTrainAIButtonClick" text="Train your AI" />
+      <Label fx:id="bauarbeitenText" />
+      <Label layoutX="279.0" layoutY="10.0" text="Language">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <ChoiceBox layoutX="354.0" layoutY="10.0" prefHeight="25.0" prefWidth="40.0" />
    </children>
 </AnchorPane>
