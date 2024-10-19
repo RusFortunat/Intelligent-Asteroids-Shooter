@@ -6,7 +6,7 @@ import javafx.scene.shape.Polygon;
 public class Projectile extends Hitbox {
 
     public Projectile(int x, int y) {
-        super(new Polygon(2, -2, 2, 2, -2, 2, -2, -2), Color.RED, x, y);
+        super(new Polygon(15, -2, 15, 2, -3, 2, -3, -2), Color.RED, x, y);
     }
 
     @Override
