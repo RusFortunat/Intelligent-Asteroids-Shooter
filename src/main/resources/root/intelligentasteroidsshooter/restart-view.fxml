@@ -1,20 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="120.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.intelligentasteroidsshooter.RestartViewController">
+<AnchorPane prefHeight="500.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.intelligentasteroidsshooter.RestartViewController">
    <children>
-      <Button fx:id="yesButton" layoutX="14.0" layoutY="80.0" mnemonicParsing="false" onAction="#onYesButtonClick" prefWidth="80.0" text="Yes" />
-      <Button fx:id="closeButton" layoutX="106.0" layoutY="80.0" mnemonicParsing="false" onAction="#onCloseButtonClick" prefWidth="80.0" text="Close Game" />
-      <VBox prefHeight="77.0" prefWidth="200.0" alignment="CENTER">
+      <Button fx:id="yesButton" layoutX="77.0" layoutY="455.0" mnemonicParsing="false" onAction="#onYesButtonClick" prefWidth="80.0" text="Yes" />
+      <Button fx:id="closeButton" layoutX="250.0" layoutY="455.0" mnemonicParsing="false" onAction="#onCloseButtonClick" prefWidth="80.0" text="Close Game" />
+      <VBox alignment="CENTER" layoutX="25.0" layoutY="5.0" prefHeight="446.0" prefWidth="350.0" spacing="10.0">
          <children>
             <Label fx:id="scoreText">
                  <font>
                      <Font size="18.0" />
                  </font>
              </Label>
+            <TableView fx:id="recordTable" prefHeight="308.0" prefWidth="350.0">
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy></TableView>
+            <HBox fx:id="newRecord" prefHeight="39.0" prefWidth="341.0">
+               <children>
+                  <Label prefHeight="27.0" prefWidth="101.0" text="Your name:">
+                       <font>
+                           <Font size="18.0" />
+                       </font>
+                     <padding>
+                        <Insets top="5.0" />
+                     </padding>
+                  </Label>
+                   <TextField fx:id="recordName" prefHeight="39.0" prefWidth="246.0">
+                       <font>
+                           <Font size="18.0" />
+                       </font>
+                   </TextField>
+               </children>
+               <VBox.margin>
+                  <Insets left="5.0" />
+               </VBox.margin>
+            </HBox>
       
             <Label fx:id="question" text="Play again?">
                  <font>
@@ -22,6 +47,9 @@
                  </font>
             </Label>
          </children>
+         <padding>
+            <Insets bottom="5.0" />
+         </padding>
       </VBox>
    </children>
 </AnchorPane>

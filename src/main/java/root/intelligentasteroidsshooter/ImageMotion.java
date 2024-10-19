@@ -17,7 +17,7 @@ public abstract class ImageMotion {
         this.scale = scale;
         double imageWidth = 0.5*scale*imageFile.getImage().getWidth();
         double imageHeight = 0.5*scale*imageFile.getImage().getHeight();
-        System.out.println("imageWidth " + imageWidth + "; imageHeight" + imageHeight);
+        //System.out.println("imageWidth " + imageWidth + "; imageHeight" + imageHeight);
         this.image.setLayoutX(x + 0.25*imageWidth); // Polygon and ImageView coordinates diverge, have to search for these numbers to ensure overlap
         this.image.setLayoutY(y - 1.75*imageHeight);
         Polygon squarePolygon = new Polygon(-imageWidth, -imageHeight,

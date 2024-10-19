@@ -3,7 +3,6 @@ package root.intelligentasteroidsshooter;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.effect.BlendMode;
 import javafx.scene.layout.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -13,9 +12,13 @@ import javafx.stage.Stage;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.*;
+
+import static java.util.stream.Collectors.toMap;
 
 public class SinglePlayerView {
 
@@ -61,13 +64,13 @@ public class SinglePlayerView {
                     size, rnd.nextInt(-3*WIDTH/4, -WIDTH/4), rnd.nextInt(-3*HEIGHT/4, -HEIGHT/4));
             if(!asteroid.collide(ship.getHitbox())) {asteroids.add(asteroid);}else{i--;}
         }
-        System.out.println("Asteroids and ship are created");
+        //System.out.println("Asteroids and ship are created");
 
         asteroids.forEach(asteroid -> {
             pane.getChildren().add(asteroid.getImage());
             pane.getChildren().add(asteroid.getHitbox().getPolygon());
         });
-        System.out.println("Ship and asteroids added to pane");
+        //System.out.println("Ship and asteroids added to pane");
 
         AtomicInteger points = new AtomicInteger();
 
@@ -83,7 +86,7 @@ public class SinglePlayerView {
             pressedKeys.put(event.getCode(), Boolean.FALSE);
         });
 
-        System.out.println("We got to the AnimationTimer");
+        //System.out.println("We got to the AnimationTimer");
 
         new AnimationTimer() {
             int score = 0;
@@ -210,11 +213,64 @@ public class SinglePlayerView {
         RestartViewController restartController = restartView.getController();
         restartController.setLabels(score);
 
-        RecordTable recordTable = new RecordTable("jdbc:h2:./record-table-database");
-        // here you need to write a code for displaying a table and offering to enter a name if the score is high
-        // if the length of the table is less than 10, always record it, if not, then first check the scores
-        // prompt to write a name only if the score is higher than any of the first
-        // update the window immediately after the name was entered and display the new entry with a different color
+        RecordTableDB recordTableDB = new RecordTableDB("jdbc:h2:./record-table-database");
+        try{
+            List<String> records = recordTableDB.toList().stream()
+                    .map(row->row.split(","))
+                    .sorted((entry1, entry2) -> Integer.valueOf(entry2[2]) - Integer.valueOf(entry1[2]))
+                    .limit(10)
+                    .map(s->{
+                        return s[0] + "," + s[1] + "," + s[2];
+                    })
+                    .collect(Collectors.toList());;
+            //System.out.println("Record list:");
+            //System.out.println(records);
+            restartController.fillTable(records);
+            if(compareScores(records, score)){ // if current score is bigger than DB entries, then it's a record
+                //System.out.println("add record");
+                restartController.showRecordField(true);
+                restartController.getName().textProperty().addListener((observable, oldValue, newValue) -> {
+                    //System.out.println("textfield changed from " + oldValue + " to " + newValue);
+                    restartController.getName().setOnKeyReleased(event -> {
+                        if (event.getCode() == KeyCode.ENTER){
+                            restartController.getName().setEditable(false);
+                            //restartController.setName(newValue);
+                            System.out.println("recordName: " + newValue);
+                            try{
+                                //System.out.println("Inside try after name is recorded");
+                                Random rnd = new Random();
+                                int id = rnd.nextInt(100000);
+                                recordTableDB.add(id,newValue,score);
+                                records.add(id + "," + newValue + "," + score);
+                                //System.out.println("before sorting");
+                                //System.out.println(records);
+                                List<String> sorted = records.stream()
+                                        .map(row->row.split(","))
+                                        .sorted((entry1, entry2) -> Integer.valueOf(entry2[2]) - Integer.valueOf(entry1[2]))
+                                        .limit(10)
+                                        .map(s->{
+                                            return s[0] + "," + s[1] + "," + s[2];
+                                        })
+                                        .collect(Collectors.toList());
+                                //System.out.println("After sorting");
+                                //System.out.println(sorted);
+                                updateDB(recordTableDB, sorted); // sort & delete bottom entry, i tried writing SQL queries myself, but I clearly need more knowledge on this
+                                System.out.println("updated DB");
+                                System.out.println(recordTableDB.toList());
+                                restartController.fillTable(sorted);
+                                System.out.println("Table refilled");
+                            }catch(SQLException e){
+                                System.out.println(e.getMessage());}
+                        }
+                    });
+                });
+            }else{
+                System.out.println("don't record");
+                restartController.showRecordField(false);
+            }
+        }catch(SQLException e){ System.out.printf(e.getMessage());}
+
+        // !!! update the window immediately after the name was entered and display the new entry with a different color
 
         Stage restartStage = new Stage();
         restartStage.setScene(restartScene);
@@ -222,8 +278,42 @@ public class SinglePlayerView {
         restartStage.show();
     }
 
-    private boolean compareScores(){
-        // code here
+    private boolean compareScores(List<String> list, int score){
+        if(list.isEmpty() || list.size() < 10) return true;
+
+        for(String entry:list){
+            String[] parts = entry.split(",");
+            if(score > Integer.valueOf(parts[2])) return true;
+        }
+
         return false;
+    }
+
+    private void updateDB(RecordTableDB recordTableDB, List<String> list) throws SQLException{
+        List<Integer> IDs = list.stream().map(s->{
+            String[] parts = s.split(",");
+            return Integer.valueOf(parts[0]);
+        })
+        .collect(Collectors.toList());
+        //System.out.println("IDs:");
+        //System.out.println(IDs);
+
+        List<String> readDB = recordTableDB.toList();
+        //System.out.println("Our BD before updating: ");
+        //System.out.println(readDB);
+        readDB.stream().forEach(s->{
+            String[] parts = s.split(","); // [0] is ID
+            //System.out.println("parts: " + parts);
+            try{
+                if(!IDs.contains(Integer.valueOf(parts[0]))) {
+                    recordTableDB.remove(Integer.valueOf(parts[0]));
+                    //System.out.println("ID: " + Integer.valueOf(parts[0]) + " is removed from BD");
+                }else{
+                    //System.out.println("ID: " + Integer.valueOf(parts[0]) + " is in the record list");
+                }
+            }catch(SQLException e){
+                System.out.println(e);
+            }
+        });
     }
 }
