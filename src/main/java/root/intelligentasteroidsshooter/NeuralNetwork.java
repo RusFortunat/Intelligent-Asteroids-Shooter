@@ -13,9 +13,10 @@ import javafx.scene.shape.Polygon;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class NeuralNetwork {
+public class NeuralNetwork implements Comparable<NeuralNetwork> {
     private Hitbox ship; // every respectable neural network should have its own spaceship
-    private double score; // each network's performance will be evaluated through this score meter
+    private double shipSize; // every respectable neural network should have its own spaceship
+    private int score; // each network's performance will be evaluated through this score meter
     private double mutationRate;
     private int inputSize;
     private int hiddenSize;
@@ -30,7 +31,9 @@ public class NeuralNetwork {
 
     // constructor; initialize a fully-connected neural network with random weights and biases
     public NeuralNetwork(double mutationRate, int inputSize, int hiddenSize, int outputSize){
-        Polygon squarePolygon = new Polygon(-20, -20, 20, -20, 20, 20, -20, 20); // ship size
+        shipSize = 40;
+        Polygon squarePolygon = new Polygon(-shipSize/2, -shipSize/2,
+                shipSize/2, -shipSize/2, shipSize/2, shipSize/2, -shipSize/2, shipSize/2); // ship size
         this.ship = new Hitbox(squarePolygon, Color.BLACK,
                 SinglePlayerView.WIDTH/2,
                 SinglePlayerView.HEIGHT/2); // all ships will be initialized exactly at the middle of the screen
@@ -48,14 +51,14 @@ public class NeuralNetwork {
         // it is a good practice to limit distribution to inverse vector size
         double rangeW1 = 1.0/inputSize;
         for(int i = 0; i < hiddenSize; i++){
-            firstLayerBiases[i] = ThreadLocalRandom.current().nextDouble(-rangeW1,rangeW1);
-            for(int j = 0; j < hiddenSize; j++) {
+            //firstLayerBiases[i] = ThreadLocalRandom.current().nextDouble(-rangeW1,rangeW1);
+            for(int j = 0; j < inputSize; j++) {
                 firstLayerWeights[i][j] = ThreadLocalRandom.current().nextDouble(-rangeW1,rangeW1);
             }
         }
         double rangeW2 = 1.0/hiddenSize;
         for(int i = 0; i < outputSize; i++){
-            secondLayerBiases[i] = ThreadLocalRandom.current().nextDouble(-rangeW2,rangeW2);
+            //secondLayerBiases[i] = ThreadLocalRandom.current().nextDouble(-rangeW2,rangeW2);
             for(int j = 0; j < hiddenSize; j++) {
                 secondLayerWeights[i][j] = ThreadLocalRandom.current().nextDouble(-rangeW2,rangeW2);
             }
@@ -120,7 +123,7 @@ public class NeuralNetwork {
         for(int i = 0; i < hiddenSize; i++){
             double mutateBias = mutationRate*rng.nextGaussian(); // nextGaussian() with mean 0 and standard deviation 1
             firstLayerBiases[i] += mutateBias;
-            for(int j = 0; j < hiddenSize; j++) {
+            for(int j = 0; j < inputSize; j++) {
                 double mutateWeight =  mutationRate*rng.nextGaussian();
                 firstLayerWeights[i][j] += mutateWeight;
             }
@@ -135,10 +138,36 @@ public class NeuralNetwork {
         }
     }
 
+    public void copyNetworkParameters(NeuralNetwork successfulNetwork){
+        firstLayerBiases = successfulNetwork.getFirstLayerBiases().clone();
+        firstLayerWeights = successfulNetwork.getFirstLayerWeights().clone();
+        secondLayerBiases = successfulNetwork.getSecondLayerBiases().clone();
+        secondLayerWeights = successfulNetwork.getSecondLayerWeights().clone();
+    }
+
+    public void addPoints(int points) {this.score += points;}
+
+    @Override
+    public int compareTo(NeuralNetwork otherNetwork){
+        return otherNetwork.getScore() - this.score; // order from big to small
+    }
+
+    // getters
+    public Hitbox getShip() { return ship; }
+    public int getScore() {
+        return score;
+    }
+    public double getShipSize() { return shipSize; }
+    public double[] getFirstLayerBiases(){  return firstLayerBiases;}
+    public double[] getSecondLayerBiases(){  return secondLayerBiases;}
+    public double[][] getFirstLayerWeights(){ return firstLayerWeights; }
+    public double[][] getSecondLayerWeights(){ return secondLayerWeights; }
+
+    // printers
     public void printNetworkParameteres(){
         System.out.println("firstLayerWeights:");
         for(int i = 0; i < hiddenSize; i++){
-            for(int j = 0; j < hiddenSize; j++) {
+            for(int j = 0; j < inputSize; j++) {
                 System.out.print(firstLayerWeights[i][j] + " ");
             }
             System.out.println("");
@@ -179,15 +208,4 @@ public class NeuralNetwork {
         System.out.println("");
     }
 
-    public double getScore() {
-        return score;
-    }
-
-    public Hitbox getShip() {
-        return ship;
-    }
-
-    public void setScore(double score) {
-        this.score = score;
-    }
 }

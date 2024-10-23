@@ -21,6 +21,22 @@ public class AITrainingPaneController {
     private Button closeWindow;
 
     @FXML
+    protected void beginToTrainAI(){
+        int networkPopulationSize = 50;
+        int totalEpisodes = 100;
+        double mutationRate = 0.01; // aka learning rate
+        EvolutionarySearch ourBestAISearcher = new EvolutionarySearch(networkPopulationSize);
+        ourBestAISearcher.startTraining(totalEpisodes, mutationRate);
+    }
+
+    @FXML
+    protected void closeTrainingSession(){
+        Stage stage = (Stage) closeWindow.getScene().getWindow();
+        stage.close();
+    }
+
+
+    @FXML
     protected void setTextAboveGamingPane() {
         textAboveGamingPane.setText("The neural network controls the ship's actions"); //+
                 //"\nIt receives the observation data as an input and selects the best action.");
@@ -30,17 +46,6 @@ public class AITrainingPaneController {
     protected void setTextAboveGraphPane(){
         textAboveGraphPane.setText("We update the neural network parameters with the\n " +
                 "Evolutionary Algorithm and track the improvement");
-    }
-
-    @FXML
-    protected void beginToTrainAI(){
-
-    }
-
-    @FXML
-    protected void closeTrainingSession(){
-        Stage stage = (Stage) closeWindow.getScene().getWindow();
-        stage.close();
     }
 
     @FXML
