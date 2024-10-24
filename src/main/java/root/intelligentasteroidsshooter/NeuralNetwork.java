@@ -14,29 +14,24 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class NeuralNetwork implements Comparable<NeuralNetwork> {
-    private Hitbox ship; // every respectable neural network should have its own spaceship
-    private double shipSize; // every respectable neural network should have its own spaceship
-    private int score; // each network's performance will be evaluated through this score meter
     private double mutationRate;
     private int inputSize;
     private int hiddenSize;
     private int outputSize;
     private double[] hiddenVector;
     private double[] outputVector;
-    // NN params
+    // Neural Network parameters
     private double[][] firstLayerWeights;
     private double[] firstLayerBiases;
     private double[][] secondLayerWeights;
     private double[] secondLayerBiases;
 
+    private Hitbox ship; // every respectable neural network should have its own spaceship
+    private double shipSize;
+    private int score; // each network's performance will be evaluated through this score meter
+
     // constructor; initialize a fully-connected neural network with random weights and biases
     public NeuralNetwork(double mutationRate, int inputSize, int hiddenSize, int outputSize){
-        shipSize = 40;
-        Polygon squarePolygon = new Polygon(-shipSize/2, -shipSize/2,
-                shipSize/2, -shipSize/2, shipSize/2, shipSize/2, -shipSize/2, shipSize/2); // ship size
-        this.ship = new Hitbox(squarePolygon, Color.BLACK,
-                SinglePlayerView.WIDTH/2,
-                SinglePlayerView.HEIGHT/2); // all ships will be initialized exactly at the middle of the screen
         this.mutationRate = mutationRate;
         this.inputSize = inputSize;
         this.hiddenSize = hiddenSize;
@@ -65,6 +60,13 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
         }
         //System.out.println("Check that NN parameters are initialized properly:");
         //printNetworkParameteres();
+
+        shipSize = 40;
+        Polygon squarePolygon = new Polygon(-shipSize/2, -shipSize/2,
+                shipSize/2, -shipSize/2, shipSize/2, shipSize/2, -shipSize/2, shipSize/2); // ship size
+        this.ship = new Hitbox(squarePolygon, Color.BLACK,
+                SinglePlayerView.WIDTH/2,
+                SinglePlayerView.HEIGHT/2); // all ships will be initialized exactly at the middle of the screen
     }
 
     // forward pass -- we take in (agent surroundings, its orientation, speed) and ask for action (move/shoot)
@@ -158,6 +160,10 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
         return score;
     }
     public double getShipSize() { return shipSize; }
+    public double getMutationRate() { return mutationRate; }
+    public int getInputSize(){ return inputSize; }
+    public int getHiddenSize(){ return hiddenSize; }
+    public int getOutputSize(){ return outputSize; }
     public double[] getFirstLayerBiases(){  return firstLayerBiases;}
     public double[] getSecondLayerBiases(){  return secondLayerBiases;}
     public double[][] getFirstLayerWeights(){ return firstLayerWeights; }

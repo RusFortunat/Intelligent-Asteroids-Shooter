@@ -4,21 +4,10 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="600.0" prefWidth="1050.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.intelligentasteroidsshooter.AITrainingPaneController">
+<AnchorPane fx:id="anchorPane" prefHeight="600.0" prefWidth="1050.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.intelligentasteroidsshooter.AITrainingPaneController">
    <children>
-       <Pane fx:id="gamingPane" layoutX="29.0" layoutY="100.0" prefHeight="400.0" prefWidth="500.0" />
-       <Pane fx:id="graphPane" layoutX="573.0" layoutY="100.0" prefHeight="400.0" prefWidth="400.0" />
-
-       <Label fx:id="textAboveGamingPane" layoutX="30.0" layoutY="35.0">
-           <font>
-               <Font size="20.0" />
-           </font>
-       </Label>
-       <Label fx:id="textAboveGraphPane" layoutX="570.0" layoutY="25.0">
-           <font>
-               <Font size="20.0" />
-           </font>
-       </Label>
+       <Pane fx:id="gamingPane" layoutX="25.0" layoutY="69.0" prefHeight="400.0" prefWidth="500.0" />
+       <Pane fx:id="graphPane" layoutX="573.0" layoutY="69.0" prefHeight="400.0" prefWidth="400.0" />
 
       <Button fx:id="beginTraining" layoutX="320.0" layoutY="525.0" mnemonicParsing="false" onMouseClicked="#beginToTrainAI" prefHeight="40.0" prefWidth="140.0" text="Begin / restart">
           <font>

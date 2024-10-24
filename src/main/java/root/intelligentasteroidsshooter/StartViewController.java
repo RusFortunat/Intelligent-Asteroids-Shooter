@@ -48,17 +48,15 @@ public class StartViewController {
         FXMLLoader AITrainingView = new FXMLLoader(IntelligentAsteroidsShooter.class.getResource("AI-training-pane.fxml"));
         Scene AITrainingScene = new Scene(AITrainingView.load());
         AITrainingPaneController aiTrainingViewController = AITrainingView.getController();
-        aiTrainingViewController.setBackground();
-        aiTrainingViewController.setTextAboveGraphPane();
-        aiTrainingViewController.setTextAboveGamingPane();
+        //aiTrainingViewController.setBackground();
+        //aiTrainingViewController.setTextAboveGraphPane();
+        //aiTrainingViewController.setTextAboveGamingPane();
 
         Stage AITrainingStage = new Stage();
         AITrainingStage.setScene(AITrainingScene);
         AITrainingStage.show();
-        Stage stage = (Stage) singlePlayerButton.getScene().getWindow();
+        Stage stage = (Stage) trainAIButton.getScene().getWindow();
         stage.close();
-
-
     }
 
     @FXML

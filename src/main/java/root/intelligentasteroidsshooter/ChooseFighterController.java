@@ -35,8 +35,6 @@ public class ChooseFighterController {
 
     private String chosenImage;
 
-
-
     @FXML
     protected void onSTButtonClick() throws Exception {
         // if I don't provide absolute path, images don't render
