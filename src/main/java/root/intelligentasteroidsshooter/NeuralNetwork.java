@@ -29,6 +29,7 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
     private Hitbox ship; // every respectable neural network should have its own spaceship
     private double shipSize;
     private int score; // each network's performance will be evaluated through this score meter
+    private int scoreForPrinting; // we won't be zeroing this one
 
     // constructor; initialize a fully-connected neural network with random weights and biases
     public NeuralNetwork(double mutationRate, int inputSize, int hiddenSize, int outputSize){
@@ -44,14 +45,16 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
         this.secondLayerBiases = new double[outputSize];
 
         // it is a good practice to limit distribution to inverse vector size
-        double rangeW1 = 1.0/inputSize;
+        //double rangeW1 = 1.0/inputSize;
+        double rangeW1 = 0.5;
         for(int i = 0; i < hiddenSize; i++){
             //firstLayerBiases[i] = ThreadLocalRandom.current().nextDouble(-rangeW1,rangeW1);
             for(int j = 0; j < inputSize; j++) {
                 firstLayerWeights[i][j] = ThreadLocalRandom.current().nextDouble(-rangeW1,rangeW1);
             }
         }
-        double rangeW2 = 1.0/hiddenSize;
+        //double rangeW2 = 1.0/hiddenSize;
+        double rangeW2 = 0.5;
         for(int i = 0; i < outputSize; i++){
             //secondLayerBiases[i] = ThreadLocalRandom.current().nextDouble(-rangeW2,rangeW2);
             for(int j = 0; j < hiddenSize; j++) {
@@ -99,9 +102,12 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
         }
 
         // SoftMax -- creates probability distribution over actions; totalSum should normalize distribution, making it to sum up to 1.0
+        //System.out.print("outputVector: [");
         for(int i = 0; i < outputSize; i++){
             outputVector[i] = Math.exp(outputVector[i]) / totalSum;
+            //System.out.print(outputVector[i] + ", ");
         }
+        //System.out.println("]");
 
         // randomly sample the action from probability distribution and return it
         Random rnd = new Random();
@@ -154,11 +160,16 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
         return otherNetwork.getScore() - this.score; // order from big to small
     }
 
+    // setters
+    public void setScore(int value) { score = value;}
+    public void setScoreForPrinting(int value) { scoreForPrinting = value;}
+
     // getters
     public Hitbox getShip() { return ship; }
     public int getScore() {
         return score;
     }
+    public int getScoreForPrinting(){ return scoreForPrinting; }
     public double getShipSize() { return shipSize; }
     public double getMutationRate() { return mutationRate; }
     public int getInputSize(){ return inputSize; }

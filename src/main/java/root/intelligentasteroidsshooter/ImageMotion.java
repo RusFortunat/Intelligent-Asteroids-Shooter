@@ -7,6 +7,8 @@ import javafx.scene.shape.Polygon;
 
 public abstract class ImageMotion {
     private ImageView image;
+    private double imageWidth;
+    private double imageHeight;
     private double scale;
     private Hitbox hitbox;
     private Point2D movement;
@@ -15,8 +17,8 @@ public abstract class ImageMotion {
     public ImageMotion(ImageView imageFile, double scale, int x, int y) {
         this.image = imageFile;
         this.scale = scale;
-        double imageWidth = 0.5*scale*imageFile.getImage().getWidth();
-        double imageHeight = 0.5*scale*imageFile.getImage().getHeight();
+        imageWidth = 0.5*scale*imageFile.getImage().getWidth();
+        imageHeight = 0.5*scale*imageFile.getImage().getHeight();
         //System.out.println("imageWidth: " + imageWidth);
         //System.out.println("imageWidth: " + imageHeight);
         // Polygon and ImageView coordinates diverge, have to search for these numbers by hand to ensure overlap
@@ -57,12 +59,14 @@ public abstract class ImageMotion {
 
     public void turnLeft() {
         this.hitbox.turnLeft();
-        this.image.setRotate(this.image.getRotate() - 3);
+        this.image.setRotate(this.hitbox.getPolygon().getRotate() - 3);
+        //this.image.setRotate(this.image.getRotate() - 3);
     }
 
     public void turnRight() {
         this.hitbox.turnRight();
-        this.image.setRotate(this.image.getRotate() + 3);
+        this.image.setRotate(this.hitbox.getPolygon().getRotate() + 3);
+        //this.image.setRotate(this.image.getRotate() + 3);
     }
 
     public void move() {
@@ -78,7 +82,7 @@ public abstract class ImageMotion {
             this.image.setLayoutX(this.image.getLayoutX() - SinglePlayerView.WIDTH);
         }
 
-        if (this.image.getLayoutY() < - SinglePlayerView.HEIGHT/2.0 - scale*this.image.getImage().getHeight()) {
+        if (this.image.getLayoutY() < - SinglePlayerView.HEIGHT/2.0 - imageHeight) {
             this.image.setLayoutY(this.image.getLayoutY() + SinglePlayerView.HEIGHT);
         }
 
@@ -89,8 +93,8 @@ public abstract class ImageMotion {
 
     public void accelerate() {
         this.hitbox.accelerate();
-        double changeX = Math.cos(Math.toRadians(this.image.getRotate()));
-        double changeY = Math.sin(Math.toRadians(this.image.getRotate()));
+        double changeX = Math.cos(Math.toRadians(getHitbox().getPolygon().getRotate()));
+        double changeY = Math.sin(Math.toRadians(getHitbox().getPolygon().getRotate()));
 
         changeX *= 0.05;
         changeY *= 0.05;
@@ -137,4 +141,7 @@ public abstract class ImageMotion {
     public Hitbox getHitbox() {
         return hitbox;
     }
+
+    public double getImageWidth(){ return imageWidth;}
+    public double getImageHeight(){ return imageHeight;}
 }

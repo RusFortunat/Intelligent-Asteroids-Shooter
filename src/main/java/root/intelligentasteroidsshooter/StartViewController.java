@@ -48,7 +48,7 @@ public class StartViewController {
         FXMLLoader AITrainingView = new FXMLLoader(IntelligentAsteroidsShooter.class.getResource("AI-training-pane.fxml"));
         Scene AITrainingScene = new Scene(AITrainingView.load());
         AITrainingPaneController aiTrainingViewController = AITrainingView.getController();
-        //aiTrainingViewController.setBackground();
+        aiTrainingViewController.setBackground();
         //aiTrainingViewController.setTextAboveGraphPane();
         //aiTrainingViewController.setTextAboveGamingPane();
 

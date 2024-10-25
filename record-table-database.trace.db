@@ -352,3 +352,9 @@ CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [421
 2024-10-20 01:03:53 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
 CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-25 12:31:05 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
+2024-10-25 12:31:18 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "RECORDTABLE" already exists; SQL statement:
+CREATE TABLE RecordTable (id int primary key, name varchar(255), score int) [42101-197]
