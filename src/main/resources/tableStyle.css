@@ -14,3 +14,7 @@
     -fx-pref-height: 0;
     -fx-max-height: 0;
 }
+
+#loadList .list-cell {
+    -fx-alignment: center;
+}

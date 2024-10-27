@@ -7,17 +7,41 @@
 <AnchorPane fx:id="anchorPane" prefHeight="600.0" prefWidth="1050.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.intelligentasteroidsshooter.AITrainingPaneController">
    <children>
        <Pane fx:id="gamingPane" layoutX="25.0" layoutY="69.0" prefHeight="400.0" prefWidth="500.0" />
-       <Pane fx:id="graphPane" layoutX="536.0" layoutY="69.0" prefHeight="400.0" prefWidth="500.0" />
+       <Pane fx:id="graphPane" layoutX="536.0" layoutY="47.0" prefHeight="445.0" prefWidth="500.0" />
+       <VBox fx:id="messageWindow" layoutX="325.0" layoutY="200.0" prefHeight="200.0" prefWidth="400.0">
+         <children>
+            <TextField fx:id="userInputNN" visible="false" />
+            <TextField fx:id="userInputEpNum" visible="false" />
+            <Button fx:id="done" mnemonicParsing="false" onMouseClicked="#passParamenters" text="Done" visible="false" />
+         </children></VBox>
+       <VBox fx:id="loadListPane" layoutX="425.0" layoutY="50.0" prefHeight="400.0" prefWidth="200.0">
+           <children>
+               <Label fx:id="loadListLabel" />
+               <ListView fx:id="loadList" layoutY="20.0" prefHeight="252.0" prefWidth="200.0" />
+            <Label fx:id="selection" />
+            <Button fx:id="confirm" onMouseClicked="#loadNetwork" mnemonicParsing="false" text="Confirm">
+                <font>
+                    <Font size="14.0" />
+                </font>
+            </Button>
+           </children>
+       </VBox>
 
-      <Button fx:id="beginTraining" layoutX="320.0" layoutY="525.0" mnemonicParsing="false" onMouseClicked="#beginToTrainAI" prefHeight="40.0" prefWidth="140.0" text="Begin / restart">
+      <Button fx:id="beginTraining" layoutX="230.0" layoutY="525.0" mnemonicParsing="false" onMouseClicked="#beginToTrainAI" prefHeight="40.0" prefWidth="140.0" text="Begin">
           <font>
               <Font size="18.0" />
           </font>
       </Button>
-      <Button fx:id="closeWindow" layoutX="600.0" layoutY="525.0" mnemonicParsing="false" onMouseClicked="#closeTrainingSession" prefHeight="40.0" prefWidth="140.0" text="Close">
+      <Button fx:id="closeWindow" layoutX="680.0" layoutY="525.0" mnemonicParsing="false" onMouseClicked="#closeTrainingSession" prefHeight="40.0" prefWidth="140.0" text="Close">
           <font>
               <Font size="18.0" />
           </font>
       </Button>
+      <Button fx:id="loadModel" layoutX="435.0" layoutY="525.0" mnemonicParsing="false" onMouseClicked="#loadTrainedModelButton" prefHeight="40.0" prefWidth="180.0" text="Load trained model">
+          <font>
+              <Font size="18.0" />
+          </font>
+      </Button>
+
    </children>
 </AnchorPane>

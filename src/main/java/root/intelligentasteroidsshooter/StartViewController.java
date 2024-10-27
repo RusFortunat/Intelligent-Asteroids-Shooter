@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
@@ -19,7 +20,7 @@ public class StartViewController {
     @FXML
     private Button trainAIButton;
     @FXML
-    private Label bauarbeitenText;
+    private ChoiceBox languageChoice;
     @FXML
     private Pane startViewPane;
     @FXML
@@ -69,6 +70,8 @@ public class StartViewController {
         //        new Insets(0.0,0.0,0.0,0.0));// or null for the padding
         Background paneBackgr = new Background(myBI);
         startViewPane.setBackground(paneBackgr);
+        language.setVisible(false);
+        languageChoice.setVisible(false);
     }
 
     @FXML

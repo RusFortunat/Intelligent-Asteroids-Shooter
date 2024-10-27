@@ -10,7 +10,11 @@ package root.intelligentasteroidsshooter;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class NeuralNetwork implements Comparable<NeuralNetwork> {
@@ -46,17 +50,17 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
 
         // it is a good practice to limit distribution to inverse vector size
         //double rangeW1 = 1.0/inputSize;
-        double rangeW1 = 0.5;
+        double rangeW1 = 0.2;
         for(int i = 0; i < hiddenSize; i++){
-            //firstLayerBiases[i] = ThreadLocalRandom.current().nextDouble(-rangeW1,rangeW1);
+            firstLayerBiases[i] = ThreadLocalRandom.current().nextDouble(-rangeW1,rangeW1);
             for(int j = 0; j < inputSize; j++) {
                 firstLayerWeights[i][j] = ThreadLocalRandom.current().nextDouble(-rangeW1,rangeW1);
             }
         }
         //double rangeW2 = 1.0/hiddenSize;
-        double rangeW2 = 0.5;
+        double rangeW2 = 0.2;
         for(int i = 0; i < outputSize; i++){
-            //secondLayerBiases[i] = ThreadLocalRandom.current().nextDouble(-rangeW2,rangeW2);
+            secondLayerBiases[i] = ThreadLocalRandom.current().nextDouble(-rangeW2,rangeW2);
             for(int j = 0; j < hiddenSize; j++) {
                 secondLayerWeights[i][j] = ThreadLocalRandom.current().nextDouble(-rangeW2,rangeW2);
             }
@@ -70,6 +74,19 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
         this.ship = new Hitbox(squarePolygon, Color.BLACK,
                 SinglePlayerView.WIDTH/2,
                 SinglePlayerView.HEIGHT/2); // all ships will be initialized exactly at the middle of the screen
+    }
+
+    // overloaded constructor for creating empty neural network (all params are zero)
+    public NeuralNetwork(int inputSize, int hiddenSize, int outputSize){
+        this.inputSize = inputSize;
+        this.hiddenSize = hiddenSize;
+        this.outputSize = outputSize;
+        this.hiddenVector = new double[hiddenSize];
+        this.outputVector = new double[outputSize];
+        this.firstLayerWeights = new double[hiddenSize][inputSize];
+        this.firstLayerBiases = new double[hiddenSize];
+        this.secondLayerWeights = new double[outputSize][hiddenSize];
+        this.secondLayerBiases = new double[outputSize];
     }
 
     // forward pass -- we take in (agent surroundings, its orientation, speed) and ask for action (move/shoot)
@@ -180,6 +197,89 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
     public double[][] getFirstLayerWeights(){ return firstLayerWeights; }
     public double[][] getSecondLayerWeights(){ return secondLayerWeights; }
 
+    // save params
+    public List<String> NNParametersToList(){
+        List<String> NNparameters = new ArrayList<>();
+
+        String firstLayerWeightsStr = "";
+        for(int i = 0; i < hiddenSize; i++){
+            for(int j = 0; j < inputSize; j++) {
+                firstLayerWeightsStr += firstLayerWeights[i][j] + ",";
+            }
+        }
+
+        String firstLayerBiasesStr = "";
+        for(int i = 0; i < hiddenSize; i++){
+            firstLayerBiasesStr += firstLayerBiases[i] + ",";
+        }
+
+        String secondLayerWeightsStr = "";
+        for(int i = 0; i < outputSize; i++){
+            for(int j = 0; j < hiddenSize; j++) {
+                secondLayerWeightsStr += secondLayerWeights[i][j] + ",";
+            }
+        }
+
+        String secondLayerBiasesStr = "";
+        for(int i = 0; i < outputSize; i++){
+            secondLayerBiasesStr += secondLayerBiases[i] + ",";
+        }
+
+        NNparameters.add(firstLayerWeightsStr);
+        NNparameters.add(firstLayerBiasesStr);
+        NNparameters.add(secondLayerWeightsStr);
+        NNparameters.add(secondLayerBiasesStr);
+
+        return NNparameters;
+    }
+
+    // load params
+    public void loadNNparameters(Scanner fileReader){
+        boolean wePrint = false;
+        String skipString = fileReader.nextLine();
+        if(wePrint) System.out.println(skipString);
+        for(int i = 0; i < hiddenSize; i++){
+            String readFirstWeights = fileReader.nextLine();
+            String[] parts = readFirstWeights.split(",");
+            for(int j = 0; j < inputSize; j++) {
+                firstLayerWeights[i][j] = Double.valueOf(parts[j]);
+                if(wePrint) System.out.print(firstLayerWeights[i][j]);
+            }
+        }
+        if(wePrint) System.out.println("");
+        skipString = fileReader.nextLine();
+        skipString = fileReader.nextLine();
+        if(wePrint) System.out.println(skipString);
+        String readFirstBiases = fileReader.nextLine();
+        String[] parts = readFirstBiases.split(",");
+        for(int i = 0; i < hiddenSize; i++){
+            firstLayerBiases[i] = Double.valueOf(parts[i]);
+            if(wePrint) System.out.print(firstLayerBiases[i]);
+        }
+        if(wePrint) System.out.println("");
+        skipString = fileReader.nextLine();
+        skipString = fileReader.nextLine();
+        if(wePrint) System.out.println(skipString);
+        for(int i = 0; i < outputSize; i++){
+            String readSecondWeights = fileReader.nextLine();
+            parts = readSecondWeights.split(",");
+            for(int j = 0; j < hiddenSize; j++) {
+                secondLayerWeights[i][j] = Double.valueOf(parts[j]);
+            }
+        }
+        if(wePrint) System.out.println(secondLayerWeights);
+        skipString = fileReader.nextLine();
+        skipString = fileReader.nextLine();
+        if(wePrint) System.out.println(skipString);
+        readFirstBiases = fileReader.nextLine();
+        parts = readFirstBiases.split(",");
+        for(int i = 0; i < outputSize; i++){
+            secondLayerBiases[i] = Double.valueOf(parts[i]);
+        }
+        if(wePrint) System.out.println(secondLayerBiases);
+        skipString = fileReader.nextLine();
+    }
+
     // printers
     public void printNetworkParameteres(){
         System.out.println("firstLayerWeights:");
@@ -225,4 +325,32 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
         System.out.println("");
     }
 
+    /*
+    public void saveNNparameteres(PrintWriter writer){
+        writer.println("firstLayerWeights:");
+        for(int i = 0; i < hiddenSize; i++){
+            for(int j = 0; j < inputSize; j++) {
+                writer.print(firstLayerWeights[i][j] + ",");
+            }
+            writer.println("");
+        }
+        writer.println("\nfirstLayerBiases:");
+        for(int i = 0; i < hiddenSize; i++){
+            writer.print(firstLayerBiases[i] + ",");
+        }
+        writer.println("");
+
+        writer.println("\nsecondLayerWeights:");
+        for(int i = 0; i < outputSize; i++){
+            for(int j = 0; j < hiddenSize; j++) {
+                writer.print(secondLayerWeights[i][j] + ",");
+            }
+            writer.println("");
+        }
+        writer.println("\nsecondLayerBiases:");
+        for(int i = 0; i < outputSize; i++){
+            writer.print(secondLayerBiases[i] + ",");
+        }
+        writer.println("\n");
+    }*/
 }

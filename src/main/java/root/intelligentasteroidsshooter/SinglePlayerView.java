@@ -48,7 +48,7 @@ public class SinglePlayerView {
         shipImage.setScaleY(scale);
         Ship ship = new Ship(shipImage, scale,0, 0);
         pane.getChildren().add(ship.getImage());
-        pane.getChildren().add(ship.getHitbox().getPolygon());
+        //pane.getChildren().add(ship.getHitbox().getPolygon());
         //System.out.println("Ship added");
 
         List<Projectile> projectiles = new ArrayList<>();
