@@ -140,7 +140,7 @@ public class EvolutionarySearch {
                          int playTime){
 
         int networkPopulationSize = ourNNPopulation.size();
-        playingNetwork = ourNNPopulation.getFirst();
+        playingNetwork = ourNNPopulation.get(0);
         playingNetworkID = 0;
         List<Asteroid> asteroids = new ArrayList<>();
         List<Projectile> projectiles = new ArrayList<>();
@@ -413,7 +413,7 @@ public class EvolutionarySearch {
                 }
 
                 int score = startTrainingEpisode(ourNNPopulation, episodeDurationPerNetwork); // trainingEpisode++ there
-                int bestPerformerScore = ourNNPopulation.getFirst().getScoreForPrinting(); // can't define it outside
+                int bestPerformerScore = ourNNPopulation.get(0).getScoreForPrinting(); // can't define it outside
                 System.out.println("Episode: " + (trainingEpisode) +
                         "; Average score per network: " + 1.0*score / networkPopulationSize +
                         "; Best score per generation: " + bestPerformerScore);
@@ -439,7 +439,7 @@ public class EvolutionarySearch {
                     gamingPane.getChildren().add(showEpisodeNumber);
 
                     // last message
-                    if(ourNNPopulation.getFirst().getScoreForPrinting() < 2000){
+                    if(ourNNPopulation.get(0).getScoreForPrinting() < 2000){
                         messageWindow.setVisible(true);
                         messageWindow.getChildren().clear();
                         Text finalResult = new Text("  In such short training time you\n" +
@@ -464,10 +464,10 @@ public class EvolutionarySearch {
     public int startTrainingEpisode(List<NeuralNetwork> ourNNPopulation,int episodeDurationPerNetwork){
         // don't know if i should just forward this all in method call...
         int populationSize = ourNNPopulation.size();
-        int inputSize = ourNNPopulation.getFirst().getInputSize();
-        int hiddenSize = ourNNPopulation.getFirst().getHiddenSize();
-        int outputSize = ourNNPopulation.getFirst().getOutputSize();
-        double mutationRate = ourNNPopulation.getFirst().getMutationRate();
+        int inputSize = ourNNPopulation.get(0).getInputSize();
+        int hiddenSize = ourNNPopulation.get(0).getHiddenSize();
+        int outputSize = ourNNPopulation.get(0).getOutputSize();
+        double mutationRate = ourNNPopulation.get(0).getMutationRate();
 
         // networks play
         for(int networkID = 0; networkID < populationSize; networkID++){
@@ -649,10 +649,10 @@ public class EvolutionarySearch {
 
         // networks evolve
         //System.out.println("First NNs first layer biases before sorting");
-        //System.out.println(ourNNPopulation.getFirst().getFirstLayerBiases()[0]);
+        //System.out.println(ourNNPopulation.get(0).getFirstLayerBiases()[0]);
         Collections.sort(ourNNPopulation); // sort network population by their performance
         //System.out.println("First NNs first layer biases after sorting");
-        //System.out.println(ourNNPopulation.getFirst().getFirstLayerBiases()[0]);
+        //System.out.println(ourNNPopulation.get(0).getFirstLayerBiases()[0]);
         // discard everything and leave only top 10%
         for(int i = 0; i < (int)(0.5*populationSize); i++){ //
             NeuralNetwork toBeDisposed = ourNNPopulation.get(populationSize - 1 - i);
@@ -802,10 +802,10 @@ public class EvolutionarySearch {
 
     public void saveNetworkParameters(List<NeuralNetwork> ourNNPopulation, int bestScore){
         StoreTrainedNNsDB recordNNParameters = new StoreTrainedNNsDB("jdbc:h2:./trained-NNs-database");
-        List<String> NNParameters = ourNNPopulation.getFirst().NNParametersToList();
+        List<String> NNParameters = ourNNPopulation.get(0).NNParametersToList();
         // NN data stored in format: int score, Str firstLWeights, Str firstLBayeses, Str secondLWeights, Str secondLBiases
         try{
-            recordNNParameters.addNetworkToDB(ourNNPopulation.getFirst().getScoreForPrinting(),
+            recordNNParameters.addNetworkToDB(ourNNPopulation.get(0).getScoreForPrinting(),
                     NNParameters.get(0), NNParameters.get(1),NNParameters.get(2),NNParameters.get(3));
         }catch(SQLException e){ System.out.printf(e.getMessage());}
     }
