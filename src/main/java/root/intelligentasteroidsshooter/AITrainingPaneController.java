@@ -162,7 +162,7 @@ public class AITrainingPaneController {
         loadList.getStyleClass().add("tableStyle.css");
 
         // react to cell click -> download selected network from database and pass it to a player
-        loadList.getSelectionModel().selectedItemProperty().addListener(this::selectionChanged);
+        //loadList.getSelectionModel().selectedItemProperty().addListener(this::selectionChanged);
     }
 
     // stolen from here: https://www.youtube.com/watch?v=Z7th7RSRitw
