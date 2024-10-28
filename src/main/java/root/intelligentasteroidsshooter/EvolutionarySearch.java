@@ -63,8 +63,6 @@ public class EvolutionarySearch {
             ourNNPopulation.add(braveNetwork);
         }
         trainingEpisode = 0;
-        superNetworksPath = "C:\\Users\\mrusl\\Desktop\\Java Projects\\Intelligent-Asteroids-Shooter" +
-        "\\src\\main\\resources\\root\\intelligentasteroidsshooter\\NNparametersBestScore4435.txt";
         //superNetworksPath = "";
 
         // gaming pane
@@ -79,18 +77,33 @@ public class EvolutionarySearch {
         gamingPane.getChildren().add(showPoints);
         gamingPane.getChildren().add(showEpisodeNumber);
         // images for ship and asteroids
-        Image imageForAsteroid = new Image("C:\\Users\\mrusl\\Desktop\\Java Projects\\Intelligent-Asteroids-Shooter" +
-                "\\src\\main\\resources\\root\\intelligentasteroidsshooter\\asteroid_nobackgr.png");
-        Image imageForShip = new Image("C:\\Users\\mrusl\\Desktop\\Java Projects\\Intelligent-Asteroids-Shooter\\src\\main" +
-                "\\resources\\root\\intelligentasteroidsshooter\\falcon_no_bgr.png");
+
+        Image imageForAsteroid =
+                new Image(getClass().getResource("/root/intelligentasteroidsshooter/images/asteroid_nobackgr.png").toString());
+        Image imageForShip =
+                new Image(getClass().getResource("/root/intelligentasteroidsshooter/images/falcon_no_bgr.png").toString());
+
         ImageView shipImage = new ImageView(imageForShip);
         double scale = 0.12;
         shipImage.setScaleX(scale);
         shipImage.setScaleY(scale);
         ship = new Ship(shipImage, scale,0, 0);
 
-        // graph pane
+        // graph pane -- all of this could be avoided if i could modify X-Axis extension
+        graphPane.getChildren().remove(lineChart);
+        NumberAxis xAxis = new NumberAxis(0,totalEpisodes,totalEpisodes/10);
+        NumberAxis yAxis = new NumberAxis(0, 5000,1000);
+        xAxis.tickLabelFontProperty().set(Font.font(15));
+        yAxis.tickLabelFontProperty().set(Font.font(15));
+        xAxis.setLabel("Episode");
+        yAxis.setLabel("Time ship stayed alive");
+        lineChart = new LineChart<>(xAxis, yAxis);
+        lineChart.setStyle("-fx-font-size: " + 20 + "px;");
+        lineChart.setLegendVisible(false);
+        lineChart.setLayoutX(-15);
+        lineChart.setLayoutY(50);
         XYChart.Series bestScorePerEpisodeGraph = new XYChart.Series();
+        graphPane.getChildren().add(lineChart);
         //lineChart.getData().add(averScorePerEpisodeGraph);
         lineChart.getData().add(bestScorePerEpisodeGraph);
         //System.out.println("Step 1 clear");
@@ -810,10 +823,10 @@ public class EvolutionarySearch {
         showPoints.setFill(Color.CRIMSON);
         showPoints.setFont(Font.font("Arial", FontWeight.BOLD, 24));
         gamingPane.getChildren().add(showPoints);
-        Image imageForAsteroid = new Image("C:\\Users\\mrusl\\Desktop\\Java Projects\\Intelligent-Asteroids-Shooter" +
-                "\\src\\main\\resources\\root\\intelligentasteroidsshooter\\asteroid_nobackgr.png");
-        Image imageForShip = new Image("C:\\Users\\mrusl\\Desktop\\Java Projects\\Intelligent-Asteroids-Shooter\\src\\main" +
-                "\\resources\\root\\intelligentasteroidsshooter\\falcon_no_bgr.png");
+        Image imageForAsteroid =
+                new Image(getClass().getResource("/root/intelligentasteroidsshooter/images/asteroid_nobackgr.png").toString());
+        Image imageForShip =
+                new Image(getClass().getResource("/root/intelligentasteroidsshooter/images/falcon_no_bgr.png").toString());
         ImageView shipImage = new ImageView(imageForShip);
         double scale = 0.12;
         shipImage.setScaleX(scale);

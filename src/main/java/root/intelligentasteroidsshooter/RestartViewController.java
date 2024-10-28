@@ -151,8 +151,8 @@ public class RestartViewController {
 
     @FXML
     protected void setBackground(){
-        Image backgroundFile = new Image("C:\\Users\\mrusl\\Desktop\\Java Projects\\Intelligent-Asteroids-Shooter" +
-                "\\src\\main\\resources\\root\\intelligentasteroidsshooter\\stars_moving.gif"); // doesn't render without full path
+        Image backgroundFile =
+                new Image(getClass().getResource("/root/intelligentasteroidsshooter/images/stars_moving.gif").toString());
         BackgroundImage myBI= new BackgroundImage(backgroundFile, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
                 BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         //BackgroundFill myBF = new BackgroundFill(Color.BLUEVIOLET, new CornerRadii(1),

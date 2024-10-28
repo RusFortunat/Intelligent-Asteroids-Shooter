@@ -38,8 +38,7 @@ public class ChooseFighterController {
     @FXML
     protected void onSTButtonClick() throws Exception {
         // if I don't provide absolute path, images don't render
-        chosenImage = "C:\\Users\\mrusl\\Desktop\\Java Projects\\Intelligent-Asteroids-Shooter" +
-                "\\src\\main\\resources\\root\\intelligentasteroidsshooter\\start-treck-removebg-preview.png";
+        chosenImage = "/root/intelligentasteroidsshooter/images/start-treck-removebg-preview.png";
         Stage singlePlayer = new Stage();
         SinglePlayerView singlePlayerView = new SinglePlayerView();
         try{
@@ -54,8 +53,7 @@ public class ChooseFighterController {
     @FXML
     protected void onSWButtonClick() throws Exception {
         // if I don't provide absolute path, images don't render
-        chosenImage = "C:\\Users\\mrusl\\Desktop\\Java Projects\\Intelligent-Asteroids-Shooter\\src\\main" +
-                "\\resources\\root\\intelligentasteroidsshooter\\falcon_no_bgr.png";
+        chosenImage = "/root/intelligentasteroidsshooter/images/falcon_no_bgr.png";
         Stage singlePlayer = new Stage();
         SinglePlayerView singlePlayerView = new SinglePlayerView();
         try{
@@ -70,8 +68,7 @@ public class ChooseFighterController {
     @FXML
     protected void onPepeButtonClick() throws Exception {
         // if I don't provide absolute path, images don't render
-        chosenImage = "C:\\Users\\mrusl\\Desktop\\Java Projects\\Intelligent-Asteroids-Shooter\\src\\main" +
-                "\\resources\\root\\intelligentasteroidsshooter\\pepeShip_nobackgr.png";
+        chosenImage = "/root/intelligentasteroidsshooter/images/pepeShip_nobackgr.png";
         Stage singlePlayer = new Stage();
         SinglePlayerView singlePlayerView = new SinglePlayerView();
         try{
@@ -85,8 +82,8 @@ public class ChooseFighterController {
 
     @FXML
     protected void setBackground(){
-        Image backgroundFile = new Image("C:\\Users\\mrusl\\Desktop\\Java Projects\\Intelligent-Asteroids-Shooter" +
-                "\\src\\main\\resources\\root\\intelligentasteroidsshooter\\deep_space.jpg"); // doesn't render without full path
+        Image backgroundFile =
+                new Image(getClass().getResource("/root/intelligentasteroidsshooter/images/deep_space.jpg").toString());
         BackgroundImage myBI= new BackgroundImage(backgroundFile, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
                 BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         //BackgroundFill myBF = new BackgroundFill(Color.BLUEVIOLET, new CornerRadii(1),

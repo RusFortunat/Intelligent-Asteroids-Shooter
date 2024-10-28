@@ -66,7 +66,7 @@ public class AITrainingPaneController {
 
     @FXML
     protected void beginToTrainAI(){
-        graphPane.getChildren().clear();
+        //graphPane.getChildren().clear();
         gamingPane.getChildren().clear();
         messageWindow.getChildren().clear();
         userInputNN.clear();
@@ -225,8 +225,8 @@ public class AITrainingPaneController {
 
     public void setBackground(){
         // main background
-        Image anchorBackgrFile = new Image("C:\\Users\\mrusl\\Desktop\\Java Projects\\Intelligent-Asteroids-Shooter" +
-                "\\src\\main\\resources\\root\\intelligentasteroidsshooter\\trainAIbackground.png"); // doesn't render without full path
+        Image anchorBackgrFile =
+                new Image(getClass().getResource("/root/intelligentasteroidsshooter/images/trainAIbackground.png").toString());
         BackgroundImage anchorBI= new BackgroundImage(anchorBackgrFile, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         Background anchorPaneBackgr = new Background(anchorBI);
@@ -247,8 +247,8 @@ public class AITrainingPaneController {
         //anchorPane.getChildren().add(messageWindow);
 
         // gaming pane background
-        Image gamingWindowBackgrFile = new Image("C:\\Users\\mrusl\\Desktop\\Java Projects\\Intelligent-Asteroids-Shooter" +
-                "\\src\\main\\resources\\root\\intelligentasteroidsshooter\\space2.gif"); // doesn't render without full path
+        Image gamingWindowBackgrFile =
+                new Image(getClass().getResource("/root/intelligentasteroidsshooter/images/space2.gif").toString());
         BackgroundImage gamingBI= new BackgroundImage(gamingWindowBackgrFile, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         Background gamingPaneBackgr = new Background(gamingBI);
@@ -261,7 +261,7 @@ public class AITrainingPaneController {
         // graph pane background
         //graphPane.setPrefSize(400, 400);
         graphPane.setBackground(new Background(new BackgroundFill(Color.GAINSBORO, null, null)));
-        NumberAxis xAxis = new NumberAxis(0,epNumber,epNumber/10);
+        NumberAxis xAxis = new NumberAxis(0,20,5);
         NumberAxis yAxis = new NumberAxis(0, 5000,1000);
         xAxis.tickLabelFontProperty().set(Font.font(15));
         yAxis.tickLabelFontProperty().set(Font.font(15));

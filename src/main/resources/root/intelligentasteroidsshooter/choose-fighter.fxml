@@ -14,27 +14,27 @@
 
       <ImageView fitHeight="117.0" fitWidth="132.0" layoutX="434.0" layoutY="82.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@pepeShip_nobackgr.png" />
+            <Image url="@images/pepeShip_nobackgr.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="234.0" layoutY="66.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@falcon_no_bgr.png" />
+            <Image url="@images/falcon_no_bgr.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="36.0" layoutY="66.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@start-treck-removebg-preview.png" />
+            <Image url="@images/start-treck-removebg-preview.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="35.0" fitWidth="165.0" layoutX="369.0" layoutY="370.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@space_bar.png" />
+            <Image url="@images/space_bar.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="68.0" fitWidth="150.0" layoutX="137.0" layoutY="341.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@arrows_keyboard.png" />
+            <Image url="@images/arrows_keyboard.png" />
          </image>
       </ImageView>
 

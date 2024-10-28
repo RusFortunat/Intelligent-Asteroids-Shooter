@@ -28,8 +28,8 @@ public class SinglePlayerView {
 
     public void start(Stage singlePlayer, String chosenImage) throws IOException {
         Pane pane = new Pane();
-        Image backgroundFile = new Image("C:\\Users\\mrusl\\Desktop\\Java Projects\\Intelligent-Asteroids-Shooter" +
-                "\\src\\main\\resources\\root\\intelligentasteroidsshooter\\space2.gif"); // doesn't render without full path
+        Image backgroundFile =
+                new Image(getClass().getResource("/root/intelligentasteroidsshooter/images/space2.gif").toString());
         BackgroundImage myBI= new BackgroundImage(backgroundFile, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
                 BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         Background paneBackgr = new Background(myBI);
@@ -41,7 +41,7 @@ public class SinglePlayerView {
         pane.setPrefSize(WIDTH, HEIGHT);
         pane.setBackground(paneBackgr);
 
-        Image imageForShip = new Image(chosenImage);
+        Image imageForShip = new Image(getClass().getResource(chosenImage).toString());
         ImageView shipImage = new ImageView(imageForShip);
         double scale = 0.12;
         shipImage.setScaleX(scale);
@@ -53,8 +53,8 @@ public class SinglePlayerView {
 
         List<Projectile> projectiles = new ArrayList<>();
 
-        Image imageForAsteroid = new Image("C:\\Users\\mrusl\\Desktop\\Java Projects\\Intelligent-Asteroids-Shooter" +
-                "\\src\\main\\resources\\root\\intelligentasteroidsshooter\\asteroid_nobackgr.png");
+        Image imageForAsteroid =
+                new Image(getClass().getResource("/root/intelligentasteroidsshooter/images/asteroid_nobackgr.png").toString());
         List<Asteroid> asteroids = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             ImageView asteroidImage = new ImageView(imageForAsteroid);
