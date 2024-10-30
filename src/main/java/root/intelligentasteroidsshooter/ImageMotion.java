@@ -14,7 +14,7 @@ public abstract class ImageMotion {
     private Point2D movement;
     private boolean alive;
 
-    public ImageMotion(ImageView imageFile, double scale, int x, int y) {
+    public ImageMotion(ImageView imageFile, double scale, double x, double y) {
         this.image = imageFile;
         this.scale = scale;
         imageWidth = 0.5*scale*imageFile.getImage().getWidth();

@@ -22,11 +22,34 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class SinglePlayerView {
+    private double respawnRate;
+    private int asteroidValue;
+    private double asteroidSpeed;
 
     public static int WIDTH = 500;
     public static int HEIGHT = 400;
 
-    public void start(Stage singlePlayer, String chosenImage) throws IOException {
+    public void start(Stage singlePlayer, String chosenImage, String chosenDifficulty) throws IOException {
+        // difficulty
+        int diffTextPosX = 0;
+        if(chosenDifficulty.equals("no sweat")){
+            respawnRate = 0.01;
+            asteroidValue = 1000;
+            asteroidSpeed = 1;
+        }
+        else if(chosenDifficulty.equals("survival")){
+            respawnRate = 0.05;
+            asteroidValue = 1000;
+            asteroidSpeed = 2;
+        }
+        else if(chosenDifficulty.equals("extreme")) {
+            respawnRate = 0.1;
+            asteroidValue = 1000; // not sure if I should change it
+            asteroidSpeed = 3;
+        }
+        System.out.println("respawnRate: " + respawnRate + ", asteroidValue: " + asteroidValue + ", asteroidSpeed: " + asteroidSpeed);
+
+        // scene setup
         Pane pane = new Pane();
         Image backgroundFile =
                 new Image(getClass().getResource("/root/intelligentasteroidsshooter/images/space2.gif").toString());
@@ -37,7 +60,11 @@ public class SinglePlayerView {
         text.setViewOrder(-100.0); // make sure it is always on top
         text.setFill(Color.CRIMSON);
         text.setFont(Font.font("Arial", FontWeight.BOLD, 24));
-        pane.getChildren().add(text);
+        Text difficulty = new Text(270, 20, "Difficulty: " + chosenDifficulty);
+        difficulty.setViewOrder(-100.0); // make sure it is always on top
+        difficulty.setFill(Color.CRIMSON);
+        difficulty.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+        pane.getChildren().addAll(text, difficulty);
         pane.setPrefSize(WIDTH, HEIGHT);
         pane.setBackground(paneBackgr);
 
@@ -71,6 +98,9 @@ public class SinglePlayerView {
         //System.out.println("Asteroids and ship are created");
 
         asteroids.forEach(asteroid -> {
+            if(asteroidSpeed > 1) {
+                for(int i =1; i < asteroidSpeed; i++) asteroid.accelerate();
+            }
             pane.getChildren().add(asteroid.getImage());
             //pane.getChildren().add(asteroid.getHitbox().getPolygon());
         });
@@ -141,7 +171,7 @@ public class SinglePlayerView {
                         if(projectile.collide(asteroid.getHitbox())) {
                             projectile.setAlive(false);
                             asteroid.setAlive(false);
-                            newPlayer.add(points.addAndGet(1000));
+                            newPlayer.add(points.addAndGet(asteroidValue));
                             text.setText("Points: " + newPlayer.getPoints());
                         }
                     });
@@ -163,7 +193,7 @@ public class SinglePlayerView {
                         .collect(Collectors.toList())); // remove from the asteroids list
 
                 // add new asteroids randomly at the edges of the screen, if they don't collide with the ship
-                if(Math.random() < 0.01) {
+                if(Math.random() < respawnRate) {
                     ImageView asteroidImage = new ImageView(imageForAsteroid);
                     Random rnd = new Random();
                     double rangeMin = 0.1;
@@ -175,6 +205,9 @@ public class SinglePlayerView {
                             rnd.nextInt(-4*WIDTH/5, -WIDTH/5),
                             rnd.nextInt(-4*HEIGHT/5, -HEIGHT/5));
                     if(!asteroid.collide(ship.getHitbox())) {
+                        if(asteroidSpeed > 1) {
+                            for(int i =1; i < asteroidSpeed; i++) asteroid.accelerate();
+                        }
                         asteroids.add(asteroid);
                         pane.getChildren().add(asteroid.getImage());
                         //pane.getChildren().add(asteroid.getHitbox().getPolygon());
@@ -212,7 +245,7 @@ public class SinglePlayerView {
         //System.out.println("inside showScoreAndAskToPlayAgain");
         FXMLLoader restartView = new FXMLLoader(IntelligentAsteroidsShooter.class.getResource("restart-view.fxml"));
         Scene restartScene = new Scene(restartView.load());
-        restartScene.getStylesheets().add("tableStyle.css");
+        restartScene.getStylesheets().add("customStyles.css");
         //System.out.println("Scene loaded");
         RestartViewController restartController = restartView.getController();
         restartController.setBackground();

@@ -9,9 +9,9 @@ import java.util.*;
 
 public class StoreTrainedNNsDB {
 
-    private String databasePath;
+    private String NNdatabasePath;
 
-    public StoreTrainedNNsDB(String path){ databasePath = path;}
+    public StoreTrainedNNsDB(String path){ NNdatabasePath = path;}
 
     // for getting network parameters from DB
     public List<String> toList(int score) throws SQLException {
@@ -19,9 +19,11 @@ public class StoreTrainedNNsDB {
         NNparameters.add(""+score);
 
         try (Connection connection = createConnectionAndEnsureDatabase();
-             ResultSet getNetwork = connection.prepareStatement("SELECT FROM TrainedNNs WHERE score = ?").executeQuery()) {
+             ResultSet getNetwork = connection.prepareStatement("SELECT * FROM TrainedNNs WHERE score = " + (int)score).executeQuery()) {
+            if(getNetwork.next()){} // do nothing, deleting .next() call causes an error //System.out.println("getNetwork is not empty: " + getNetwork.toString());
 
             int NNscore = getNetwork.getInt("score");
+            //System.out.println("NNscore " + NNscore);
             String NNfirstLayerWeights = getNetwork.getString("firstLayerWeights");
             String NNfirstLayerBiases = getNetwork.getString("firstLayerBiases");
             String NNsecondLayerWeights = getNetwork.getString("secondLayerWeights");
@@ -77,7 +79,7 @@ public class StoreTrainedNNsDB {
     }
 
     private Connection createConnectionAndEnsureDatabase() throws SQLException {
-        Connection conn = DriverManager.getConnection(this.databasePath, "sa", "");
+        Connection conn = DriverManager.getConnection(this.NNdatabasePath, "sa", "");
         try {
             // I will save the neural network as following
             // score, firstLayerWeights, firstLayerBiases, secondLayerWeights, secondLayerBiases
@@ -85,7 +87,7 @@ public class StoreTrainedNNsDB {
                     "firstLayerWeights varchar(10000), firstLayerBiases varchar(1000), " +
                     "secondLayerWeights varchar(10000), secondLayerBiases varchar(1000))").execute();
         } catch (SQLException t) {
-            System.out.println(t.getMessage());
+            //System.out.println(t.getMessage());
         }
 
         return conn;

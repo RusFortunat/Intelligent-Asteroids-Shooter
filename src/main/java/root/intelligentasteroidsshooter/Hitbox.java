@@ -10,7 +10,7 @@ public class Hitbox {
     private Point2D movement;
     private boolean alive;
 
-    public Hitbox(Polygon polygon, Color color, int x, int y) {
+    public Hitbox(Polygon polygon, Color color, double x, double y) {
         this.polygon = polygon;
         this.polygon.setTranslateX(x);
         this.polygon.setTranslateY(y);

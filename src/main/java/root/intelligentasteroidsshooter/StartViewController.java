@@ -2,7 +2,6 @@ package root.intelligentasteroidsshooter;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -12,10 +11,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.net.URL;
 
 public class StartViewController {
     @FXML
@@ -30,8 +26,6 @@ public class StartViewController {
     private Label chooseMode;
     @FXML
     private Label language;
-
-    SinglePlayerView game = new SinglePlayerView();
 
     @FXML
     protected void onSinglePlayerButtonClick() throws IOException {
@@ -53,8 +47,6 @@ public class StartViewController {
         Scene AITrainingScene = new Scene(AITrainingView.load());
         AITrainingPaneController aiTrainingViewController = AITrainingView.getController();
         aiTrainingViewController.setBackground();
-        //aiTrainingViewController.setTextAboveGraphPane();
-        //aiTrainingViewController.setTextAboveGamingPane();
 
         Stage AITrainingStage = new Stage();
         AITrainingStage.setScene(AITrainingScene);
@@ -69,8 +61,6 @@ public class StartViewController {
                 new Image(getClass().getResource("/root/intelligentasteroidsshooter/images/stars_moving.gif").toString());
         BackgroundImage myBI= new BackgroundImage(backgroundFile, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
                 BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-        //BackgroundFill myBF = new BackgroundFill(Color.BLUEVIOLET, new CornerRadii(1),
-        //        new Insets(0.0,0.0,0.0,0.0));// or null for the padding
         Background paneBackgr = new Background(myBI);
         startViewPane.setBackground(paneBackgr);
         language.setVisible(false);
@@ -82,10 +72,4 @@ public class StartViewController {
 
     @FXML
     protected void setLangugeLabel() {language.setTextFill(Color.WHITE);}
-
-    /*@FXML
-    protected void setButtonsFont() {
-        singlePlayerButton.setStyle("-fx-font-size:18");
-        trainAIButton.setStyle("-fx-font-size:18");
-    }*/
 }

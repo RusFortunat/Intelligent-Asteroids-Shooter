@@ -6,14 +6,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.List;
 
 public class RestartViewController {
@@ -72,6 +68,8 @@ public class RestartViewController {
                     return parts[2];
                 })
                 .toList();
+        //System.out.println("scores");
+        //System.out.println(scores);
 
         // now lest fill TableColumn properly; i followed this guide: https://jenkov.com/tutorials/javafx/tableview.html
         TableColumn<RecordHolders, String> column1 =  new TableColumn<>("Name");
@@ -91,7 +89,7 @@ public class RestartViewController {
         column2.setResizable(false);
         column1.setSortable(false);
         column2.setSortable(false);
-        column1.getStyleClass().add("tableStyle.css");
+        column1.getStyleClass().add("customStyles.css");
 
         for(int i = 0; i < names.size(); i++){
             RecordHolders recordHolder = new RecordHolders(names.get(i), scores.get(i));

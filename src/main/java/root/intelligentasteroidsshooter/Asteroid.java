@@ -10,7 +10,7 @@ import java.util.Random;
 public class Asteroid extends ImageMotion{
     private double rotationalMovement;
 
-    public Asteroid(ImageView imageFile, double scale, int x, int y) {
+    public Asteroid(ImageView imageFile, double scale, double x, double y) {
         super(imageFile,scale,x,y);
 
         Random rnd = new Random();

@@ -163,40 +163,6 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
         }
     }
 
-    public void copyNetworkParameters(NeuralNetwork successfulNetwork){
-        firstLayerBiases = successfulNetwork.getFirstLayerBiases().clone();
-        firstLayerWeights = successfulNetwork.getFirstLayerWeights().clone();
-        secondLayerBiases = successfulNetwork.getSecondLayerBiases().clone();
-        secondLayerWeights = successfulNetwork.getSecondLayerWeights().clone();
-    }
-
-    public void addPoints(int points) {this.score += points;}
-
-    @Override
-    public int compareTo(NeuralNetwork otherNetwork){
-        return otherNetwork.getScore() - this.score; // order from big to small
-    }
-
-    // setters
-    public void setScore(int value) { score = value;}
-    public void setScoreForPrinting(int value) { scoreForPrinting = value;}
-
-    // getters
-    public Hitbox getShip() { return ship; }
-    public int getScore() {
-        return score;
-    }
-    public int getScoreForPrinting(){ return scoreForPrinting; }
-    public double getShipSize() { return shipSize; }
-    public double getMutationRate() { return mutationRate; }
-    public int getInputSize(){ return inputSize; }
-    public int getHiddenSize(){ return hiddenSize; }
-    public int getOutputSize(){ return outputSize; }
-    public double[] getFirstLayerBiases(){  return firstLayerBiases;}
-    public double[] getSecondLayerBiases(){  return secondLayerBiases;}
-    public double[][] getFirstLayerWeights(){ return firstLayerWeights; }
-    public double[][] getSecondLayerWeights(){ return secondLayerWeights; }
-
     // save params
     public List<String> NNParametersToList(){
         List<String> NNparameters = new ArrayList<>();
@@ -280,6 +246,38 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
         skipString = fileReader.nextLine();
     }
 
+    public void copyNetworkParameters(NeuralNetwork successfulNetwork){
+        firstLayerBiases = successfulNetwork.getFirstLayerBiases().clone();
+        firstLayerWeights = successfulNetwork.getFirstLayerWeights().clone();
+        secondLayerBiases = successfulNetwork.getSecondLayerBiases().clone();
+        secondLayerWeights = successfulNetwork.getSecondLayerWeights().clone();
+    }
+
+    public void addPoints(int points) {this.score += points;}
+
+    @Override
+    public int compareTo(NeuralNetwork otherNetwork){
+        return otherNetwork.getScore() - this.score; // order from big to small
+    }
+
+    // setters
+    public void setScore(int value) { score = value;}
+    public void setScoreForPrinting(int value) { scoreForPrinting = value;}
+
+    // getters
+    public Hitbox getShip() { return ship; }
+    public int getScore() { return score; }
+    public int getScoreForPrinting(){ return scoreForPrinting; }
+    public double getShipSize() { return shipSize; }
+    public double getMutationRate() { return mutationRate; }
+    public int getInputSize(){ return inputSize; }
+    public int getHiddenSize(){ return hiddenSize; }
+    public int getOutputSize(){ return outputSize; }
+    public double[] getFirstLayerBiases(){  return firstLayerBiases;}
+    public double[] getSecondLayerBiases(){  return secondLayerBiases;}
+    public double[][] getFirstLayerWeights(){ return firstLayerWeights; }
+    public double[][] getSecondLayerWeights(){ return secondLayerWeights; }
+
     // printers
     public void printNetworkParameteres(){
         System.out.println("firstLayerWeights:");
@@ -324,33 +322,4 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
         }
         System.out.println("");
     }
-
-    /*
-    public void saveNNparameteres(PrintWriter writer){
-        writer.println("firstLayerWeights:");
-        for(int i = 0; i < hiddenSize; i++){
-            for(int j = 0; j < inputSize; j++) {
-                writer.print(firstLayerWeights[i][j] + ",");
-            }
-            writer.println("");
-        }
-        writer.println("\nfirstLayerBiases:");
-        for(int i = 0; i < hiddenSize; i++){
-            writer.print(firstLayerBiases[i] + ",");
-        }
-        writer.println("");
-
-        writer.println("\nsecondLayerWeights:");
-        for(int i = 0; i < outputSize; i++){
-            for(int j = 0; j < hiddenSize; j++) {
-                writer.print(secondLayerWeights[i][j] + ",");
-            }
-            writer.println("");
-        }
-        writer.println("\nsecondLayerBiases:");
-        for(int i = 0; i < outputSize; i++){
-            writer.print(secondLayerBiases[i] + ",");
-        }
-        writer.println("\n");
-    }*/
 }

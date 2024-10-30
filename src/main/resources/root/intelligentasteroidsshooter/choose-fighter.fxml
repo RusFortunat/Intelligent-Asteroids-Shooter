@@ -74,6 +74,23 @@
             <Font size="18.0" />
          </font>
       </Label>
+      <VBox fx:id="diffcultySelection" layoutX="150.0" layoutY="125.0" prefHeight="200.0" prefWidth="300.0">
+         <children>
+            <Label fx:id="difficultyLabel" text="Choose difficulty" />
+            <Button fx:id="easy" mnemonicParsing="false" onAction="#onEasyClick" prefHeight="35.0" prefWidth="120.0" text="no sweat">
+               <font>
+                  <Font name="Arial" size="18.0" />
+               </font></Button>
+            <Button fx:id="normal" mnemonicParsing="false" onAction="#onNormalClick" prefHeight="35.0" prefWidth="120.0" text="survival">
+               <font>
+                  <Font name="Arial" size="18.0" />
+               </font></Button>
+            <Button fx:id="hard" mnemonicParsing="false" onAction="#onHardClick" prefHeight="35.0" prefWidth="120.0" text="extreme">
+               <font>
+                  <Font name="Arial" size="18.0" />
+               </font></Button>
+         </children>
+      </VBox>
 
    </children>
 </AnchorPane>

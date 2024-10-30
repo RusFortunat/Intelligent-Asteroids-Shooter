@@ -14,16 +14,27 @@
             <TextField fx:id="userInputEpNum" visible="false" />
             <Button fx:id="done" mnemonicParsing="false" onMouseClicked="#passParamenters" text="Done" visible="false" />
          </children></VBox>
-       <VBox fx:id="loadListPane" layoutX="425.0" layoutY="50.0" prefHeight="400.0" prefWidth="200.0">
+       <VBox fx:id="loadListPane" layoutX="400.0" layoutY="50.0" prefHeight="400.0" prefWidth="250.0">
            <children>
                <Label fx:id="loadListLabel" />
-               <ListView fx:id="loadList" layoutY="20.0" prefHeight="252.0" prefWidth="200.0" />
-            <Label fx:id="selection" />
-            <Button fx:id="confirm" onMouseClicked="#loadNetwork" mnemonicParsing="false" text="Confirm">
-                <font>
-                    <Font size="14.0" />
-                </font>
-            </Button>
+               <ListView fx:id="loadList" layoutY="20.0" prefHeight="252.0" prefWidth="180.0" />
+                <HBox fx:id="wrapSelection">
+                    <children>
+                        <Label fx:id="selection" />
+                    </children>
+                </HBox>
+               <HBox fx:id="loadButtons">
+                   <Button fx:id="confirm" mnemonicParsing="false" onMouseClicked="#loadNetwork" text="Confirm">
+                       <font>
+                           <Font size="14.0" />
+                       </font>
+                   </Button>
+                   <Button fx:id="cancel" mnemonicParsing="false" onMouseClicked="#cancelLoad" text="Cancel">
+                       <font>
+                           <Font size="14.0" />
+                       </font>
+                   </Button>
+               </HBox>
            </children>
        </VBox>
 

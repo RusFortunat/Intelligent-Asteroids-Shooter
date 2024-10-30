@@ -1,0 +1,1 @@
+java --module-path C:\Users\mrusl\AppData\Roaming\JetBrains\IdeaIC2024.2\plugins\JavaFX plugin --add-modules javafx.controls -jar .\Intelligent-Asteroids-Shooter-1.0-SNAPSHOT.jar

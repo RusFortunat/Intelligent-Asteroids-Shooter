@@ -1,18 +1,12 @@
 package root.intelligentasteroidsshooter;
 
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -23,11 +17,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 
-import java.io.File;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class AITrainingPaneController {
     @FXML
@@ -43,7 +34,7 @@ public class AITrainingPaneController {
     @FXML
     private Button done;
     @FXML
-    private Button loadModel;
+    private Button confirm;
     @FXML
     private Label selection;
     @FXML
@@ -58,32 +49,34 @@ public class AITrainingPaneController {
     private Label loadListLabel;
     @FXML
     private ListView loadList;
+    @FXML
+    private HBox wrapSelection;
+    @FXML
+    private HBox loadButtons;
 
     private int NNPoolSize;
     private int epNumber;
-    private EvolutionarySearch ourBestAICoach;
+    private EvolutionarySearch ourBestAICoach; // i define both here to be able to stop them from other button clicks
+    private NNPLaysGameOnly ourBestNetworkPlays;
     private LineChart<Number, Number> lineChart;
 
     @FXML
     protected void beginToTrainAI(){
-        //graphPane.getChildren().clear();
+        // for restarting purposes
         gamingPane.getChildren().clear();
         messageWindow.getChildren().clear();
         userInputNN.clear();
         userInputEpNum.clear();
-        if(ourBestAICoach == null){
-        }else{
-            if(ourBestAICoach.getPlayer() == null){
-            }else{
-                ourBestAICoach.getPlayer().stop();
-            }
-
-            if(ourBestAICoach.getTrainer() == null){
-            }else{
-                ourBestAICoach.getTrainer().stop();
-            }
+        // stop previous sessions
+        if(ourBestAICoach != null){
+            if(ourBestAICoach.getPlayer() != null) ourBestAICoach.getPlayer().stop();
+            if(ourBestAICoach.getTrainer() != null) ourBestAICoach.getTrainer().stop();
         }
         ourBestAICoach = null;
+        if(ourBestNetworkPlays != null){
+            if(ourBestNetworkPlays.getPlayer() != null) ourBestNetworkPlays.getPlayer().stop();
+        }
+        ourBestNetworkPlays = null;
         Text chooseParams = new Text("Choose simulation parameters:");
         chooseParams.setFont(Font.font("Arial", FontWeight.BOLD, 18));
         HBox numOfNetworks = new HBox();
@@ -138,83 +131,108 @@ public class AITrainingPaneController {
 
             Stage stage = (Stage) beginTraining.getScene().getWindow();
             ourBestAICoach = new EvolutionarySearch();
-            ourBestAICoach.start(stage, anchorPane, gamingPane, graphPane, messageWindow, NNPoolSize, epNumber, lineChart);
+            ourBestAICoach.start(gamingPane, graphPane, messageWindow, NNPoolSize, epNumber, lineChart);
         }
     }
 
     @FXML
     protected void loadTrainedModelButton(){
+        // stop all processes if any are running
+        if(ourBestAICoach != null){
+            if(ourBestAICoach.getPlayer() != null) ourBestAICoach.getPlayer().stop();
+            if(ourBestAICoach.getTrainer() != null) ourBestAICoach.getTrainer().stop();
+        }
+        ourBestAICoach = null;
+        if(ourBestNetworkPlays != null){
+            if(ourBestNetworkPlays.getPlayer() != null) ourBestNetworkPlays.getPlayer().stop();
+        }
+        ourBestNetworkPlays = null;
+        messageWindow.setVisible(false);
+        gamingPane.getChildren().clear();
         loadListPane.setVisible(true);
+        loadList.getItems().clear();
 
         // load list of networks from our database
         StoreTrainedNNsDB NNDataBase = new StoreTrainedNNsDB("jdbc:h2:./trained-NNs-database");
         try{
-            List<String> showAllSavedNNs = NNDataBase.getSavedList();
-            System.out.println("Best Networks list");
-            for(String entry:showAllSavedNNs) System.out.println(entry);
+            List<String> showAllSavedNNs = NNDataBase.getSavedList().stream()
+                    .map(el->"Survival chance: " + Integer.valueOf(el)/50.0 + "%").toList(); // 5000 is the max run time
+            //System.out.println("List of best Networks");
+            //for(String entry:showAllSavedNNs) System.out.println(entry);
             loadList.getItems().addAll(showAllSavedNNs);
         }catch(SQLException s){}
-
-        // display ListView
-        loadListLabel.setText("Best Neural Networks");
-        loadListLabel.setFont(Font.font("Arial", 14));
-        loadList.setCellFactory(new PropertyValueFactory<>("score"));
-        loadList.getStyleClass().add("tableStyle.css");
+        //System.out.println("showAllSavedNNs added to loadList");
 
         // react to cell click -> download selected network from database and pass it to a player
-        //loadList.getSelectionModel().selectedItemProperty().addListener(this::selectionChanged);
-    }
-
-    // stolen from here: https://www.youtube.com/watch?v=Z7th7RSRitw
-    private void selectionChanged(ObservableValue<? extends String> Observable, String oldVal, String newVal){
-        ObservableList<String> selectedItems = loadList.getSelectionModel().getSelectedItems();
-        String getSelectedItem = (selectedItems.isEmpty())?"No Selected Item":selectedItems.toString();
-        selection.setText("Your selection: " + getSelectedItem);
-        selection.setFont(Font.font("Arial", 14));
+        loadList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if(newValue != null){
+                    //System.out.println("ListView selection changed from oldValue = " + oldValue + " to newValue = " + newValue);
+                    String[] parts = newValue.split(" ");
+                    selection.setText("Your selection: " + parts[2]);
+                }
+            }
+        });
+        selection.setFont(Font.font("Arial", 18));
+        //System.out.println("getSelectionModel() works");
     }
 
     @FXML
     protected void loadNetwork(){
+        loadListPane.setVisible(false);
         String getSelectedScore = selection.getText();
         String[] parts = getSelectedScore.split(" ");
-        int score = Integer.valueOf(parts[2]);
-        StoreTrainedNNsDB NNDataBase = new StoreTrainedNNsDB("jdbc:h2:./trained-NNs-database");
+        String[] percent = parts[2].split("%");
+        int score = (int) (Double.valueOf(percent[0])*50); // convert it back to the score that is stored in database
+        System.out.println("score " + score);
+        //System.out.println("score: " + score);
         try{
+            StoreTrainedNNsDB NNDataBase = new StoreTrainedNNsDB("jdbc:h2:./trained-NNs-database");
             List<String> chosenNetwork = NNDataBase.toList(score); // get the desired network
             // list structure: score, firstLayerWeights, firstLayerBiases, secondLayerWeights, secondLayerBiases
-            String firstLayerWeightsCSV = chosenNetwork.get(1);
+            // HOWEVER, in SQL 0 index reserved for primary ID, and first column starts with 1, .get(0) and .get(1) give same result for me here
+            String firstLayerWeightsCSV = chosenNetwork.get(2);
             String[] firstLayerWeightsStr = firstLayerWeightsCSV.split(",");
             Double[] firstLayerWeights = new Double[firstLayerWeightsStr.length];
             for(int entry = 0; entry < firstLayerWeightsStr.length; entry++){
                 firstLayerWeights[entry] = Double.valueOf(firstLayerWeightsStr[entry]);
             }
-            String firstLayerBiasesCSV = chosenNetwork.get(1);
+            String firstLayerBiasesCSV = chosenNetwork.get(3);
             String[] firstLayerBiasesStr = firstLayerBiasesCSV.split(",");
             Double[] firstLayerBiases = new Double[firstLayerBiasesStr.length];
             for(int entry = 0; entry < firstLayerBiasesStr.length; entry++){
                 firstLayerBiases[entry] = Double.valueOf(firstLayerBiasesStr[entry]);
             }
-            String secondLayerWeightsCSV = chosenNetwork.get(1);
+            String secondLayerWeightsCSV = chosenNetwork.get(4);
             String[] secondLayerWeightsStr = secondLayerWeightsCSV.split(",");
             Double[] secondLayerWeights = new Double[secondLayerWeightsStr.length];
             for(int entry = 0; entry < secondLayerWeightsStr.length; entry++){
                 secondLayerWeights[entry] = Double.valueOf(secondLayerWeightsStr[entry]);
             }
-            String secondLayerBiasesCSV = chosenNetwork.get(1);
+            String secondLayerBiasesCSV = chosenNetwork.get(5);
             String[] secondLayerBiasesStr = secondLayerBiasesCSV.split(",");
             Double[] secondLayerBiases = new Double[secondLayerBiasesStr.length];
             for(int entry = 0; entry < secondLayerBiasesStr.length; entry++){
                 secondLayerBiases[entry] = Double.valueOf(secondLayerBiasesStr[entry]);
             }
 
-            int inputSize = firstLayerWeights.length/firstLayerBiases.length ;
+            int inputSize = firstLayerWeights.length/firstLayerBiases.length;
             NeuralNetwork loadedNetwork = new NeuralNetwork(inputSize, firstLayerBiases.length, secondLayerBiases.length);
+            //System.out.println("loaded NN score: " + loadedNetwork.getScoreForPrinting());
 
-            Stage stage = (Stage) beginTraining.getScene().getWindow();
-            ourBestAICoach = new EvolutionarySearch();
-            ourBestAICoach.playGameOnly(stage, anchorPane, gamingPane, graphPane, loadedNetwork);
+            Stage stage = (Stage) confirm.getScene().getWindow();
+            ourBestNetworkPlays = new NNPLaysGameOnly();
+            ourBestNetworkPlays.start(gamingPane, graphPane, messageWindow, loadedNetwork, lineChart);
+            //System.out.println("ourBestNetworkPlays.start() was reached");
+        }catch(SQLException s){
+            System.out.println(s.getMessage());
+        }
+    }
 
-        }catch(SQLException s){}
+    @FXML
+    protected void cancelLoad(){
+        loadListPane.setVisible(false);
     }
 
     @FXML
@@ -282,10 +300,24 @@ public class AITrainingPaneController {
         graphPane.getChildren().add(graphLabel);
 
         // for loading stuff
+        loadListPane.setBackground(new Background(new BackgroundFill(Color.BEIGE, null, null)));
+        loadListLabel.setText("List of best Networks");
+        loadListLabel.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        loadListPane.setAlignment(Pos.CENTER);
+        loadListPane.setPadding(new Insets(20));
+        loadListPane.setSpacing(10);
+        loadListPane.setVisible(false);
+        //loadList.getStyleClass().add("customStyles.css");
+        // nothing was working, so I used this solution: https://stackoverflow.com/a/51574405/24522071
+        loadList.setCellFactory(stringListView -> new CenteredListViewCell());
+        //loadList.setEditable(false);
+        //loadList.setStyle("customStyles.css");
+        loadList.setStyle("-fx-font-size:16.0; -fx-alignment: center;");
+        wrapSelection.setAlignment(Pos.CENTER_LEFT);
         selection.setText("Your selection: ");
         selection.setFont(Font.font("Arial", 14));
-        loadListLabel.setAlignment(Pos.CENTER);
-        loadListPane.setVisible(false);
+        loadButtons.setSpacing(30);
+        loadButtons.setAlignment(Pos.CENTER);
     }
 
     private void setNNPoolSizeValue(int value){
@@ -298,5 +330,26 @@ public class AITrainingPaneController {
 
     private TextField getUserInputNN(){ return userInputNN; }
     private TextField getUserInputEpNum(){ return userInputEpNum; }
+    private VBox getMessageWindow(){ return messageWindow;}
 }
 
+final class CenteredListViewCell extends ListCell<String> {
+    @Override
+    protected void updateItem(String item, boolean empty) {
+        super.updateItem(item, empty);
+        if (empty) {
+            setGraphic(null);
+        } else {
+            // Create the HBox
+            HBox hBox = new HBox();
+            hBox.setAlignment(Pos.CENTER);
+
+            // Create centered Label
+            Label label = new Label(item);
+            label.setAlignment(Pos.CENTER);
+
+            hBox.getChildren().add(label);
+            setGraphic(hBox);
+        }
+    }
+}
