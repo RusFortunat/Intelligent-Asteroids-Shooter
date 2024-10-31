@@ -841,3 +841,60 @@ CREATE TABLE TrainedNNs (score int primary key, firstLayerWeights varchar(10000)
 2024-10-30 18:52:52 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRAINEDNNS" already exists; SQL statement:
 CREATE TABLE TrainedNNs (score int primary key, firstLayerWeights varchar(10000), firstLayerBiases varchar(1000), secondLayerWeights varchar(10000), secondLayerBiases varchar(1000)) [42101-220]
+2024-10-30 23:23:26 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRAINEDNNS" already exists; SQL statement:
+CREATE TABLE TrainedNNs (score int primary key, firstLayerWeights varchar(10000), firstLayerBiases varchar(1000), secondLayerWeights varchar(10000), secondLayerBiases varchar(1000)) [42101-220]
+2024-10-30 23:23:29 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRAINEDNNS" already exists; SQL statement:
+CREATE TABLE TrainedNNs (score int primary key, firstLayerWeights varchar(10000), firstLayerBiases varchar(1000), secondLayerWeights varchar(10000), secondLayerBiases varchar(1000)) [42101-220]
+2024-10-30 23:26:55 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRAINEDNNS" already exists; SQL statement:
+CREATE TABLE TrainedNNs (score int primary key, firstLayerWeights varchar(10000), firstLayerBiases varchar(1000), secondLayerWeights varchar(10000), secondLayerBiases varchar(1000)) [42101-220]
+2024-10-30 23:26:58 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRAINEDNNS" already exists; SQL statement:
+CREATE TABLE TrainedNNs (score int primary key, firstLayerWeights varchar(10000), firstLayerBiases varchar(1000), secondLayerWeights varchar(10000), secondLayerBiases varchar(1000)) [42101-220]
+2024-10-31 00:55:14 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRAINEDNNS" already exists; SQL statement:
+CREATE TABLE TrainedNNs (score int primary key, firstLayerWeights varchar(10000), firstLayerBiases varchar(1000), secondLayerWeights varchar(10000), secondLayerBiases varchar(1000)) [42101-220]
+2024-10-31 00:57:23 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRAINEDNNS" already exists; SQL statement:
+CREATE TABLE TrainedNNs (score int primary key, firstLayerWeights varchar(10000), firstLayerBiases varchar(1000), secondLayerWeights varchar(10000), secondLayerBiases varchar(1000)) [42101-220]
+2024-10-31 01:03:08 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRAINEDNNS" already exists; SQL statement:
+CREATE TABLE TrainedNNs (score int primary key, firstLayerWeights varchar(10000), firstLayerBiases varchar(1000), secondLayerWeights varchar(10000), secondLayerBiases varchar(1000)) [42101-220]
+2024-10-31 02:29:33 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRAINEDNNS" already exists; SQL statement:
+CREATE TABLE TrainedNNs (score int primary key, firstLayerWeights varchar(10000), firstLayerBiases varchar(1000), secondLayerWeights varchar(10000), secondLayerBiases varchar(1000)) [42101-220]
+2024-10-31 02:30:39 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRAINEDNNS" already exists; SQL statement:
+CREATE TABLE TrainedNNs (score int primary key, firstLayerWeights varchar(10000), firstLayerBiases varchar(1000), secondLayerWeights varchar(10000), secondLayerBiases varchar(1000)) [42101-220]
+2024-10-31 02:41:38 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRAINEDNNS" already exists; SQL statement:
+CREATE TABLE TrainedNNs (score int primary key, firstLayerWeights varchar(10000), firstLayerBiases varchar(1000), secondLayerWeights varchar(10000), secondLayerBiases varchar(1000)) [42101-220]
+2024-10-31 02:46:35 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRAINEDNNS" already exists; SQL statement:
+CREATE TABLE TrainedNNs (score int primary key, firstLayerWeights varchar(10000), firstLayerBiases varchar(1000), secondLayerWeights varchar(10000), secondLayerBiases varchar(1000)) [42101-220]
+2024-10-31 03:35:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRAINEDNNS" already exists; SQL statement:
+CREATE TABLE TrainedNNs (score int primary key, firstLayerWeights varchar(10000), firstLayerBiases varchar(1000), secondLayerWeights varchar(10000), secondLayerBiases varchar(1000)) [42101-220]
+2024-10-31 03:39:27 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRAINEDNNS" already exists; SQL statement:
+CREATE TABLE TrainedNNs (score int primary key, firstLayerWeights varchar(10000), firstLayerBiases varchar(1000), secondLayerWeights varchar(10000), secondLayerBiases varchar(1000)) [42101-220]
+2024-10-31 04:01:37 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRAINEDNNS" already exists; SQL statement:
+CREATE TABLE TrainedNNs (score int primary key, firstLayerWeights varchar(10000), firstLayerBiases varchar(1000), secondLayerWeights varchar(10000), secondLayerBiases varchar(1000)) [42101-220]
+2024-10-31 04:08:20 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRAINEDNNS" already exists; SQL statement:
+CREATE TABLE TrainedNNs (score int primary key, firstLayerWeights varchar(10000), firstLayerBiases varchar(1000), secondLayerWeights varchar(10000), secondLayerBiases varchar(1000)) [42101-220]
+2024-10-31 07:29:09 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRAINEDNNS" already exists; SQL statement:
+CREATE TABLE TrainedNNs (score int primary key, firstLayerWeights varchar(10000), firstLayerBiases varchar(1000), secondLayerWeights varchar(10000), secondLayerBiases varchar(1000)) [42101-220]
+2024-10-31 07:29:17 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRAINEDNNS" already exists; SQL statement:
+CREATE TABLE TrainedNNs (score int primary key, firstLayerWeights varchar(10000), firstLayerBiases varchar(1000), secondLayerWeights varchar(10000), secondLayerBiases varchar(1000)) [42101-220]
+2024-10-31 07:29:36 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRAINEDNNS" already exists; SQL statement:
+CREATE TABLE TrainedNNs (score int primary key, firstLayerWeights varchar(10000), firstLayerBiases varchar(1000), secondLayerWeights varchar(10000), secondLayerBiases varchar(1000)) [42101-220]
+2024-10-31 07:29:39 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRAINEDNNS" already exists; SQL statement:
+CREATE TABLE TrainedNNs (score int primary key, firstLayerWeights varchar(10000), firstLayerBiases varchar(1000), secondLayerWeights varchar(10000), secondLayerBiases varchar(1000)) [42101-220]
