@@ -33,7 +33,8 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
     private Hitbox ship; // every respectable neural network should have its own spaceship
     private double shipSize;
     private int score; // each network's performance will be evaluated through this score meter
-    private int scoreForPrinting; // we won't be zeroing this one
+    private int scoreForPrinting; // scores are being zeroed for every evolutional iteration, but this one is stored
+    private double averagePopulationScore; // we won't be zeroing this one
 
     // constructor; initialize a fully-connected neural network with random weights and biases
     public NeuralNetwork(double mutationRate, int inputSize, int hiddenSize, int outputSize){
@@ -255,6 +256,11 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
 
     public void addPoints(int points) {this.score += points;}
 
+    public void resetShip(){
+        this.ship.getPolygon().setTranslateX(SinglePlayerView.WIDTH/2);
+        this.ship.getPolygon().setTranslateX(SinglePlayerView.HEIGHT/2);
+    }
+
     @Override
     public int compareTo(NeuralNetwork otherNetwork){
         return otherNetwork.getScore() - this.score; // order from big to small
@@ -263,12 +269,13 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
     // setters
     public void setScore(int value) { score = value;}
     public void setScoreForPrinting(int value) { scoreForPrinting = value;}
+    public void setAveragePopulationScore(double value) { averagePopulationScore = value;}
 
     // getters
     public Hitbox getShip() { return ship; }
     public int getScore() { return score; }
-    public int getScoreForPrinting(){ return scoreForPrinting; }
-    public double getShipSize() { return shipSize; }
+    public int getScoreForPrinting() {return scoreForPrinting; }
+    public double getAveragePopulationScore(){ return averagePopulationScore; }
     public double getMutationRate() { return mutationRate; }
     public int getInputSize(){ return inputSize; }
     public int getHiddenSize(){ return hiddenSize; }

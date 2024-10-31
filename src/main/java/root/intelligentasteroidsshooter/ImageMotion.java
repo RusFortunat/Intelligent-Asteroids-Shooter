@@ -47,7 +47,7 @@ public abstract class ImageMotion {
                 0.75*imageWidth, -0.75*imageHeight,
                 0.75*imageWidth, 0.75*imageHeight,
                 -0.75*imageWidth, 0.75*imageHeight);
-        this.hitbox = new Hitbox(squarePolygon, Color.WHITE,
+        this.hitbox = new Hitbox(squarePolygon, Color.TRANSPARENT,
                 (int)(x + SinglePlayerView.WIDTH/2.0),
                 (int)(y + SinglePlayerView.HEIGHT/2.0 )); // square
 

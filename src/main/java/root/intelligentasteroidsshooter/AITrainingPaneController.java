@@ -93,9 +93,9 @@ public class AITrainingPaneController {
         done.setVisible(true);
         done.setFont(Font.font("Arial", 14));
 
-        Text note = new Text("Setting pool size to 100 networks and total episodes to 10\n " +
+        Text note = new Text("Setting pool size to 200 networks and total episodes to 20\n " +
                 "should produce results within a minute, but they will be bad.\n" +
-                "To get good networks, set pool size to about 5000-10000 and the number\n" +
+                "To get good networks, set pool size to about 2000-5000 and the number\n" +
                 "of episodes to 100-300. It takes about two hours on my PC to finish training");
         note.setLineSpacing(5);
         note.setFont(Font.font("Arial", 12));
@@ -110,6 +110,7 @@ public class AITrainingPaneController {
     protected void passParamenters(){
         //System.out.println("Button clicked");
         // get networks pool size
+        graphPane.getChildren().clear();
         try{
             NNPoolSize = Integer.valueOf(userInputNN.getText());
             //System.out.println("NNPoolSize " + NNPoolSize);
@@ -128,6 +129,7 @@ public class AITrainingPaneController {
         if(NNPoolSize > 0 && epNumber > 0){
             beginTraining.setText("Restart");
             messageWindow.setVisible(false);
+            graphPane.getChildren().remove(lineChart);
 
             Stage stage = (Stage) beginTraining.getScene().getWindow();
             ourBestAICoach = new EvolutionarySearch();
@@ -156,7 +158,7 @@ public class AITrainingPaneController {
         StoreTrainedNNsDB NNDataBase = new StoreTrainedNNsDB("jdbc:h2:./trained-NNs-database");
         try{
             List<String> showAllSavedNNs = NNDataBase.getSavedList().stream()
-                    .map(el->"Survival chance: " + Integer.valueOf(el)/50.0 + "%").toList(); // 5000 is the max run time
+                    .map(el->"Loss: " + Integer.valueOf(el)).toList(); // 5000 is the max run time
             //System.out.println("List of best Networks");
             //for(String entry:showAllSavedNNs) System.out.println(entry);
             loadList.getItems().addAll(showAllSavedNNs);
@@ -170,7 +172,7 @@ public class AITrainingPaneController {
                 if(newValue != null){
                     //System.out.println("ListView selection changed from oldValue = " + oldValue + " to newValue = " + newValue);
                     String[] parts = newValue.split(" ");
-                    selection.setText("Your selection: " + parts[2]);
+                    selection.setText("Your selection: " + parts[1]);
                 }
             }
         });
@@ -181,10 +183,10 @@ public class AITrainingPaneController {
     @FXML
     protected void loadNetwork(){
         loadListPane.setVisible(false);
+        graphPane.getChildren().clear();
         String getSelectedScore = selection.getText();
         String[] parts = getSelectedScore.split(" ");
-        String[] percent = parts[2].split("%");
-        int score = (int) (Double.valueOf(percent[0])*50); // convert it back to the score that is stored in database
+        int score = Integer.valueOf(parts[2]); // convert it back to the score that is stored in database
         System.out.println("score " + score);
         //System.out.println("score: " + score);
         try{
@@ -280,11 +282,11 @@ public class AITrainingPaneController {
         //graphPane.setPrefSize(400, 400);
         graphPane.setBackground(new Background(new BackgroundFill(Color.GAINSBORO, null, null)));
         NumberAxis xAxis = new NumberAxis(0,20,5);
-        NumberAxis yAxis = new NumberAxis(0, 5000,1000);
+        NumberAxis yAxis = new NumberAxis(-30000, 0,5000);
         xAxis.tickLabelFontProperty().set(Font.font(15));
         yAxis.tickLabelFontProperty().set(Font.font(15));
         xAxis.setLabel("Episode");
-        yAxis.setLabel("Time ship stayed alive");
+        yAxis.setLabel("Average Loss");
         lineChart = new LineChart<>(xAxis, yAxis);
         lineChart.setStyle("-fx-font-size: " + 20 + "px;");
         Text graphLabel = new Text(70, 40, "Neural Networks Performance");
@@ -318,6 +320,24 @@ public class AITrainingPaneController {
         selection.setFont(Font.font("Arial", 14));
         loadButtons.setSpacing(30);
         loadButtons.setAlignment(Pos.CENTER);
+    }
+
+    private void resetLinechart(){
+        lineChart = null;
+        NumberAxis xAxis = new NumberAxis(0,20,5);
+        NumberAxis yAxis = new NumberAxis(-30000, 0,5000);
+        xAxis.tickLabelFontProperty().set(Font.font(15));
+        yAxis.tickLabelFontProperty().set(Font.font(15));
+        xAxis.setLabel("Episode");
+        yAxis.setLabel("Average Loss");
+        lineChart = new LineChart<>(xAxis, yAxis);
+        lineChart.setStyle("-fx-font-size: " + 20 + "px;");
+        Text graphLabel = new Text(70, 40, "Neural Networks Performance");
+        graphLabel.setFont(Font.font("Arial", FontWeight.BOLD, 28));
+        //XYChart.Series averScorePerEpisodeGraph = new XYChart.Series();
+        lineChart.setLegendVisible(false);
+        lineChart.setLayoutX(-15);
+        lineChart.setLayoutY(50);
     }
 
     private void setNNPoolSizeValue(int value){

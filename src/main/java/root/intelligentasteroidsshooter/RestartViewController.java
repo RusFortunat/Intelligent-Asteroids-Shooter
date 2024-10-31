@@ -143,6 +143,19 @@ public class RestartViewController {
 
     @FXML
     protected void onCloseButtonClick() {
+        FXMLLoader startView = new FXMLLoader(IntelligentAsteroidsShooter.class.getResource("start-view.fxml"));
+        try{
+            Scene startViewScene = new Scene(startView.load());
+            StartViewController startViewController = startView.getController();
+            startViewController.setBackground();
+
+            Stage startViewStage = new Stage();
+            startViewStage.setScene(startViewScene);
+            startViewStage.show();
+        }catch(Exception em){
+            System.out.printf(em.getMessage());
+        }
+
         Stage stage = (Stage) closeButton.getScene().getWindow();
         stage.close();
     }

@@ -51,11 +51,11 @@ public class EvolutionarySearch {
         lineChart = lineChart;
 
         // internal simulation parameters that user don't see
-        int episodeDurationPerNetwork = 5000; // the time every network has per episode, i.e., each NN can do 10000 inputs
+        int episodeDurationPerNetwork = 1000; // the time every network has per episode, i.e., each NN can do 10000 inputs
         inputSize = 9; // 3x3 grid of asteroid positions around the ship
         hiddenSize = 16;
         outputSize = 8; // accelerate, decelerate, turn left, turn right //, shoot -- try with always shooting
-        double mutationRate = 0.0075; // aka learning rate
+        double mutationRate = 0.005; // aka learning rate
         int playTime = 15000; // in milliseconds, e.g.., 10sec
         // create population of neural networks that will be playing the game
         List<NeuralNetwork> ourNNPopulation = new ArrayList<>();
@@ -91,20 +91,22 @@ public class EvolutionarySearch {
         ship = new Ship(shipImage, scale,0, 0);
 
         // graph pane -- all of this could be avoided if i could modify X-Axis extension
+        Text graphLabel = new Text(70, 40, "Neural Networks Performance");
+        graphLabel.setFont(Font.font("Arial", FontWeight.BOLD, 28));
         graphPane.getChildren().remove(lineChart);
         NumberAxis xAxis = new NumberAxis(0,totalEpisodes,totalEpisodes/10);
-        NumberAxis yAxis = new NumberAxis(0, 5000,1000);
+        NumberAxis yAxis = new NumberAxis(-30000, 0,5000);
         xAxis.tickLabelFontProperty().set(Font.font(15));
         yAxis.tickLabelFontProperty().set(Font.font(15));
         xAxis.setLabel("Episode");
-        yAxis.setLabel("Time ship stayed alive");
+        yAxis.setLabel("Average Loss");
         lineChart = new LineChart<>(xAxis, yAxis);
         lineChart.setStyle("-fx-font-size: " + 20 + "px;");
         lineChart.setLegendVisible(false);
         lineChart.setLayoutX(-15);
         lineChart.setLayoutY(50);
         XYChart.Series bestScorePerEpisodeGraph = new XYChart.Series();
-        graphPane.getChildren().add(lineChart);
+        graphPane.getChildren().addAll(lineChart, graphLabel);
         //lineChart.getData().add(averScorePerEpisodeGraph);
         lineChart.getData().add(bestScorePerEpisodeGraph);
         //System.out.println("Step 1 clear");
@@ -213,6 +215,33 @@ public class EvolutionarySearch {
                     }
                 }
 
+                // removing colliding projectiles and asteroids
+                projectiles.forEach(projectile -> {
+                    asteroids.forEach(asteroid -> {
+                        if(projectile.collide(asteroid.getHitbox())) {
+                            projectile.setAlive(false);
+                            asteroid.setAlive(false);
+                            setPointsToDisplay(points.addAndGet(1000));
+                            showPoints.setText("Points: " + pointsToDisplay);
+                        }
+                    });
+                });
+                projectiles.stream()
+                        .filter(projectile -> !projectile.isAlive())
+                        .forEach(projectile -> gamingPane.getChildren().remove(projectile.getPolygon())); // remove from the pane
+                projectiles.removeAll(projectiles.stream()
+                        .filter(projectile -> !projectile.isAlive())
+                        .collect(Collectors.toList())); // remove from the projectiles list
+                asteroids.stream()
+                        .filter(asteroid -> !asteroid.isAlive())
+                        .forEach(asteroid ->{
+                            gamingPane.getChildren().remove(asteroid.getImage());
+                            gamingPane.getChildren().remove(asteroid.getHitbox().getPolygon()); // remove from the pane
+                        } );
+                asteroids.removeAll(asteroids.stream()
+                        .filter(asteroid -> !asteroid.isAlive())
+                        .collect(Collectors.toList())); // remove from the asteroids list
+
                 // allow to act every 0.2sec +/- 0.1sec
                 int variationInActionTime = rng.nextInt(-100,100);
                 if(Duration.between(forActions.getStart(), Instant.now()).toMillis() > 200 + variationInActionTime){
@@ -307,100 +336,73 @@ public class EvolutionarySearch {
 
                         ship.accelerate();
                     }
-                    // network always shoots if it can
-                    if (projectiles.size() < 10) {// limit number of projectiles present at the time to 10 (aka ammo capacity)
-                        // NN shoots
-                        double changeX = 1 * Math.cos(Math.toRadians(ship.getImage().getRotate()));
-                        double changeY = 1 * Math.sin(Math.toRadians(ship.getImage().getRotate()));
-                        int x = (int) (ship.getImage().getLayoutX() + 0.8*GameWindowWIDTH/2 + 0.4*changeX*ship.getImageWidth());
-                        int y = (int) (ship.getImage().getLayoutY() + GameWindowHEIGHT/2 + 0.4*changeY*ship.getImageHeight());
+                }
 
-                        Projectile projectile = new Projectile(x, y);
-                        projectile.getPolygon().setRotate(ship.getImage().getRotate());
-                        projectiles.add(projectile);
+                // network always shoots if it can
+                if (projectiles.size() < 5) {// limit number of projectiles present at the time to 10 (aka ammo capacity)
+                    // NN shoots
+                    double changeX = 1 * Math.cos(Math.toRadians(ship.getImage().getRotate()));
+                    double changeY = 1 * Math.sin(Math.toRadians(ship.getImage().getRotate()));
+                    int x = (int) (ship.getImage().getLayoutX() + 0.8*GameWindowWIDTH/2 + 0.4*changeX*ship.getImageWidth());
+                    int y = (int) (ship.getImage().getLayoutY() + GameWindowHEIGHT/2 + 0.4*changeY*ship.getImageHeight());
 
-                        projectile.accelerate();
-                        projectile.setMovement(projectile.getMovement().normalize().multiply(3));
-                        gamingPane.getChildren().add(projectile.getPolygon());
+                    Projectile projectile = new Projectile(x, y);
+                    projectile.getPolygon().setRotate(ship.getImage().getRotate());
+                    projectiles.add(projectile);
+
+                    projectile.accelerate();
+                    projectile.setMovement(projectile.getMovement().normalize().multiply(3));
+                    gamingPane.getChildren().add(projectile.getPolygon());
+                }
+
+                // move all objects
+                ship.move();
+                asteroids.forEach(asteroid -> asteroid.move());
+                projectiles.forEach(projectile -> projectile.move());
+
+                // add new asteroids randomly at the edges of the screen, if they don't collide with the ship
+                if(Math.random() < 0.01) {
+                    ImageView asteroidImage = new ImageView(imageForAsteroid);
+                    Random rnd = new Random();
+                    double rangeMin = 0.1;
+                    double rangeMax = 0.2;
+                    double size = rangeMin + (rangeMax - rangeMin) * rnd.nextDouble(); // restrict asteroids size in this range
+                    asteroidImage.setScaleX(size);
+                    asteroidImage.setScaleY(size);
+                    Asteroid asteroid = new Asteroid(asteroidImage,
+                            size, rnd.nextInt(-3*GameWindowWIDTH/4, -GameWindowWIDTH/4),
+                            rnd.nextInt(-3*GameWindowHEIGHT/4, -GameWindowHEIGHT/4));
+                    if(!asteroid.collide(ship.getHitbox())) {
+                        asteroids.add(asteroid);
+                        gamingPane.getChildren().add(asteroid.getImage());
+                        gamingPane.getChildren().add(asteroid.getHitbox().getPolygon()); // explicitly adding polygons eliminates delay in removal
                     }
+                }
 
-                    // move all objects
-                    ship.move();
-                    asteroids.forEach(asteroid -> asteroid.move());
-                    projectiles.forEach(projectile -> projectile.move());
-
-                    // removing colliding projectiles and asteroids
-                    projectiles.forEach(projectile -> {
-                        asteroids.forEach(asteroid -> {
-                            if(projectile.collide(asteroid.getHitbox())) {
-                                projectile.setAlive(false);
-                                asteroid.setAlive(false);
-                                setPointsToDisplay(points.addAndGet(1000));
-                                showPoints.setText("Points: " + pointsToDisplay);
-                            }
-                        });
-                    });
-                    projectiles.stream()
-                            .filter(projectile -> !projectile.isAlive())
-                            .forEach(projectile -> gamingPane.getChildren().remove(projectile.getPolygon())); // remove from the pane
-                    projectiles.removeAll(projectiles.stream()
-                            .filter(projectile -> !projectile.isAlive())
-                            .collect(Collectors.toList())); // remove from the projectiles list
-                    asteroids.stream()
-                            .filter(asteroid -> !asteroid.isAlive())
-                            .forEach(asteroid ->{
-                                gamingPane.getChildren().remove(asteroid.getImage());
-                                //gamingPane.getChildren().remove(asteroid.getHitbox().getPolygon()); // remove from the pane
-                            } );
-                    asteroids.removeAll(asteroids.stream()
-                            .filter(asteroid -> !asteroid.isAlive())
-                            .collect(Collectors.toList())); // remove from the asteroids list
-
-                    // add new asteroids randomly at the edges of the screen, if they don't collide with the ship
-                    if(Math.random() < 0.01) {
-                        ImageView asteroidImage = new ImageView(imageForAsteroid);
-                        Random rnd = new Random();
-                        double rangeMin = 0.1;
-                        double rangeMax = 0.2;
-                        double size = rangeMin + (rangeMax - rangeMin) * rnd.nextDouble(); // restrict asteroids size in this range
-                        asteroidImage.setScaleX(size);
-                        asteroidImage.setScaleY(size);
-                        Asteroid asteroid = new Asteroid(asteroidImage,
-                                size, rnd.nextInt(-3*GameWindowWIDTH/4, -GameWindowWIDTH/4),
-                                rnd.nextInt(-3*GameWindowHEIGHT/4, -GameWindowHEIGHT/4));
-                        if(!asteroid.collide(ship.getHitbox())) {
-                            asteroids.add(asteroid);
-                            gamingPane.getChildren().add(asteroid.getImage());
-                            //gamingPane.getChildren().add(asteroid.getHitbox().getPolygon());
+                // restart the game when ship and asteroids collide, replaced forEach with explicit for loop because i delete asteroids
+                for(int i=0; i < asteroids.size();i++){
+                    if(ship.collide(asteroids.get(i).getHitbox())){
+                        showPoints.setText("Points: 0");
+                        System.out.println("How well did it perform: " + points);
+                        points.set(0);
+                        resetEnvironment(gamingPane, shipImage, imageForAsteroid, asteroids, projectiles, scale);
+                        //System.out.println("resetEnvironment successful");
+                        if(playingNetworkID < networkPopulationSize - 1){
+                            changePlayingNetwork(ourNNPopulation); // can't change playing network here explicitly
+                            //System.out.println("changePlayingNetwork successful");
                         }
-                    }
-
-                    // restart the game when ship and asteroids collide, replaced forEach with explicit for loop because i delete asteroids
-                    for(int i=0; i < asteroids.size();i++){
-                        if(ship.collide(asteroids.get(i).getHitbox())){
-                            showPoints.setText("Points: 0");
-                            System.out.println("How well did it perform: " + points);
-                            points.set(0);
-                            resetEnvironment(gamingPane, shipImage, imageForAsteroid, asteroids, projectiles, scale);
-                            //System.out.println("resetEnvironment successful");
-                            if(playingNetworkID < networkPopulationSize - 1){
-                                changePlayingNetwork(ourNNPopulation); // can't change playing network here explicitly
-                                //System.out.println("changePlayingNetwork successful");
-                            }
-                            break;
-                        }
+                        break;
                     }
                 }
             }
         };
         player.start();
-
     }
 
     public void train(Pane gamingPane, Pane graphPane, LineChart lineChart, VBox messageWindow,
                       List<NeuralNetwork> ourNNPopulation, Text showPoints,
                       Text showEpisodeNumber, Image imageForAsteroid, ImageView shipImage, double scale,
-                      XYChart.Series bestScorePerEpisodeGraph, int totalEpisodes,
+                      XYChart.Series averageLossPerEpisodeGraph, int totalEpisodes,
                       int episodeDurationPerNetwork, int endEpisode, int playTime){
         int networkPopulationSize = ourNNPopulation.size();
         //System.out.println("we are inside train() method");
@@ -418,15 +420,14 @@ public class EvolutionarySearch {
                 }
 
                 int score = startTrainingEpisode(ourNNPopulation, episodeDurationPerNetwork); // trainingEpisode++ there
-                int bestPerformerScore = ourNNPopulation.get(0).getScoreForPrinting(); // can't define it outside
                 System.out.println("Episode: " + (trainingEpisode) +
                         "; Average score per network: " + 1.0*score / networkPopulationSize +
-                        "; Best score per generation: " + bestPerformerScore);
-                bestScorePerEpisodeGraph.getData().add(new XYChart.Data(trainingEpisode, bestPerformerScore));
+                        "; Best score per generation: " + ourNNPopulation.get(0).getScoreForPrinting());
+                averageLossPerEpisodeGraph.getData().add(new XYChart.Data(trainingEpisode, 1.0*score / networkPopulationSize));
 
                 // worth saving
-                if(bestPerformerScore > 4000) {
-                    saveNetworkParameters(ourNNPopulation, bestPerformerScore);
+                if(1.0*score / networkPopulationSize > -17000) { // adjust this parameter if training rewards are changed
+                    saveNetworkParameters(ourNNPopulation, ourNNPopulation.get(0).getScoreForPrinting());
                 }
 
                 if(trainingEpisode >= endEpisode && trainingEpisode < totalEpisodes) {
@@ -436,7 +437,7 @@ public class EvolutionarySearch {
 
                     playGame(gamingPane, graphPane, lineChart, messageWindow, ourNNPopulation, showPoints,
                             showEpisodeNumber, imageForAsteroid, shipImage,
-                            scale, bestScorePerEpisodeGraph, episodeDurationPerNetwork, totalEpisodes, playTime);
+                            scale, averageLossPerEpisodeGraph, episodeDurationPerNetwork, totalEpisodes, playTime);
                 }
 
                 if(trainingEpisode >= totalEpisodes) {
@@ -444,6 +445,7 @@ public class EvolutionarySearch {
                     //gamingPane.getChildren().add(showPoints);
                     //gamingPane.getChildren().add(showEpisodeNumber);
 
+                    graphPane.getChildren().remove(lineChart);
                     NNPLaysGameOnly ourBestNetworkPlays = new NNPLaysGameOnly();
                     ourBestNetworkPlays.start(gamingPane, graphPane, messageWindow, ourNNPopulation.get(0), lineChart);
                 }
@@ -457,7 +459,7 @@ public class EvolutionarySearch {
     public int startTrainingEpisode(List<NeuralNetwork> ourNNPopulation,int episodeDurationPerNetwork){
         // don't know if i should just forward this all in method call...
         int populationSize = ourNNPopulation.size();
-        int inputSize = ourNNPopulation.get(0).getInputSize();
+        int inputSize = ourNNPopulation.get(0).getInputSize(); // getFirst() doesn't work on some systems
         int hiddenSize = ourNNPopulation.get(0).getHiddenSize();
         int outputSize = ourNNPopulation.get(0).getOutputSize();
         double mutationRate = ourNNPopulation.get(0).getMutationRate();
@@ -473,55 +475,43 @@ public class EvolutionarySearch {
                 Polygon squarePolygon = new Polygon(-20*size, -20*size, 20*size, -20*size,
                         20*size, 20*size, -20*size, 20*size); // asteroid's size
                 Hitbox asteroid = new Hitbox(squarePolygon, Color.BLACK,
-                        rng.nextInt(-4*SinglePlayerView.WIDTH/5, -SinglePlayerView.WIDTH/5),
-                        rng.nextInt(-4*SinglePlayerView.HEIGHT/5, -SinglePlayerView.HEIGHT/5));
+                        rng.nextInt(-3*GameWindowWIDTH/4, -GameWindowWIDTH/4),
+                        rng.nextInt(-3*GameWindowHEIGHT/4, -GameWindowHEIGHT/4));
+                for(int k = 0; k < 3; k++) asteroid.accelerate();
                 asteroids.add(asteroid);
             }
             // projectiles will be stored here
-            List<Projectile> projectiles = new ArrayList<>();
+            //List<Projectile> projectiles = new ArrayList<>();
             //System.out.println("All ready to begin!");
 
             // Here we will have a speed-up version of a single player game, where every network will play a game.
             // We won't be displaying training process of every single network in real time, otherwise it would take forever
             int score = 0;
             for(int timestep = 0; timestep < episodeDurationPerNetwork; timestep++){
-                score++;
-                //System.out.println("timestep: " + timestep);
+                //score++;
+                //System.out.println("networkID " + networkID + "; timestep: " + timestep);
                 double[] input = getObservation(asteroids, playingNetwork.getShip());
                 int action = playingNetwork.forward(input); // pass observation to network and get action
                 // indices: 0 - X,Y; 1 - nextX,Y; 2 - nextX,nextY; 3 - X,nextY; 4 - prevX,nextY; 5 - prevX,Y; 6 - prevX,prevY, 7 - X,prevY; 8 - nextX,prevY
-                if (action == 0) {
-                    playingNetwork.getShip().getPolygon().setRotate(0);
-                }
-                else if (action == 1){
-                    playingNetwork.getShip().getPolygon().setRotate(45);
-                }
-                else if (action == 2) {
-                    playingNetwork.getShip().getPolygon().setRotate(90);
-                }
-                else if (action == 3) {
-                    playingNetwork.getShip().getPolygon().setRotate(135);
-                }
-                else if (action == 4) {
-                    playingNetwork.getShip().getPolygon().setRotate(-180);
-                }
-                else if (action == 5) {
-                    playingNetwork.getShip().getPolygon().setRotate(-135);
-                }
-                else if (action == 6) {
-                    playingNetwork.getShip().getPolygon().setRotate(-90);
-                }
-                else if (action == 7) {
-                    playingNetwork.getShip().getPolygon().setRotate(-45);
-                }
+                int angle = 45*action;
+                playingNetwork.getShip().getPolygon().setRotate(angle);
+                if(input[action+1] == 1) playingNetwork.addPoints(-100); // punish the network if it moves toward asteroid
                 for(int k = 0; k < 5; k++){
                     playingNetwork.getShip().decelerate();
                 }
                 for(int k = 0; k < 5; k++){
                     playingNetwork.getShip().accelerate();
                 }
+                // punish ship if it comes too close to boundaries where asteroids spawn
+                int shipX = (int) Math.abs(playingNetwork.getShip().getPolygon().getTranslateX());
+                int shipY = (int) Math.abs(playingNetwork.getShip().getPolygon().getTranslateY());
+                int X = shipX / 50;
+                int Y = shipY / 50;
+                if(X == 0 || Y == 0 || X == (int)(GameWindowWIDTH/50) - 1
+                        || Y == (int)(GameWindowHEIGHT/50) - 1) playingNetwork.addPoints(-10);
+
                 // network always shoots
-                if(projectiles.size() < 10 ){// limit number of projectiles present at the time to 10 (aka ammo capacity)
+                /*if(projectiles.size() < 10 ){// limit number of projectiles present at the time to 10 (aka ammo capacity)
                     // NN shoots
                     double changeX = 1*Math.cos(Math.toRadians(playingNetwork.getShip().getPolygon().getRotate()));
                     double changeY = 1*Math.sin(Math.toRadians(playingNetwork.getShip().getPolygon().getRotate()));
@@ -536,16 +526,16 @@ public class EvolutionarySearch {
 
                     projectile.accelerate();
                     projectile.setMovement(projectile.getMovement().normalize().multiply(3));
-                }
+                }*/
                 //System.out.println("input processed and decision is made");
 
                 // move objects and do it faster
                 playingNetwork.getShip().move();
                 asteroids.forEach(asteroid -> asteroid.move());
-                projectiles.forEach(projectile -> projectile.move());
+                //projectiles.forEach(projectile -> projectile.move());
 
                 // removing colliding projectiles and asteroids
-                projectiles.forEach(projectile -> {
+                /*projectiles.forEach(projectile -> {
                     asteroids.forEach(asteroid -> {
                         if(projectile.collide(asteroid)) {
                             projectile.setAlive(false);
@@ -560,16 +550,16 @@ public class EvolutionarySearch {
                 asteroids.removeAll(asteroids.stream()
                         .filter(asteroid -> !asteroid.isAlive())
                         .collect(Collectors.toList())); // remove from the asteroids list
-
+*/
                 // add new asteroids randomly at the edges of the screen, if they don't collide with the ship
-                if(Math.random() < 0.1) {
+                if(Math.random() < 0.05) {
                     Random rng = new Random();
                     double size = 0.5 + rng.nextDouble(); // let size of asteroids vary a bit
                     Polygon squarePolygon = new Polygon(-20*size, -20*size, 20*size, -20*size,
                             20*size, 20*size, -20*size, 20*size); // asteroid's size
                     Hitbox asteroid = new Hitbox(squarePolygon, Color.BLACK,
-                            rng.nextInt(-4*GameWindowWIDTH/5, -GameWindowWIDTH/5),
-                            rng.nextInt(-4*GameWindowHEIGHT/5, -GameWindowHEIGHT/5));
+                            rng.nextInt(-3*GameWindowWIDTH/4, -GameWindowWIDTH/4),
+                            rng.nextInt(-3*GameWindowHEIGHT/4, -GameWindowHEIGHT/4));
                     if(!asteroid.collide(playingNetwork.getShip())) {
                         asteroids.add(asteroid);
                     }
@@ -580,11 +570,26 @@ public class EvolutionarySearch {
                     if (playingNetwork.getShip().collide(asteroid)) {
                         playingNetwork.getShip().setAlive(false);
                         //System.out.println("Our NN died trying :(");
+                        playingNetwork.resetShip();
+
+                        playingNetwork.addPoints(-100);
                     }
                 });
+                // repopulate asteroids
                 if(!playingNetwork.getShip().isAlive()){
-                    playingNetwork.setScore(timestep);
-                    break;
+                    playingNetwork.getShip().setAlive(true);
+                    asteroids.clear();
+                    for(int i = 0; i < 10; i++){ // start with 10 asteroids
+                        Random rng = new Random();
+                        double size = 0.5 + rng.nextDouble(); // let size of asteroids vary a bit
+                        Polygon squarePolygon = new Polygon(-20*size, -20*size, 20*size, -20*size,
+                                20*size, 20*size, -20*size, 20*size); // asteroid's size
+                        Hitbox asteroid = new Hitbox(squarePolygon, Color.BLACK,
+                                rng.nextInt(-4*SinglePlayerView.WIDTH/5, -SinglePlayerView.WIDTH/5),
+                                rng.nextInt(-4*SinglePlayerView.HEIGHT/5, -SinglePlayerView.HEIGHT/5));
+                        for(int k = 0; k < 3; k++) asteroid.accelerate();
+                        asteroids.add(asteroid);
+                    }
                 }
             }
             //System.out.println("NN finished playing the game");
@@ -600,15 +605,16 @@ public class EvolutionarySearch {
 
         // networks evolve
         Collections.sort(ourNNPopulation); // sort network population by their performance
+        ourNNPopulation.get(0).setAveragePopulationScore(1.0*totalScore/populationSize);
         // discard everything and leave only top 10%
-        for(int i = 0; i < (int)(0.5*populationSize); i++){ //
+        for(int i = 0; i < (int)(0.75*populationSize); i++){ //
             NeuralNetwork toBeDisposed = ourNNPopulation.get(populationSize - 1 - i);
             ourNNPopulation.remove( populationSize - 1 - i);
             toBeDisposed = null; // remove loser network from memory
         }
         // refill population by duplicating networks that performed well
-        for(int i = 0; i < (int)(0.5*populationSize); i++){
-            for(int j = 0; j < 1; j++){
+        for(int i = 0; i < (int)(0.25*populationSize); i++){
+            for(int j = 0; j < 3; j++){
                 NeuralNetwork newNetwork = new NeuralNetwork(mutationRate, inputSize,hiddenSize,outputSize);
                 newNetwork.copyNetworkParameters(ourNNPopulation.get(i));
                 newNetwork.mutate();
@@ -687,19 +693,19 @@ public class EvolutionarySearch {
         pointsToDisplay = 0;
         // remove old ship
         gamingPane.getChildren().remove(ship.getImage());
-        //gamingPane.getChildren().remove(ship.getHitbox().getPolygon());
+        gamingPane.getChildren().remove(ship.getHitbox().getPolygon());
         // and add new
         ship = new Ship(shipImage, scale, 0,0);
         shipImage.setRotate(0);
         gamingPane.getChildren().add(ship.getImage());
-        //gamingPane.getChildren().add(ship.getHitbox().getPolygon());
+        gamingPane.getChildren().add(ship.getHitbox().getPolygon());
         //System.out.println("ship added");
         // remove old asteroids
         projectiles.forEach(projectile -> gamingPane.getChildren().remove(projectile.getPolygon())); // remove from the pane
         projectiles.clear(); // remove from the projectiles list
         asteroids.forEach(asteroid ->{
             gamingPane.getChildren().remove(asteroid.getImage());
-            //gamingPane.getChildren().remove(asteroid.getHitbox().getPolygon()); // remove from the pane
+            gamingPane.getChildren().remove(asteroid.getHitbox().getPolygon()); // remove from the pane
         });
         asteroids.clear();
         //System.out.println("projectiles and asteroids removed");
@@ -720,7 +726,7 @@ public class EvolutionarySearch {
         if(asteroids.isEmpty()) System.out.println("No asteroids added!");
         asteroids.forEach(asteroid -> {
             gamingPane.getChildren().add(asteroid.getImage());
-            //gamingPane.getChildren().add(asteroid.getHitbox().getPolygon());
+            gamingPane.getChildren().add(asteroid.getHitbox().getPolygon());
         });
         //System.out.println("Asteroids added");
     }
