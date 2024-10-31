@@ -6,6 +6,7 @@ module root.intelligentasteroidsshooter {
     requires java.sql;
     requires jdk.security.jgss;
     requires java.desktop;
+    requires jdk.compiler;
 
     opens root.intelligentasteroidsshooter to javafx.fxml;
     exports root.intelligentasteroidsshooter;

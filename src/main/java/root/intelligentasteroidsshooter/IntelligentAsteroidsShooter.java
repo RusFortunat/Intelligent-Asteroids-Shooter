@@ -3,6 +3,7 @@ package root.intelligentasteroidsshooter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import java.sql.SQLException;
 
@@ -19,6 +20,11 @@ public class IntelligentAsteroidsShooter extends Application  {
         startViewController.setChooseModeLabel();
         startViewController.setLangugeLabel();
 
+        window.getIcons().add(new Image(getClass().getResourceAsStream(
+                "/root/intelligentasteroidsshooter/images/pepega.png")));
+        //window.getIcons().add(new Image(getClass().getResource("/root/intelligentasteroidsshooter/images/pepega.jpg").toString()));
+        //window.getIcons().add(new Image(IntelligentAsteroidsShooter.class.getResourceAsStream(
+        //        "/root/intelligentasteroidsshooter/images/pepega.ico").toString()));
         window.setTitle("Intelligent Asteroids Shooter");
         window.setScene(startScene);
         window.show();
