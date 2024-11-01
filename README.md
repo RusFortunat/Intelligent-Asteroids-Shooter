@@ -13,14 +13,14 @@ and then this command to launch the app
 java --add-modules javafx.controls,javafx.fxml --module-path .\dependency-jars\ -jar .\Intelligent-Asteroids-Shooter-1.0-SNAPSHOT.jar
 ```
 
-## Single Player
+## Descriptiion
+### Single Player
 
 The single player mode was inspired by the exercise that comes from [MOOC Java Programming II course](https://java-programming.mooc.fi/part-14/3-larger-application-asteroids). After selecting your ship and game difficulty level, try shooting as much asteroids as you can and immortalize your name in the table of records. The later was implemented with use of H2 Database. 
 
 ![](https://github.com/RusFortunat/Intelligent-Asteroids-Shooter/blob/main/docs/player%20view.gif)
 
-
-## Train AI with Evolutionary Algorithm
+### Train Neural Networks with the Evolutionary Algorithm
 
 The neural network will be taking the observations of asteroid positions and the ship's velocity and then will be proposing possible actions. I will train the network with gradient-free Evolutionary Strategy apporach and track the performance improvement in the API as well.
 
