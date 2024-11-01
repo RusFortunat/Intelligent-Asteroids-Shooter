@@ -34,7 +34,7 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
     private double shipSize;
     private int score; // each network's performance will be evaluated through this score meter
     private int scoreForPrinting; // scores are being zeroed for every evolutional iteration, but this one is stored
-    private double averagePopulationScore; // we won't be zeroing this one
+    private double averagePopulationScore; // network is a part of population and this is a measure of population fitness
 
     // constructor; initialize a fully-connected neural network with random weights and biases
     public NeuralNetwork(double mutationRate, int inputSize, int hiddenSize, int outputSize){
@@ -51,7 +51,7 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
 
         // it is a good practice to limit distribution to inverse vector size
         //double rangeW1 = 1.0/inputSize;
-        double rangeW1 = 0.2;
+        double rangeW1 = 1.0;
         for(int i = 0; i < hiddenSize; i++){
             firstLayerBiases[i] = ThreadLocalRandom.current().nextDouble(-rangeW1,rangeW1);
             for(int j = 0; j < inputSize; j++) {
@@ -59,7 +59,7 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
             }
         }
         //double rangeW2 = 1.0/hiddenSize;
-        double rangeW2 = 0.2;
+        double rangeW2 = 1.0;
         for(int i = 0; i < outputSize; i++){
             secondLayerBiases[i] = ThreadLocalRandom.current().nextDouble(-rangeW2,rangeW2);
             for(int j = 0; j < hiddenSize; j++) {
@@ -88,6 +88,61 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
         this.firstLayerBiases = new double[hiddenSize];
         this.secondLayerWeights = new double[outputSize][hiddenSize];
         this.secondLayerBiases = new double[outputSize];
+    }
+
+    // create a new network from two parents via crossover
+    public NeuralNetwork(NeuralNetwork parent1, NeuralNetwork parent2){
+        this.inputSize = parent1.getInputSize();
+        this.hiddenSize = parent1.getHiddenSize();
+        this.outputSize = parent1.getOutputSize();
+        this.hiddenVector = new double[hiddenSize];
+        this.outputVector = new double[outputSize];
+        this.firstLayerWeights = new double[hiddenSize][inputSize];
+        this.firstLayerBiases = new double[hiddenSize];
+        this.secondLayerWeights = new double[outputSize][hiddenSize];
+        this.secondLayerBiases = new double[outputSize];
+        double[] parent1Biases1 = parent1.getFirstLayerBiases();
+        double[][] parent1Weights1 = parent1.getFirstLayerWeights();
+        double[] parent1Biases2 = parent1.getSecondLayerBiases();
+        double[][] parent1Weights2 = parent1.getSecondLayerWeights();
+        double[] parent2Biases1 = parent2.getFirstLayerBiases();
+        double[][] parent2Weights1 = parent2.getFirstLayerWeights();
+        double[] parent2Biases2 = parent2.getSecondLayerBiases();
+        double[][] parent2Weights2 = parent2.getSecondLayerWeights();
+
+        // create a new network with completely shuffled parameters from two parents
+        for(int i = 0; i < hiddenSize; i++){
+            int dice = ThreadLocalRandom.current().nextInt(0,2);
+            if(dice == 0) {
+                firstLayerBiases[i] = parent1Biases1[i];
+            }else{
+                firstLayerBiases[i] = parent2Biases1[i];
+            }
+            for(int j = 0; j < inputSize; j++) {
+                dice = ThreadLocalRandom.current().nextInt(0,2);
+                if(dice == 0){
+                    firstLayerWeights[i][j] = parent1Weights1[i][j];
+                }else{
+                    firstLayerWeights[i][j] = parent2Weights1[i][j];
+                }
+            }
+        }
+        for(int i = 0; i < outputSize; i++){
+            int dice = ThreadLocalRandom.current().nextInt(0,2);
+            if(dice == 0) {
+                secondLayerBiases[i] = parent1Biases2[i];
+            }else{
+                secondLayerBiases[i] = parent2Biases2[i];
+            }
+            for(int j = 0; j < hiddenSize; j++) {
+                dice = ThreadLocalRandom.current().nextInt(0,2);
+                if(dice == 0){
+                    secondLayerWeights[i][j] = parent1Weights2[i][j];
+                }else{
+                    secondLayerWeights[i][j] = parent2Weights2[i][j];
+                }
+            }
+        }
     }
 
     // forward pass -- we take in (agent surroundings, its orientation, speed) and ask for action (move/shoot)
@@ -123,9 +178,7 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
         //System.out.print("outputVector: [");
         for(int i = 0; i < outputSize; i++){
             outputVector[i] = Math.exp(outputVector[i]) / totalSum;
-            //System.out.print(outputVector[i] + ", ");
         }
-        //System.out.println("]");
 
         // randomly sample the action from probability distribution and return it
         Random rnd = new Random();
@@ -142,6 +195,8 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
 
         return action;
     }
+
+
 
     // mutate neural network parameters -- we will use Gaussian distribution with mutation rate as a standard deviation
     public void mutate(){
@@ -200,53 +255,6 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
         return NNparameters;
     }
 
-    // load params
-    public void loadNNparameters(Scanner fileReader){
-        boolean wePrint = false;
-        String skipString = fileReader.nextLine();
-        if(wePrint) System.out.println(skipString);
-        for(int i = 0; i < hiddenSize; i++){
-            String readFirstWeights = fileReader.nextLine();
-            String[] parts = readFirstWeights.split(",");
-            for(int j = 0; j < inputSize; j++) {
-                firstLayerWeights[i][j] = Double.valueOf(parts[j]);
-                if(wePrint) System.out.print(firstLayerWeights[i][j]);
-            }
-        }
-        if(wePrint) System.out.println("");
-        skipString = fileReader.nextLine();
-        skipString = fileReader.nextLine();
-        if(wePrint) System.out.println(skipString);
-        String readFirstBiases = fileReader.nextLine();
-        String[] parts = readFirstBiases.split(",");
-        for(int i = 0; i < hiddenSize; i++){
-            firstLayerBiases[i] = Double.valueOf(parts[i]);
-            if(wePrint) System.out.print(firstLayerBiases[i]);
-        }
-        if(wePrint) System.out.println("");
-        skipString = fileReader.nextLine();
-        skipString = fileReader.nextLine();
-        if(wePrint) System.out.println(skipString);
-        for(int i = 0; i < outputSize; i++){
-            String readSecondWeights = fileReader.nextLine();
-            parts = readSecondWeights.split(",");
-            for(int j = 0; j < hiddenSize; j++) {
-                secondLayerWeights[i][j] = Double.valueOf(parts[j]);
-            }
-        }
-        if(wePrint) System.out.println(secondLayerWeights);
-        skipString = fileReader.nextLine();
-        skipString = fileReader.nextLine();
-        if(wePrint) System.out.println(skipString);
-        readFirstBiases = fileReader.nextLine();
-        parts = readFirstBiases.split(",");
-        for(int i = 0; i < outputSize; i++){
-            secondLayerBiases[i] = Double.valueOf(parts[i]);
-        }
-        if(wePrint) System.out.println(secondLayerBiases);
-        skipString = fileReader.nextLine();
-    }
-
     public void copyNetworkParameters(NeuralNetwork successfulNetwork){
         firstLayerBiases = successfulNetwork.getFirstLayerBiases().clone();
         firstLayerWeights = successfulNetwork.getFirstLayerWeights().clone();
@@ -272,11 +280,11 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
     public void setAveragePopulationScore(double value) { averagePopulationScore = value;}
 
     // getters
+    public double getMutationRate() { return mutationRate; }
     public Hitbox getShip() { return ship; }
     public int getScore() { return score; }
     public int getScoreForPrinting() {return scoreForPrinting; }
     public double getAveragePopulationScore(){ return averagePopulationScore; }
-    public double getMutationRate() { return mutationRate; }
     public int getInputSize(){ return inputSize; }
     public int getHiddenSize(){ return hiddenSize; }
     public int getOutputSize(){ return outputSize; }

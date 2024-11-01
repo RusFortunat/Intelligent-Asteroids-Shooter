@@ -7,14 +7,12 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -29,7 +27,7 @@ public class NNPLaysGameOnly {
     private int pointsToDisplay;
     private int inGameAction;
     private int gameNumber;
-    private AnimationTimer player;
+    private AnimationTimer NNplayer;
 
     public NNPLaysGameOnly(){}
 
@@ -40,41 +38,6 @@ public class NNPLaysGameOnly {
         messageWindowLingerTime.setStart(Instant.now());
         messageWindow.setAlignment(Pos.CENTER);
         // getScoreForPrinting() = 0 means we loaded our network, the message below appears only after training
-        if(loadedNetwork.getAveragePopulationScore() < -16000 && loadedNetwork.getScoreForPrinting() != 0){
-            messageWindow.setVisible(true);
-            messageWindow.getChildren().clear();
-            Text finalResult = new Text("  Improvement is zero to none.");
-            Text loadNetworkMessage = new Text("Try increasing simulation parameters\n" +
-                    "   or load an already trained model");
-            finalResult.setLineSpacing(10);
-            loadNetworkMessage.setLineSpacing(10);
-            finalResult.setFont(Font.font("Arial", FontWeight.BOLD, 22));
-            loadNetworkMessage.setFont(Font.font("Arial", FontWeight.BOLD, 22));
-            messageWindow.getChildren().addAll(finalResult, loadNetworkMessage);
-        }
-        else if(loadedNetwork.getAveragePopulationScore() > -16000 && loadedNetwork.getScoreForPrinting() != 0){
-            messageWindow.setVisible(true);
-            messageWindow.getChildren().clear();
-            Text finalResult = new Text("   Improvement is decent, but \n" +
-                    "we can still do better");
-            Text loadNetworkMessage = new Text("Try increasing simulation parameters\n" +
-                    "   or load an already trained model");
-            finalResult.setLineSpacing(10);
-            loadNetworkMessage.setLineSpacing(10);
-            finalResult.setFont(Font.font("Arial", FontWeight.BOLD, 22));
-            loadNetworkMessage.setFont(Font.font("Arial", FontWeight.BOLD, 22));
-            messageWindow.getChildren().addAll(finalResult, loadNetworkMessage);
-        }
-        else if(loadedNetwork.getAveragePopulationScore() > -13000 && loadedNetwork.getScoreForPrinting() != 0){
-            messageWindow.setVisible(true);
-            messageWindow.getChildren().clear();
-            Text finalResult = new Text("I'm impressed that you actually run\n" +
-                    "simulation for a few hours to get this\n" +
-                    "far. ");
-            finalResult.setLineSpacing(10);
-            finalResult.setFont(Font.font("Arial", FontWeight.BOLD, 22));
-            messageWindow.getChildren().add(finalResult);
-        }
 
         // graph pane -- all of this could be avoided if i could modify X-Axis extension
         graphPane.getChildren().remove(lineChart);
@@ -124,7 +87,7 @@ public class NNPLaysGameOnly {
         gameNumber = 1;
 
         Random rng = new Random();
-        player = new AnimationTimer() {
+        NNplayer = new AnimationTimer() {
             @Override
             public void handle(long now) {
 
@@ -162,99 +125,110 @@ public class NNPLaysGameOnly {
 
             // allow to act every 0.2sec +/- 0.1sec
             int variationInActionTime = rng.nextInt(-100,100);
-            if(Duration.between(forActions.getStart(), Instant.now()).toMillis() > 200 + variationInActionTime){
-                forActions.setStart(Instant.now());
+                if(Duration.between(forActions.getStart(), Instant.now()).toMillis() > 200 + variationInActionTime){
+                    forActions.setStart(Instant.now()); // reset action timer
 
-                // network decides upon action, and executes it until next time to choose comes
-                List<Hitbox> asteroidHitboxes = asteroids.stream().map(s -> s.getHitbox()).toList();
-                double[] input = getObservation(asteroidHitboxes, ship.getHitbox(), loadedNetwork.getInputSize());
-                inGameAction = loadedNetwork.forward(input); // pass observation to network and get action
-                // get speed to zero
-                for(int k = 0; k < 5; k++){
-                    ship.decelerate();
-                }
-            }else{ // repeat actions until neural network doesn't choose a new one
-                // to make sure the code below works, i choose work only with positive angles
-                double angle = ship.getImage().getRotate() % 360;
-                if(angle < 0){
-                    ship.getImage().setRotate(angle + 360);
-                }else{
+                    // we provide asteroids locations as an input vector
+                    List<Hitbox> asteroidHitboxes = asteroids.stream().map(s -> s.getHitbox()).toList();
+                    double[] input = getObservation(asteroidHitboxes, ship.getHitbox(), loadedNetwork.getInputSize());
+                    inGameAction = loadedNetwork.forward(input); // pass observation to get new direction for motion
+                    // get speed to zero to prepare the ship to make a rotation
+                    for(int k = 0; k < 5; k++){
+                        ship.decelerate();
+                    }
+                }else{ // repeat actions until neural network doesn't choose a new one
+                    // TODO: compactly define rotation & remove ship's trembling / vibrating motion
+                    // restrict angle values between 0 and 360 for the code below to work
+                    int delta = 2;
+                    /*double angle = ship.getImage().getRotate() % 360 >= 0 ?
+                            ship.getImage().getRotate() % 360 : ship.getImage().getRotate() % 360 + 360;
                     ship.getImage().setRotate(angle);
-                }
+                    int chosenDirection = inGameAction*45;
+                    int oppositeEnd = inGameAction*45 + 180;
+                    // chooses shortest rotation path
 
-                if (inGameAction == 0) { // turn to 0 degrees (along +X axis)
-                    if(angle < 180){
-                        ship.turnRight();
+
+                    if(Math.abs(chosenDirection - angle) > delta) {
+                        if (angle < 180) {
+                            if (angle > chosenDirection && angle < oppositeEnd) {
+                                ship.turnLeft(); // += -3 grad
+                            } else {
+                                ship.turnRight(); // += 3 grad
+                            }
+                        } else {
+                            if (angle > chosenDirection || angle < oppositeEnd) {
+                                ship.turnLeft(); // += -3 grad
+                            } else {
+                                ship.turnRight(); // += 3 grad
+                            }
+                        }
+                    }*/
+                    double angle = ship.getImage().getRotate() % 360;
+                    if(angle < 0){
+                        ship.getImage().setRotate(angle + 360);
                     }else{
-                        ship.turnLeft();
+                        ship.getImage().setRotate(angle);
+                    }
+
+                    if (inGameAction == 0) { // turn to 0 degrees (along +X axis)
+                        if(angle < 180 && angle > delta){
+                            ship.turnRight();
+                        }else{
+                            ship.turnLeft();
+                        }
+                    }
+                    else if (inGameAction == 1){ // turn to +45 degrees (+X,+Y)
+                        if(angle > 45+delta && angle < 225){
+                            ship.turnRight();
+                        }else{
+                            ship.turnLeft();
+                        }
+                    }
+                    else if (inGameAction == 2) { // turn to +90 degrees (0,+Y)
+                        if(angle > 90+delta && angle < 270){
+                            ship.turnRight();
+                        }else{
+                            ship.turnLeft();
+                        }
+                    }
+                    else if (inGameAction == 3) { // turn to +135 degrees (-X,+Y)
+                        if(angle > 135 + delta && angle < 315){
+                            ship.turnRight();
+                        }else{
+                            ship.turnLeft();
+                        }
+                    }
+                    else if (inGameAction == 4) { // turn to +180 degrees (-X,0)
+                        if(angle > 180 + delta){
+                            ship.turnRight();
+                        }else{
+                            ship.turnLeft();
+                        }
+                    }
+                    else if (inGameAction == 5) { // turn to +225 degrees (-X,-Y)
+                        if(angle > 225 + delta || angle < 45 - delta){
+                            ship.turnRight();
+                        }else{
+                            ship.turnLeft();
+                        }
+                    }
+                    else if (inGameAction == 6) { // turn to +270 degrees (0,-Y)
+                        if(angle > 270 + delta || angle < 90 - delta){
+                            ship.turnRight();
+                        }else{
+                            ship.turnLeft();
+                        }
+                    }
+                    else if (inGameAction == 7) { // turn to +315 degrees (+X,-Y)
+                        if(angle > 315 + delta || angle < 135 - delta){
+                            ship.turnRight();
+                        }else{
+                            ship.turnLeft();
+                        }
                     }
 
                     ship.accelerate();
                 }
-                else if (inGameAction == 1){ // turn to +45 degrees (+X,+Y)
-                    if(angle > 45 && angle < 225){
-                        ship.turnRight();
-                    }else{
-                        ship.turnLeft();
-                    }
-
-                    ship.accelerate();
-                }
-                else if (inGameAction == 2) { // turn to +90 degrees (0,+Y)
-                    if(angle > 90 && angle < 270){
-                        ship.turnRight();
-                    }else{
-                        ship.turnLeft();
-                    }
-
-                    ship.accelerate();
-                }
-                else if (inGameAction == 3) { // turn to +135 degrees (-X,+Y)
-                    if(angle > 135 && angle < 315){
-                        ship.turnRight();
-                    }else{
-                        ship.turnLeft();
-                    }
-
-                    ship.accelerate();
-                }
-                else if (inGameAction == 4) { // turn to +180 degrees (-X,0)
-                    if(angle > 180){
-                        ship.turnRight();
-                    }else{
-                        ship.turnLeft();
-                    }
-
-                    ship.accelerate();
-                }
-                else if (inGameAction == 5) { // turn to +225 degrees (-X,-Y)
-                    if(angle > 225 || angle < 45){
-                        ship.turnRight();
-                    }else{
-                        ship.turnLeft();
-                    }
-
-                    ship.accelerate();
-                }
-                else if (inGameAction == 6) { // turn to +270 degrees (0,-Y)
-                    if(angle > 270 || angle < 90){
-                        ship.turnRight();
-                    }else{
-                        ship.turnLeft();
-                    }
-
-                    ship.accelerate();
-                }
-                else if (inGameAction == 7) { // turn to +315 degrees (+X,-Y)
-                    if(angle > 315 || angle < 135){
-                        ship.turnRight();
-                    }else{
-                        ship.turnLeft();
-                    }
-
-                    ship.accelerate();
-                }
-            }
 
             // network always shoots if it can
             if (projectiles.size() < 5) {// limit number of projectiles present at the time to 10 (aka ammo capacity)
@@ -279,8 +253,6 @@ public class NNPLaysGameOnly {
             ship.move();
             asteroids.forEach(asteroid -> asteroid.move());
             projectiles.forEach(projectile -> projectile.move());
-
-
 
             // add new asteroids randomly at the edges of the screen, if they don't collide with the ship
             if(Math.random() < 0.01) {
@@ -318,7 +290,7 @@ public class NNPLaysGameOnly {
             }
             }
         };
-        player.start();
+        NNplayer.start();
     }
 
     private void resetEnvironment(Pane gamingPane, ImageView shipImage, Image imageForAsteroid,
@@ -366,6 +338,10 @@ public class NNPLaysGameOnly {
             gamingPane.getChildren().add(asteroid.getHitbox().getPolygon());
         });
         //System.out.println("Asteroids added");
+    }
+
+    public void stopExecution(){
+        NNplayer.stop();
     }
 
     public double[] getObservation(List<Hitbox> asteroids, Hitbox ship, int inputSize){
@@ -426,5 +402,5 @@ public class NNPLaysGameOnly {
 
     public void setPointsToDisplay(int value) { pointsToDisplay = value;}
 
-    public AnimationTimer getPlayer(){ return player;}
+    public AnimationTimer getPlayer(){ return NNplayer;}
 }

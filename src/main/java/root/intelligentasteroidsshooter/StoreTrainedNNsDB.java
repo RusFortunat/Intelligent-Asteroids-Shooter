@@ -40,15 +40,19 @@ public class StoreTrainedNNsDB {
 
     public void addNetworkToDB(int score, String firstLayerWeights, String firstLayerBiases,
                     String secondLayerWeights, String secondLayerBiases) throws SQLException {
-        try (Connection connection = createConnectionAndEnsureDatabase()) {
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO TrainedNNs " +
-                    "(score, firstLayerWeights, firstLayerBiases, secondLayerWeights, secondLayerBiases) VALUES (?, ?, ?, ?, ?)");
-            stmt.setInt(1, score); // seriously? SQL indexing starts from 1?
-            stmt.setString(2, firstLayerWeights);
-            stmt.setString(3, firstLayerBiases);
-            stmt.setString(4, secondLayerWeights);
-            stmt.setString(5, secondLayerBiases);
-            stmt.executeUpdate();
+
+        List<String> content = this.getSavedList();
+        if(!content.contains(score+"")){
+            try (Connection connection = createConnectionAndEnsureDatabase()) {
+                PreparedStatement stmt = connection.prepareStatement("INSERT INTO TrainedNNs " +
+                        "(score, firstLayerWeights, firstLayerBiases, secondLayerWeights, secondLayerBiases) VALUES (?, ?, ?, ?, ?)");
+                stmt.setInt(1, score); // seriously? SQL indexing starts from 1?
+                stmt.setString(2, firstLayerWeights);
+                stmt.setString(3, firstLayerBiases);
+                stmt.setString(4, secondLayerWeights);
+                stmt.setString(5, secondLayerBiases);
+                stmt.executeUpdate();
+            }
         }
     }
 

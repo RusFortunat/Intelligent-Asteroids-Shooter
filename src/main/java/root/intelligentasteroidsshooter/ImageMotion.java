@@ -19,8 +19,7 @@ public abstract class ImageMotion {
         this.scale = scale;
         imageWidth = 0.5*scale*imageFile.getImage().getWidth();
         imageHeight = 0.5*scale*imageFile.getImage().getHeight();
-        //System.out.println("imageWidth: " + imageWidth);
-        //System.out.println("imageWidth: " + imageHeight);
+
         // Polygon and ImageView coordinates diverge, have to search for these numbers by hand to ensure overlap
         // as a gamer myself -- I *hate* when hitboxes are wrong!
         if(imageWidth < 25){
@@ -60,7 +59,6 @@ public abstract class ImageMotion {
     public void turnLeft() {
         this.hitbox.turnLeft();
         this.image.setRotate(this.hitbox.getPolygon().getRotate() - 3);
-        //this.image.setRotate(this.image.getRotate() - 3);
     }
 
     public void turnRight() {
