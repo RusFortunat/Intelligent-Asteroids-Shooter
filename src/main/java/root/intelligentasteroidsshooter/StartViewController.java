@@ -65,7 +65,7 @@ public class StartViewController {
         startViewPane.setBackground(paneBackgr);
         language.setVisible(false);
         languageChoice.setVisible(false);
-
+        chooseMode.setTextFill(Color.WHITE);
     }
 
     @FXML
