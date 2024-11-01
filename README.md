@@ -18,11 +18,11 @@ java --add-modules javafx.controls,javafx.fxml --module-path .\dependency-jars\ 
 
 The single player mode was inspired by the exercise that comes from [MOOC Java Programming II course](https://java-programming.mooc.fi/part-14/3-larger-application-asteroids). After selecting your ship and game difficulty level, try shooting as much asteroids as you can and immortalize your name in the table of records. The later was implemented with use of H2 Database. 
 
-![](https://github.com/RusFortunat/Intelligent-Asteroids-Shooter/blob/main/docs/player%20view.gif)
+![](https://github.com/RusFortunat/Intelligent-Asteroids-Shooter/blob/main/docs/Single%20Player%20mode.mp4)
 
 ### Train Neural Networks with the Evolutionary Algorithm
 
 The neural network will be taking the observations of asteroid positions and the ship's velocity and then will be proposing possible actions. I will train the network with gradient-free Evolutionary Strategy apporach and track the performance improvement in the API as well.
 
-![](https://github.com/RusFortunat/Intelligent-Asteroids-Shooter/blob/main/docs/training%20view.gif)
+![](https://github.com/RusFortunat/Intelligent-Asteroids-Shooter/blob/main/docs/Train%20AI%20mode.mp4)
 
