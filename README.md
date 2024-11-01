@@ -24,5 +24,5 @@ The single player mode was inspired by the exercise that comes from [MOOC Java P
 
 The neural network will be taking the observations of asteroid positions and the ship's velocity and then will be proposing possible actions. I will train the network with gradient-free Evolutionary Strategy apporach and track the performance improvement in the API as well.
 
-![](https://github.com/RusFortunat/Intelligent-Asteroids-Shooter/blob/main/docs/Train%20AI%20mode.mp4)
+![](https://github.com/RusFortunat/Intelligent-Asteroids-Shooter/blob/main/docs/trainAI%20mode.mp4)
 
