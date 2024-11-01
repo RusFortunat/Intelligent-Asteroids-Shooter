@@ -54,7 +54,7 @@ public class EvolutionarySearch {
         hiddenSize = 16;
         outputSize = 8; // directions of motion
         double mutationRate = 0.01; // aka learning rate in machine learning
-        int playTime = 5000; // in milliseconds, e.g., 15sec
+        int playTime = 10000; // in milliseconds, e.g., 15sec
 
         // create population of neural networks that will be playing the game
         List<NeuralNetwork> ourNNPopulation = new ArrayList<>();
@@ -108,7 +108,7 @@ public class EvolutionarySearch {
         // show the first message to user after the training has begun
         Timer forFirstMessage = new Timer(); // to set message linger time
         forFirstMessage.setStart(Instant.now());
-        if(Duration.between(forFirstMessage.getStart(), Instant.now()).toMillis() < 6000){ // show message for 5 sec
+        if(Duration.between(forFirstMessage.getStart(), Instant.now()).toMillis() < 5000){ // show message for 5 sec
             messageWindow.setVisible(true);
             messageWindow.getChildren().clear();
             Text welcomeDescription = new Text("We create " + networkPopulationSize + " neural networks\n" +
@@ -185,7 +185,8 @@ public class EvolutionarySearch {
                         ship.decelerate();
                     }
                 }else{ // repeat actions until neural network doesn't choose a new one
-                    // TODO: compactly define rotation & remove ship's trembling / vibrating motion
+                    // TODO: fix compact rotation code block below by removing ship's trembling / vibrating motion;
+                    int delta = 2;
                     // restrict angle values between 0 and 360 for the code below to work
                     /*double angle = ship.getImage().getRotate() % 360 >= 0 ?
                             ship.getImage().getRotate() % 360 : ship.getImage().getRotate() % 360 + 360;
@@ -193,7 +194,6 @@ public class EvolutionarySearch {
                     int chosenDirection = inGameAction*45;
                     int oppositeEnd = inGameAction*45 + 180;
                     // chooses shortest rotation path
-                    int delta = 5;
 
                     if(Math.abs(chosenDirection - angle) > delta) {
                         if (angle < 180) {
@@ -218,76 +218,60 @@ public class EvolutionarySearch {
                     }
 
                     if (inGameAction == 0) { // turn to 0 degrees (along +X axis)
-                        if(angle < 180){
+                        if(angle < 180 && angle > delta){
                             ship.turnRight();
                         }else{
                             ship.turnLeft();
                         }
-
-                        ship.accelerate();
                     }
                     else if (inGameAction == 1){ // turn to +45 degrees (+X,+Y)
-                        if(angle > 45 && angle < 225){
+                        if(angle > 45+delta && angle < 225){
                             ship.turnRight();
                         }else{
                             ship.turnLeft();
                         }
-
-                        ship.accelerate();
                     }
                     else if (inGameAction == 2) { // turn to +90 degrees (0,+Y)
-                        if(angle > 90 && angle < 270){
+                        if(angle > 90+delta && angle < 270){
                             ship.turnRight();
                         }else{
                             ship.turnLeft();
                         }
-
-                        ship.accelerate();
                     }
                     else if (inGameAction == 3) { // turn to +135 degrees (-X,+Y)
-                        if(angle > 135 && angle < 315){
+                        if(angle > 135 + delta && angle < 315){
                             ship.turnRight();
                         }else{
                             ship.turnLeft();
                         }
-
-                        ship.accelerate();
                     }
                     else if (inGameAction == 4) { // turn to +180 degrees (-X,0)
-                        if(angle > 180){
+                        if(angle > 180 + delta){
                             ship.turnRight();
                         }else{
                             ship.turnLeft();
                         }
-
-                        ship.accelerate();
                     }
                     else if (inGameAction == 5) { // turn to +225 degrees (-X,-Y)
-                        if(angle > 225 || angle < 45){
+                        if(angle > 225 + delta || angle < 45 - delta){
                             ship.turnRight();
                         }else{
                             ship.turnLeft();
                         }
-
-                        ship.accelerate();
                     }
                     else if (inGameAction == 6) { // turn to +270 degrees (0,-Y)
-                        if(angle > 270 || angle < 90){
+                        if(angle > 270 + delta || angle < 90 - delta){
                             ship.turnRight();
                         }else{
                             ship.turnLeft();
                         }
-
-                        ship.accelerate();
                     }
                     else if (inGameAction == 7) { // turn to +315 degrees (+X,-Y)
-                        if(angle > 315 || angle < 135){
+                        if(angle > 315 + delta || angle < 135 - delta){
                             ship.turnRight();
                         }else{
                             ship.turnLeft();
                         }
-
-                        ship.accelerate();
                     }
 
                     ship.accelerate();
@@ -381,8 +365,8 @@ public class EvolutionarySearch {
 
                     // this is the first training half
                     int endEpisode = 0;
-                    if(trainingEpisode <totalEpisodes/2){
-                        endEpisode = totalEpisodes/2;
+                    if(trainingEpisode <totalEpisodes) {
+                        endEpisode = totalEpisodes;
 
                         // display message for the first time training
                         messageWindow.setVisible(true);
@@ -402,9 +386,9 @@ public class EvolutionarySearch {
                                 showEpisodeNumber, imageForAsteroid, shipImage,
                                 scale, averageScorePerEpisodeGraph, totalEpisodes, episodeDurationPerNetwork,
                                 endEpisode, playTime);
-
+                    }
                     // the second half of the training
-                    }else if(trainingEpisode >= totalEpisodes/2 && trainingEpisode < totalEpisodes){
+                    /*}else if(trainingEpisode >= totalEpisodes/2 && trainingEpisode < totalEpisodes){
                         endEpisode = totalEpisodes;
 
                         // second message
@@ -424,7 +408,7 @@ public class EvolutionarySearch {
                                 showEpisodeNumber, imageForAsteroid, shipImage,
                                 scale, averageScorePerEpisodeGraph, totalEpisodes, episodeDurationPerNetwork,
                                 endEpisode, playTime);
-                    }
+                    }*/
                 }
             }
         };

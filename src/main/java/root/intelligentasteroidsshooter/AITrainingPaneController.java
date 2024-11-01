@@ -3,7 +3,9 @@ package root.intelligentasteroidsshooter;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.*;
@@ -237,6 +239,19 @@ public class AITrainingPaneController {
 
     @FXML
     protected void closeTrainingSession(){
+        FXMLLoader startView = new FXMLLoader(IntelligentAsteroidsShooter.class.getResource("start-view.fxml"));
+        try{
+            Scene startViewScene = new Scene(startView.load());
+            StartViewController startViewController = startView.getController();
+            startViewController.setBackground();
+
+            Stage startViewStage = new Stage();
+            startViewStage.setScene(startViewScene);
+            startViewStage.show();
+        }catch(Exception em){
+            System.out.printf(em.getMessage());
+        }
+
         Stage stage = (Stage) closeWindow.getScene().getWindow();
         stage.close();
     }

@@ -1,9 +1,9 @@
-#recordTable .table-view .column-header .label {
+.table-view .column-header .label {
     -fx-text-fill: white;
     -fx-font-weight: bold;
 }
 
-#recordTable .table-view .scroll-bar * {
+.table-view .scroll-bar * {
     -fx-min-width: 0;
     -fx-pref-width: 0;
     -fx-max-width: 0;

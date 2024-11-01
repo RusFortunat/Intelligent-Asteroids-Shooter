@@ -137,7 +137,7 @@ public class NNPLaysGameOnly {
                         ship.decelerate();
                     }
                 }else{ // repeat actions until neural network doesn't choose a new one
-                    // TODO: compactly define rotation & remove ship's trembling / vibrating motion
+                    // TODO: fix compact rotation code block below by removing ship's trembling / vibrating motion;
                     // restrict angle values between 0 and 360 for the code below to work
                     int delta = 2;
                     /*double angle = ship.getImage().getRotate() % 360 >= 0 ?
