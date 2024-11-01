@@ -251,7 +251,8 @@ public class SinglePlayerView {
         restartController.setBackground();
         restartController.setLabels(score);
 
-        RecordTableDB recordTableDB = new RecordTableDB("jdbc:h2:./record-table-database");
+        RecordTableDB recordTableDB =
+                new RecordTableDB("jdbc:h2:./src/main/resources/root/intelligentasteroidsshooter/record-table-database");
         try{
             List<String> records = recordTableDB.toList().stream()
                     .map(row->row.split(","))
