@@ -4,7 +4,7 @@ Classic ATARI-like asteroid shooter game with an AI twist -- in additional to Si
 
 ## Installation
 
-This is a Java desktop application that was written with JavaFX. Therefore, to install and run the application you will need to have [Maven](https://maven.apache.org/download.cgi), [JDK 23](https://www.oracle.com/java/technologies/downloads/#jdk23-linux), and latest [JavaFX](https://gluonhq.com/products/javafx/) on your machine. Assuming you have all three (and added all to your PATH as well), use the following command to generate .jar file that is needed for app execution:
+This is a Java desktop application that was written with JavaFX. Therefore, after cloning the project, to install and run the application you will need to have [Maven](https://maven.apache.org/download.cgi), [JDK 23](https://www.oracle.com/java/technologies/downloads/#jdk23-linux), and [JavaFX](https://gluonhq.com/products/javafx/) on your machine. Assuming you have all three (and added maven & JDK to your PATH as well), use the following command to generate .jar file that is needed for app execution:
 ```
 mvn install
 ```
@@ -22,7 +22,19 @@ The single player mode was inspired by the exercise that comes from [MOOC Java P
 
 ### Train Neural Networks with the Evolutionary Algorithm
 
-The neural network will be taking the observations of asteroid positions and the ship's velocity and then will be proposing possible actions. I will train the network with gradient-free Evolutionary Strategy apporach and track the performance improvement in the API as well.
+![](https://github.com/RusFortunat/Intelligent-Asteroids-Shooter/blob/main/src/main/resources/root/intelligentasteroidsshooter/images/schematics.png)
+
+In our implementation, the neural network receives information about the ship surroundings and whether the ship is close to the screen edges where asteroids spawn. The neural network processes the input using regular forward-propagation with ReLU activation and produces probabilities of the ship to choose a certain orientation. We train the neural networks by using **Evolutionary Algorithm**:
+0. Create a collection of different networks with random parameters 
+1. Let the networks stir the ship and estimate their individual performance
+2. Select top 25% networks that perform better and discard the rest
+3. Generate new "child" networks via crossover: pick two successful "parents" and create a new set of parameters by randomly picking the same parameters from parent1 or parent2.
+4. Mutate the neural network parameters of all networks by some small amount
+5. Repeat 1-4
+
+If all works well, you should see the average performance of the network population steadily growing, as in this sample video:
 
 ![](https://github.com/RusFortunat/Intelligent-Asteroids-Shooter/blob/main/docs/trainAI-mode.gif)
 
+## Author
+Ruslan Mukhamadiarov
