@@ -28,7 +28,7 @@ In our implementation, the neural network receives information about the ship su
 
 We train the neural networks by using the following implementation of **Evolutionary Algorithm**:
 1. Create a collection of different networks with random parameters 
-2. Let the networks stir the ship and estimate their individual performance
+2. Let the networks stir the ship and estimate their individual performances
 3. Select top 25% networks that perform better and discard the rest
 4. Generate new "child" networks via crossover: pick two successful "parents" and create a new set of parameters by randomly picking the same parameters from parent1 or parent2.
 5. Mutate the neural network parameters of all networks by some small amount
