@@ -127,16 +127,16 @@ public class EvolutionarySearch {
         // play game and train networks alternatively
         // i need to call train() method from within playGame(), otherwise the program tries executing them together
         // and fails. The concept of stack works funny for Javafx and AnimationTimer()
-        playGame(gamingPane, graphPane, lineChart, messageWindow, ourNNPopulation, showPoints, showEpisodeNumber,
+        playGame(gamingPane, messageWindow, ourNNPopulation, showPoints, showEpisodeNumber,
                 imageForAsteroid, shipImage, scale, averageScorePerEpisode, episodeDurationPerNetwork, totalEpisodes,
                 playTime);
     }
 
     // the method launches game on the left gaming window to demonstrate how the neural network controls tre ship
-    public void playGame(Pane gamingPane, Pane graphPane, LineChart lineChart, VBox messageWindow,
-                         List<NeuralNetwork> ourNNPopulation, Text showPoints, Text showEpisodeNumber,
-                         Image imageForAsteroid, ImageView shipImage, double scale,
-                         XYChart.Series averageScorePerEpisodeGraph, int episodeDurationPerNetwork, int totalEpisodes, int playTime){
+    public void playGame(Pane gamingPane, VBox messageWindow, List<NeuralNetwork> ourNNPopulation, Text showPoints,
+                         Text showEpisodeNumber, Image imageForAsteroid, ImageView shipImage, double scale,
+                         XYChart.Series averageScorePerEpisodeGraph, int episodeDurationPerNetwork, int totalEpisodes,
+                         int playTime){
 
         // (re-)set the environment
         int networkPopulationSize = ourNNPopulation.size();
@@ -277,7 +277,7 @@ public class EvolutionarySearch {
                     ship.accelerate();
                 }
 
-                // network always shoots if it can
+                // ship always shoots if it can
                 if (projectiles.size() < 5) {// limit number of projectiles present at the time to 10 (aka ammo capacity)
                     // set the projectile's direction to be the same as the ship's orientation
                     double changeX = 1 * Math.cos(Math.toRadians(ship.getImage().getRotate()));
@@ -302,7 +302,6 @@ public class EvolutionarySearch {
                 // add new asteroids randomly at the edges of the screen, if they don't collide with the ship
                 if(Math.random() < 0.01) {
                     ImageView asteroidImage = new ImageView(imageForAsteroid);
-                    //Random rnd = new Random(); // to make asteroid sizes random
                     double rangeMin = 0.1;
                     double rangeMax = 0.2;
                     double size = ThreadLocalRandom.current().nextDouble(rangeMin,rangeMax); // restrict asteroids size in this range
@@ -361,9 +360,8 @@ public class EvolutionarySearch {
 
                 // stop playing after a certain time
                 if(Duration.between(forEntireGame.getStart(), Instant.now()).toMillis() > playTime){
-                    stop(); // stop -> train for a certain number of episodes -> and then start playing again
+                    stop(); // stop -> train for a certain number of episodes
 
-                    // this is the first training half
                     int endEpisode = 0;
                     if(trainingEpisode <totalEpisodes) {
                         endEpisode = totalEpisodes;
@@ -382,44 +380,17 @@ public class EvolutionarySearch {
                         messageWindow.setAlignment(Pos.CENTER);
 
                         // begin training
-                        train(gamingPane, graphPane, lineChart, messageWindow, ourNNPopulation, showPoints,
-                                showEpisodeNumber, imageForAsteroid, shipImage,
-                                scale, averageScorePerEpisodeGraph, totalEpisodes, episodeDurationPerNetwork,
-                                endEpisode, playTime);
+                        train(gamingPane, messageWindow, ourNNPopulation, averageScorePerEpisodeGraph,
+                                totalEpisodes, episodeDurationPerNetwork);
                     }
-                    // the second half of the training
-                    /*}else if(trainingEpisode >= totalEpisodes/2 && trainingEpisode < totalEpisodes){
-                        endEpisode = totalEpisodes;
-
-                        // second message
-                        messageWindow.setVisible(true);
-                        messageWindow.getChildren().clear();
-                        Text lessRandomResult = new Text("Ship should be doing better,\n" +
-                                "      but not much better");
-                        Text trainContinues = new Text("Lets continue with training");
-                        lessRandomResult.setLineSpacing(10);
-                        trainContinues.setLineSpacing(10);
-                        lessRandomResult.setFont(Font.font("Arial", FontWeight.BOLD, 22));
-                        trainContinues.setFont(Font.font("Arial", FontWeight.BOLD, 22));
-                        messageWindow.getChildren().addAll(lessRandomResult, trainContinues);
-                        messageWindow.setAlignment(Pos.CENTER);
-
-                        train(gamingPane, graphPane, lineChart, messageWindow, ourNNPopulation, showPoints,
-                                showEpisodeNumber, imageForAsteroid, shipImage,
-                                scale, averageScorePerEpisodeGraph, totalEpisodes, episodeDurationPerNetwork,
-                                endEpisode, playTime);
-                    }*/
                 }
             }
         };
         player.start();
     }
 
-    public void train(Pane gamingPane, Pane graphPane, LineChart lineChart, VBox messageWindow,
-                      List<NeuralNetwork> ourNNPopulation, Text showPoints,
-                      Text showEpisodeNumber, Image imageForAsteroid, ImageView shipImage, double scale,
-                      XYChart.Series averageLossPerEpisodeGraph, int totalEpisodes,
-                      int episodeDurationPerNetwork, int endEpisode, int playTime){
+    public void train(Pane gamingPane, VBox messageWindow, List<NeuralNetwork> ourNNPopulation,
+                      XYChart.Series averageLossPerEpisodeGraph, int totalEpisodes, int episodeDurationPerNetwork){
 
         int networkPopulationSize = ourNNPopulation.size();
 
@@ -448,20 +419,7 @@ public class EvolutionarySearch {
                     saveNetworkParameters(ourNNPopulation, ourNNPopulation.get(0).getScoreForPrinting());
                 }
 
-                // stop training
-                if(trainingEpisode >= endEpisode && trainingEpisode < totalEpisodes) {
-                    stop();
-                    // prepare gaming window and restart game
-                    gamingPane.getChildren().add(showPoints);
-                    gamingPane.getChildren().add(showEpisodeNumber);
-
-                    playGame(gamingPane, graphPane, lineChart, messageWindow, ourNNPopulation, showPoints,
-                            showEpisodeNumber, imageForAsteroid, shipImage,
-                            scale, averageLossPerEpisodeGraph, episodeDurationPerNetwork, totalEpisodes, playTime);
-                }
-
-                // after training is done, select the best network from the population and let it continue playing until
-                // the user closes the window or chooses some other action
+                //
                 if(trainingEpisode >= totalEpisodes) {
                     stop();
                     player.stop();
@@ -475,10 +433,6 @@ public class EvolutionarySearch {
                     messageWindow.getChildren().addAll(finalResult1, finalResult2);
                     messageWindow.setAlignment(Pos.CENTER);
                     messageWindow.setPadding(new Insets(20));
-
-                    //graphPane.getChildren().remove(lineChart);
-                    //NNPLaysGameOnly ourBestNetworkPlays = new NNPLaysGameOnly(); // we will use a separate method for play-only
-                    //ourBestNetworkPlays.start(gamingPane, graphPane, messageWindow, ourNNPopulation.get(0), lineChart);
                 }
             }
         };
@@ -490,8 +444,6 @@ public class EvolutionarySearch {
     public int startTrainingEpisode(List<NeuralNetwork> ourNNPopulation,int episodeDurationPerNetwork){
 
         int populationSize = ourNNPopulation.size();
-        double mutationRate = ourNNPopulation.get(0).getMutationRate();
-        //Random dice = new Random();
 
         // networks play the game
         for(int networkID = 0; networkID < populationSize; networkID++){
@@ -523,11 +475,9 @@ public class EvolutionarySearch {
                 }else{
                     input[12] = 1;
                 }
-                //System.out.println("input[]: " + input);
 
-                // pass the input to the network and get the action
+                // pass the input to the network and get the action from it
                 int action = playingNetwork.forward(input);
-                //System.out.println("action " + action);
 
                 // now punish the network for wrong moves and reward for good ones -- in essence, here happens the supervised learning
                 int punishValue = -5;
@@ -565,7 +515,7 @@ public class EvolutionarySearch {
         for(int i = 0; i < (int)(0.75*populationSize); i++){ // chao losers
             NeuralNetwork toBeDisposed = ourNNPopulation.get(populationSize - 1 - i);
             ourNNPopulation.remove( populationSize - 1 - i);
-            toBeDisposed = null; // remove loser network from memory
+            toBeDisposed = null; // remove loser network from memory, is it necessary?
         }
 
         // refill population by duplicating networks that performed well
@@ -613,7 +563,7 @@ public class EvolutionarySearch {
             int yAst = (int) Math.abs(ast.getPolygon().getTranslateY());
             int astX = xAst / 100;
             int astY = yAst / 100;
-            //System.out.println("asteroid coordinates: x = " + xAst + ", y = " + yAst + "; X = " + astX + "; Y = " + astY );
+
             if(astX == X && astY == Y){
                 shipObservation[0] = 1;
             }

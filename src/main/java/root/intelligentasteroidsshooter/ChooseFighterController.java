@@ -6,7 +6,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -20,10 +19,6 @@ public class ChooseFighterController {
     private VBox diffcultySelection;
     @FXML
     private Button pepeButton;
-    @FXML
-    private Button SWButton;
-    @FXML
-    private Button STButton;
     @FXML
     private Button easy;
     @FXML
@@ -71,7 +66,6 @@ public class ChooseFighterController {
     @FXML
     protected void onEasyClick(){
         chosenDifficulty = easy.getText();
-        //System.out.println("chosenDifficulty: " + chosenDifficulty);
 
         Stage singlePlayer = new Stage();
         SinglePlayerView singlePlayerView = new SinglePlayerView();

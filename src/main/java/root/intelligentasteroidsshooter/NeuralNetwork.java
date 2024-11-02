@@ -6,15 +6,12 @@
 // =============================================
 package root.intelligentasteroidsshooter;
 
-
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class NeuralNetwork implements Comparable<NeuralNetwork> {
@@ -50,7 +47,6 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
         this.secondLayerBiases = new double[outputSize];
 
         // it is a good practice to limit distribution to inverse vector size
-        //double rangeW1 = 1.0/inputSize;
         double rangeW1 = 1.0;
         for(int i = 0; i < hiddenSize; i++){
             firstLayerBiases[i] = ThreadLocalRandom.current().nextDouble(-rangeW1,rangeW1);
@@ -58,7 +54,6 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
                 firstLayerWeights[i][j] = ThreadLocalRandom.current().nextDouble(-rangeW1,rangeW1);
             }
         }
-        //double rangeW2 = 1.0/hiddenSize;
         double rangeW2 = 1.0;
         for(int i = 0; i < outputSize; i++){
             secondLayerBiases[i] = ThreadLocalRandom.current().nextDouble(-rangeW2,rangeW2);
@@ -66,8 +61,6 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
                 secondLayerWeights[i][j] = ThreadLocalRandom.current().nextDouble(-rangeW2,rangeW2);
             }
         }
-        //System.out.println("Check that NN parameters are initialized properly:");
-        //printNetworkParameteres();
 
         shipSize = 40;
         Polygon squarePolygon = new Polygon(-shipSize/2, -shipSize/2,
@@ -175,7 +168,6 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
         }
 
         // SoftMax -- creates probability distribution over actions; totalSum should normalize distribution, making it to sum up to 1.0
-        //System.out.print("outputVector: [");
         for(int i = 0; i < outputSize; i++){
             outputVector[i] = Math.exp(outputVector[i]) / totalSum;
         }
@@ -195,8 +187,6 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
 
         return action;
     }
-
-
 
     // mutate neural network parameters -- we will use Gaussian distribution with mutation rate as a standard deviation
     public void mutate(){
@@ -255,19 +245,7 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
         return NNparameters;
     }
 
-    public void copyNetworkParameters(NeuralNetwork successfulNetwork){
-        firstLayerBiases = successfulNetwork.getFirstLayerBiases().clone();
-        firstLayerWeights = successfulNetwork.getFirstLayerWeights().clone();
-        secondLayerBiases = successfulNetwork.getSecondLayerBiases().clone();
-        secondLayerWeights = successfulNetwork.getSecondLayerWeights().clone();
-    }
-
     public void addPoints(int points) {this.score += points;}
-
-    public void resetShip(){
-        this.ship.getPolygon().setTranslateX(SinglePlayerView.WIDTH/2);
-        this.ship.getPolygon().setTranslateX(SinglePlayerView.HEIGHT/2);
-    }
 
     @Override
     public int compareTo(NeuralNetwork otherNetwork){
@@ -280,11 +258,8 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
     public void setAveragePopulationScore(double value) { averagePopulationScore = value;}
 
     // getters
-    public double getMutationRate() { return mutationRate; }
-    public Hitbox getShip() { return ship; }
     public int getScore() { return score; }
     public int getScoreForPrinting() {return scoreForPrinting; }
-    public double getAveragePopulationScore(){ return averagePopulationScore; }
     public int getInputSize(){ return inputSize; }
     public int getHiddenSize(){ return hiddenSize; }
     public int getOutputSize(){ return outputSize; }
@@ -293,7 +268,7 @@ public class NeuralNetwork implements Comparable<NeuralNetwork> {
     public double[][] getFirstLayerWeights(){ return firstLayerWeights; }
     public double[][] getSecondLayerWeights(){ return secondLayerWeights; }
 
-    // printers
+    // printers, for debug purposes
     public void printNetworkParameteres(){
         System.out.println("firstLayerWeights:");
         for(int i = 0; i < hiddenSize; i++){

@@ -9,14 +9,12 @@ public abstract class ImageMotion {
     private ImageView image;
     private double imageWidth;
     private double imageHeight;
-    private double scale;
     private Hitbox hitbox;
     private Point2D movement;
     private boolean alive;
 
     public ImageMotion(ImageView imageFile, double scale, double x, double y) {
         this.image = imageFile;
-        this.scale = scale;
         imageWidth = 0.5*scale*imageFile.getImage().getWidth();
         imageHeight = 0.5*scale*imageFile.getImage().getHeight();
 
@@ -41,7 +39,8 @@ public abstract class ImageMotion {
             this.image.setLayoutX(x + 0.22*imageWidth);
             this.image.setLayoutY(y - 0.9*imageHeight);
         }
-        // i mage hitboxes a bit smaller due to irregular shape of asteroids
+
+        // i make hitboxes to be a bit smaller due to irregular shape of asteroids
         Polygon squarePolygon = new Polygon(-0.75*imageWidth, -0.75*imageHeight,
                 0.75*imageWidth, -0.75*imageHeight,
                 0.75*imageWidth, 0.75*imageHeight,
@@ -64,7 +63,6 @@ public abstract class ImageMotion {
     public void turnRight() {
         this.hitbox.turnRight();
         this.image.setRotate(this.hitbox.getPolygon().getRotate() + 3);
-        //this.image.setRotate(this.image.getRotate() + 3);
     }
 
     public void move() {
@@ -101,8 +99,6 @@ public abstract class ImageMotion {
     }
 
     public void decelerate() {
-        //System.out.println("Ship Image coords: X " + this.image.getLayoutX() + "; Y " + this.image.getLayoutX());
-        //System.out.println("Ship Polygon coords: X " + hitbox.getPolygon().getTranslateX() + "; Y " + hitbox.getPolygon().getTranslateY());
         this.hitbox.decelerate();
         double newX = -0.1*this.movement.getX();
         double newY = -0.1*this.movement.getY();
@@ -113,15 +109,6 @@ public abstract class ImageMotion {
         return this.hitbox.collide(other);
     }
 
-    public Point2D getMovement(){
-        return this.movement;
-    }
-
-    public void setMovement(Point2D point){
-        this.hitbox.setMovement(point);
-        this.movement = this.movement.add(point.getX(),point.getY());
-    }
-
     public boolean isAlive(){
         return alive;
     }
@@ -130,7 +117,6 @@ public abstract class ImageMotion {
         hitbox.setAlive(value);
         alive = value;
     }
-
 
     public ImageView getImage() {
         return image;

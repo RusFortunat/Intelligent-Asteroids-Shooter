@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -31,10 +32,9 @@ public class SinglePlayerView {
 
     public void start(Stage singlePlayer, String chosenImage, String chosenDifficulty) throws IOException {
         // difficulty
-        int diffTextPosX = 0;
         if(chosenDifficulty.equals("no sweat")){
             respawnRate = 0.01;
-            asteroidValue = 1000;
+            asteroidValue = 1000; // not sure if I should change it for different difficulty levels
             asteroidSpeed = 1;
         }
         else if(chosenDifficulty.equals("survival")){
@@ -44,10 +44,9 @@ public class SinglePlayerView {
         }
         else if(chosenDifficulty.equals("extreme")) {
             respawnRate = 0.1;
-            asteroidValue = 1000; // not sure if I should change it
+            asteroidValue = 1000;
             asteroidSpeed = 3;
         }
-        System.out.println("respawnRate: " + respawnRate + ", asteroidValue: " + asteroidValue + ", asteroidSpeed: " + asteroidSpeed);
 
         // scene setup
         Pane pane = new Pane();
@@ -67,7 +66,7 @@ public class SinglePlayerView {
         pane.getChildren().addAll(text, difficulty);
         pane.setPrefSize(WIDTH, HEIGHT);
         pane.setBackground(paneBackgr);
-
+        // ship
         Image imageForShip = new Image(getClass().getResource(chosenImage).toString());
         ImageView shipImage = new ImageView(imageForShip);
         double scale = 0.12;
@@ -75,38 +74,34 @@ public class SinglePlayerView {
         shipImage.setScaleY(scale);
         Ship ship = new Ship(shipImage, scale,0, 0);
         pane.getChildren().add(ship.getImage());
-        //pane.getChildren().add(ship.getHitbox().getPolygon());
-        //System.out.println("Ship added");
-
-        List<Projectile> projectiles = new ArrayList<>();
-
+        // asteroids
         Image imageForAsteroid =
                 new Image(getClass().getResource("/root/intelligentasteroidsshooter/images/asteroid_nobackgr.png").toString());
         List<Asteroid> asteroids = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             ImageView asteroidImage = new ImageView(imageForAsteroid);
-            Random rnd = new Random();
             double rangeMin = 0.1;
             double rangeMax = 0.2;
-            double size = rangeMin + (rangeMax - rangeMin) * rnd.nextDouble();
+            double size = ThreadLocalRandom.current().nextDouble(rangeMin,rangeMax);;
             asteroidImage.setScaleX(size);
             asteroidImage.setScaleY(size);
             Asteroid asteroid = new Asteroid(asteroidImage,
-                    size, rnd.nextInt(-3*WIDTH/4, -WIDTH/4), rnd.nextInt(-3*HEIGHT/4, -HEIGHT/4));
-            if(!asteroid.collide(ship.getHitbox())) {asteroids.add(asteroid);}else{i--;}
+                    size, ThreadLocalRandom.current().nextInt(-3*WIDTH/4, -WIDTH/4),
+                    ThreadLocalRandom.current().nextInt(-3*HEIGHT/4, -HEIGHT/4));
+            if(!asteroid.collide(ship.getHitbox())) {asteroids.add(asteroid);}else{i--;} // don't add asteroids on top of the ship
         }
-        //System.out.println("Asteroids and ship are created");
-
         asteroids.forEach(asteroid -> {
             if(asteroidSpeed > 1) {
                 for(int i =1; i < asteroidSpeed; i++) asteroid.accelerate();
             }
             pane.getChildren().add(asteroid.getImage());
-            //pane.getChildren().add(asteroid.getHitbox().getPolygon());
         });
+        // projectiles
+        List<Projectile> projectiles = new ArrayList<>();
 
         Scene scene = new Scene(pane);
 
+        // to enable App to trace user input
         Map<KeyCode, Boolean> pressedKeys = new HashMap<>();
         scene.setOnKeyPressed(event -> {
             pressedKeys.put(event.getCode(), Boolean.TRUE);
@@ -116,8 +111,10 @@ public class SinglePlayerView {
             pressedKeys.put(event.getCode(), Boolean.FALSE);
         });
 
-        AtomicInteger points = new AtomicInteger(); // to count points
+        // to count points
+        AtomicInteger points = new AtomicInteger();
         RecordHolders newPlayer = new RecordHolders("futureRecordHolder?", "0");
+        // to restrict projectile firing frequency, for now it is 1 shot per 0.5sec
         Timer forProjectiles = new Timer();
         forProjectiles.setStart(Instant.now());
 
@@ -144,12 +141,15 @@ public class SinglePlayerView {
                 // shoot!
                 if (pressedKeys.getOrDefault(KeyCode.SPACE, false) && projectiles.size() < 10
                         && Duration.between(forProjectiles.getStart(), Instant.now()).toMillis() > 100 ) { // 1 shot per 0.5sec
-                    // we shoot
+
                     forProjectiles.setStart(Instant.now());
+                    // to orient the projectile along the ship's direction
                     double changeX = 1*Math.cos(Math.toRadians(ship.getImage().getRotate()));
                     double changeY = 1*Math.sin(Math.toRadians(ship.getImage().getRotate()));
-                    int x = (int)(ship.getImage().getLayoutX() + 0.8*WIDTH/2 + 0.4*changeX*scale*shipImage.getImage().getWidth());
-                    int y = (int)(ship.getImage().getLayoutY() + HEIGHT/2 + 0.4*changeY*scale*shipImage.getImage().getHeight()); // this has to scale with images size and Pane sizes
+                    int x = (int)(ship.getImage().getLayoutX() + 0.8*WIDTH/2
+                            + 0.4*changeX*scale*shipImage.getImage().getWidth());
+                    int y = (int)(ship.getImage().getLayoutY() + HEIGHT/2
+                            + 0.4*changeY*scale*shipImage.getImage().getHeight()); // this has to scale with images size and Pane sizes
                     Projectile projectile = new Projectile(x, y);
                     projectile.getPolygon().setRotate(ship.getImage().getRotate());
                     projectiles.add(projectile);
@@ -181,7 +181,7 @@ public class SinglePlayerView {
                         .forEach(projectile -> pane.getChildren().remove(projectile.getPolygon())); // remove from the pane
                 projectiles.removeAll(projectiles.stream()
                         .filter(projectile -> !projectile.isAlive())
-                        .collect(Collectors.toList())); // remove from the projectiles list
+                        .toList()); // remove from the projectiles list
                 asteroids.stream()
                         .filter(asteroid -> !asteroid.isAlive())
                         .forEach(asteroid ->{
@@ -190,27 +190,25 @@ public class SinglePlayerView {
                         } );
                 asteroids.removeAll(asteroids.stream()
                         .filter(asteroid -> !asteroid.isAlive())
-                        .collect(Collectors.toList())); // remove from the asteroids list
+                        .toList()); // remove from the asteroids list
 
                 // add new asteroids randomly at the edges of the screen, if they don't collide with the ship
                 if(Math.random() < respawnRate) {
                     ImageView asteroidImage = new ImageView(imageForAsteroid);
-                    Random rnd = new Random();
                     double rangeMin = 0.1;
                     double rangeMax = 0.2;
-                    double size = rangeMin + (rangeMax - rangeMin) * rnd.nextDouble(); // restrict asteroids size in this range
+                    double size = ThreadLocalRandom.current().nextDouble(rangeMin,rangeMax);;
                     asteroidImage.setScaleX(size);
                     asteroidImage.setScaleY(size);
-                    Asteroid asteroid = new Asteroid(asteroidImage, size,
-                            rnd.nextInt(-4*WIDTH/5, -WIDTH/5),
-                            rnd.nextInt(-4*HEIGHT/5, -HEIGHT/5));
+                    Asteroid asteroid = new Asteroid(asteroidImage,
+                            size, ThreadLocalRandom.current().nextInt(-3*WIDTH/4, -WIDTH/4),
+                            ThreadLocalRandom.current().nextInt(-3*HEIGHT/4, -HEIGHT/4));
                     if(!asteroid.collide(ship.getHitbox())) {
                         if(asteroidSpeed > 1) {
                             for(int i =1; i < asteroidSpeed; i++) asteroid.accelerate();
                         }
                         asteroids.add(asteroid);
                         pane.getChildren().add(asteroid.getImage());
-                        //pane.getChildren().add(asteroid.getHitbox().getPolygon());
                     }
                 }
 
@@ -221,19 +219,11 @@ public class SinglePlayerView {
                         singlePlayer.close();
                         try{
                             showScoreAndAskToPlayAgain(newPlayer.getPoints());
-                        }catch(Exception e){e.getMessage();}
+                        }catch(Exception e){
+                            System.out.println(e.getMessage());
+                        }
                     }
                 });
-            }
-        }.start();
-
-        //projectiles.forEach(projectile -> projectile.move());
-
-        new AnimationTimer() {
-
-            @Override
-            public void handle(long now) {
-                //text.setText("Points: " + points.incrementAndGet());
             }
         }.start();
 
@@ -242,18 +232,20 @@ public class SinglePlayerView {
     }
 
     public void showScoreAndAskToPlayAgain(int score) throws IOException{
-        //System.out.println("inside showScoreAndAskToPlayAgain");
+        // call restart window
         FXMLLoader restartView = new FXMLLoader(IntelligentAsteroidsShooter.class.getResource("restart-view.fxml"));
         Scene restartScene = new Scene(restartView.load());
         restartScene.getStylesheets().add("customStyles.css");
-        //System.out.println("Scene loaded");
         RestartViewController restartController = restartView.getController();
         restartController.setBackground();
         restartController.setLabels(score);
 
+        // get records database
         RecordTableDB recordTableDB =
                 new RecordTableDB("jdbc:h2:./src/main/resources/root/intelligentasteroidsshooter/record-table-database");
         try{
+
+            // go through all DB entries and create sorted lists of names and records
             List<String> records = recordTableDB.toList().stream()
                     .map(row->row.split(","))
                     .sorted((entry1, entry2) -> Integer.valueOf(entry2[2]) - Integer.valueOf(entry1[2]))
@@ -267,28 +259,27 @@ public class SinglePlayerView {
                     .map(s->{
                         return  s[1];
                     })
-                    .collect(Collectors.toList());
-            //System.out.println("Record list:");
-            //System.out.println(records);
+                    .toList();
+
+            // show the current table state to the user
             restartController.fillTable(records, "");
-            if(compareScores(records, score)){ // if current score is bigger than DB entries, then it's a record
-                //System.out.println("add record");
-                restartController.showRecordField(true);
+
+            // if player's score is bigger than DB records entries, then it's a new record
+            if(compareScores(records, score)){
+                restartController.showRecordField(true); // let user enter they name
+                // add listener
                 restartController.getName().textProperty().addListener((observable, oldValue, newValue) -> {
-                    //System.out.println("textfield changed from " + oldValue + " to " + newValue);
                     restartController.getName().setOnKeyReleased(event -> {
-                        if (event.getCode() == KeyCode.ENTER && !names.contains(newValue)){ // don't accept existing names
+                        // accept on Enter; don't accept existing names
+                        if (event.getCode() == KeyCode.ENTER && !names.contains(newValue)){
                             restartController.getName().setEditable(false);
-                            //restartController.setName(newValue);
-                            //System.out.println("recordName: " + newValue);
                             try{
-                                //System.out.println("Inside try after name is recorded");
+                                // generate SQL ID and add a new record holder to the database
                                 Random rnd = new Random();
                                 int id = rnd.nextInt(100000);
                                 recordTableDB.add(id,newValue,score);
+                                // add new entry to the list and sort it again
                                 records.add(id + "," + newValue + "," + score);
-                                //System.out.println("before sorting");
-                                //System.out.println(records);
                                 List<String> sorted = records.stream()
                                         .map(row->row.split(","))
                                         .sorted((entry1, entry2) -> Integer.valueOf(entry2[2]) - Integer.valueOf(entry1[2]))
@@ -297,29 +288,25 @@ public class SinglePlayerView {
                                             return s[0] + "," + s[1] + "," + s[2];
                                         })
                                         .collect(Collectors.toList());
-                                //System.out.println("After sorting");
-                                //System.out.println(sorted);
-                                updateDB(recordTableDB, sorted); // sort & delete bottom entry, i tried writing SQL queries myself, but I clearly need more knowledge on this
-                                //System.out.println("updated DB");
-                                //System.out.println(recordTableDB.toList());
+                                // sort & delete bottom entry, i tried writing SQL queries myself, but I clearly need more knowledge on this
+                                updateDB(recordTableDB, sorted);
+                                // update the record table
                                 restartController.fillTable(sorted, newValue);
-                                //System.out.println("Table refilled");
                             }catch(SQLException e){
-                                System.out.println(e.getMessage());}
+                                System.out.println(e.getMessage());
+                            }
                         }
                     });
                 });
             }else{
-                //System.out.println("don't record");
-                restartController.showRecordField(false);
+                restartController.showRecordField(false); // if score is below all the records
             }
-        }catch(SQLException e){ System.out.printf(e.getMessage());}
-
-        // !!! update the window immediately after the name was entered and display the new entry with a different color
+        }catch(SQLException e){
+            System.out.printf(e.getMessage());
+        }
 
         Stage restartStage = new Stage();
         restartStage.setScene(restartScene);
-        //System.out.println("Stage set and scene forwarded to it");
         restartStage.show();
     }
 
@@ -334,30 +321,24 @@ public class SinglePlayerView {
         return false;
     }
 
-    private void updateDB(RecordTableDB recordTableDB, List<String> list) throws SQLException{
-        List<Integer> IDs = list.stream().map(s->{
+    private void updateDB(RecordTableDB recordTableDB, List<String> newRecordHolders) throws SQLException{
+        // get all IDs from the provided record holder list
+        List<Integer> IDs = newRecordHolders.stream().map(s->{
             String[] parts = s.split(",");
             return Integer.valueOf(parts[0]);
         })
-        .collect(Collectors.toList());
-        //System.out.println("IDs:");
-        //System.out.println(IDs);
+        .toList();
 
+        // remove all entries from database that are not in the new record holder list
         List<String> readDB = recordTableDB.toList();
-        //System.out.println("Our BD before updating: ");
-        //System.out.println(readDB);
-        readDB.stream().forEach(s->{
+        readDB.forEach(s->{
             String[] parts = s.split(","); // [0] is ID
-            //System.out.println("parts: " + parts);
             try{
                 if(!IDs.contains(Integer.valueOf(parts[0]))) {
                     recordTableDB.remove(Integer.valueOf(parts[0]));
-                    //System.out.println("ID: " + Integer.valueOf(parts[0]) + " is removed from BD");
-                }else{
-                    //System.out.println("ID: " + Integer.valueOf(parts[0]) + " is in the record list");
                 }
             }catch(SQLException e){
-                System.out.println(e);
+                System.out.println(e.getMessage());
             }
         });
     }

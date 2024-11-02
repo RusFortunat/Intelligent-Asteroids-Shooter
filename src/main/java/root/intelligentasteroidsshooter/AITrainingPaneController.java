@@ -319,7 +319,7 @@ public class AITrainingPaneController {
         loadListPane.setVisible(false);
         //loadList.getStyleClass().add("customStyles.css");
         //loadList.setStyle("customStyles.css");
-        // nothing was working, so I used this solution: https://stackoverflow.com/a/51574405/24522071
+        // nothing was working, so I used this solution that adds final class: https://stackoverflow.com/a/51574405/24522071
         loadList.setCellFactory(stringListView -> new CenteredListViewCell());
         loadList.setStyle("-fx-font-size:16.0; -fx-alignment: center;");
         wrapSelection.setAlignment(Pos.CENTER_LEFT);

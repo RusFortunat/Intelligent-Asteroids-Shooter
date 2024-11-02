@@ -15,22 +15,18 @@ public class Projectile extends Hitbox {
         super.getPolygon().setTranslateY(super.getPolygon().getTranslateY() + super.getMovement().getY());
 
         if (super.getPolygon().getTranslateX() < 0) {
-            //super.getPolygon().setTranslateX(super.getPolygon().getTranslateX() + SinglePlayerView.WIDTH);
             super.setAlive(false);
         }
 
         if (super.getPolygon().getTranslateX() > SinglePlayerView.WIDTH) {
-            //super.getPolygon().setTranslateX(super.getPolygon().getTranslateX() - SinglePlayerView.WIDTH);
             super.setAlive(false);
         }
 
         if (super.getPolygon().getTranslateY()< 0) {
-            //super.getPolygon().setTranslateY(super.getPolygon().getTranslateY() + SinglePlayerView.HEIGHT);
             super.setAlive(false);
         }
 
         if (super.getPolygon().getTranslateY() > SinglePlayerView.HEIGHT) {
-            //super.getPolygon().setTranslateY(super.getPolygon().getTranslateY() - SinglePlayerView.HEIGHT);
             super.setAlive(false);
         }
     }

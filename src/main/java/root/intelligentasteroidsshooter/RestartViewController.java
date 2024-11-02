@@ -55,9 +55,11 @@ public class RestartViewController {
 
     @FXML
     protected void fillTable(List<String> list, String newRecordHolder){
+
         this.newRecordName = newRecordHolder; // i had to create it to pass String to setRowFactory
-        clearTable();
-        // list has ID, name, and score and should be already sorted
+        clearTable(); // clear table from previous entries (if the user played the game already)
+
+        // let's get names and scores from our RecordTable database
         List<String> names = list.stream().map(s->{
             String[] parts = s.split(",");
             return parts[1];
@@ -68,19 +70,29 @@ public class RestartViewController {
                     return parts[2];
                 })
                 .toList();
-        //System.out.println("scores");
-        //System.out.println(scores);
 
         // now lest fill TableColumn properly; i followed this guide: https://jenkov.com/tutorials/javafx/tableview.html
         TableColumn<RecordHolders, String> column1 =  new TableColumn<>("Name");
         TableColumn<RecordHolders, String> column2 =  new TableColumn<>("Score");
         column1.setCellValueFactory( new PropertyValueFactory<>("name"));
         column2.setCellValueFactory( new PropertyValueFactory<>("score"));
-
-        recordTable.setStyle("-fx-background-color: transparent; -fx-text-fill: white; "
-                + "-fx-base: rgba(56, 176, 209, 0); ");
         recordTable.getColumns().add(column1);
         recordTable.getColumns().add(column2);
+        for(int i = 0; i < names.size(); i++){
+            RecordHolders recordHolder = new RecordHolders(names.get(i), scores.get(i));
+            recordTable.getItems().add(recordHolder);
+        }
+        // if database is new and doesn't have that many entries, fill the empty cells with this
+        if(names.size() < 10){
+            for(int i=names.size(); i < 10; i++){
+                RecordHolders recordHolder = new RecordHolders("EMPTY", "0");
+                recordTable.getItems().add(recordHolder);
+            }
+        }
+
+        // some table styling
+        recordTable.setStyle("-fx-background-color: transparent; -fx-text-fill: white; "
+                + "-fx-base: rgba(56, 176, 209, 0); ");
         column1.prefWidthProperty().bind(recordTable.widthProperty().multiply(0.49));
         column2.prefWidthProperty().bind(recordTable.widthProperty().multiply(0.49));
         column1.setStyle( "-fx-alignment: CENTER; -fx-font-size: 14px; -fx-text-fill: white;");
@@ -90,30 +102,12 @@ public class RestartViewController {
         column1.setSortable(false);
         column2.setSortable(false);
         column1.getStyleClass().add("customStyles.css");
-
-        for(int i = 0; i < names.size(); i++){
-            RecordHolders recordHolder = new RecordHolders(names.get(i), scores.get(i));
-            recordTable.getItems().add(recordHolder);
-        }
-        if(names.size() < 10){
-            for(int i=names.size(); i < 10; i++){
-                RecordHolders recordHolder = new RecordHolders("EMPTY", "0");
-                recordTable.getItems().add(recordHolder);
-            }
-        }
-
         recordTable.setRowFactory(tv -> new TableRow<RecordHolders>() {
             @Override
             protected void updateItem(RecordHolders row, boolean empty) {
                 super.updateItem(row, empty);
                 if (row != null){
                     if(row.getName().equals(newRecordName)) {
-                        // none of this worked
-                        //this.setTextFill(Color.RED);
-                        //setText(row.getName());
-                        //setText(row.getScore());
-                        //setStyle("red-column");
-                        //this.setStyle("-fx-text-fill: red !important;"); // doesn't work for whatever reason, even with !important flag
                         setStyle("-fx-background-color: #F08080;");
                     } else {
                         setStyle("");
@@ -125,6 +119,7 @@ public class RestartViewController {
 
     @FXML
     protected void onYesButtonClick() throws Exception {
+        // user wants to play again
         FXMLLoader chooseFighterView = new FXMLLoader(IntelligentAsteroidsShooter.class.getResource("choose-fighter.fxml"));
         try{
             Scene chooseFighterScene = new Scene(chooseFighterView.load());
@@ -137,12 +132,14 @@ public class RestartViewController {
         }catch(Exception em){
             System.out.printf(em.getMessage());
         }
+
         Stage stage = (Stage) yesButton.getScene().getWindow();
         stage.close();
     }
 
     @FXML
     protected void onCloseButtonClick() {
+        // call the start window to let user pick the TrainAI option, if they want
         FXMLLoader startView = new FXMLLoader(IntelligentAsteroidsShooter.class.getResource("start-view.fxml"));
         try{
             Scene startViewScene = new Scene(startView.load());
@@ -166,15 +163,12 @@ public class RestartViewController {
                 new Image(getClass().getResource("/root/intelligentasteroidsshooter/images/stars_moving.gif").toString());
         BackgroundImage myBI= new BackgroundImage(backgroundFile, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
                 BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-        //BackgroundFill myBF = new BackgroundFill(Color.BLUEVIOLET, new CornerRadii(1),
-        //        new Insets(0.0,0.0,0.0,0.0));// or null for the padding
         Background paneBackgr = new Background(myBI);
         restartPane.setBackground(paneBackgr);
         recordTableLabel.setTextFill(Color.WHITE);
         scoreText.setTextFill(Color.WHITE);
         yourName.setTextFill(Color.WHITE);
         question.setTextFill(Color.WHITE);
-        //recordName.setStyle("-fx-text-fill: white;");
     }
 
     public TextField getName(){return recordName;}

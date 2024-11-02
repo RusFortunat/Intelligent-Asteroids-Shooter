@@ -23,7 +23,7 @@ public class RecordTableDB {
             while (results.next()) {
                 String entry = results.getInt("id") + ","
                         + results.getString("name") + "," + results.getInt("score");
-                recordScores.add(entry);//, results.getString("name"), ""+results.getInt("score"));
+                recordScores.add(entry);
             }
         }
 
@@ -36,10 +36,7 @@ public class RecordTableDB {
             stmt.setInt(1, id); // seriously? SQL indexing starts from 1?
             stmt.setString(2, name);
             stmt.setInt(3, score);
-            //PreparedStatement stmt2 = connection.prepareStatement("SELECT * FROM RecordTable ORDER BY score DESC");
-            //PreparedStatement stmt3 = connection.prepareStatement("DELETE FROM RecordTable WHERE id > 10"); // we will have only 10 entries
             stmt.executeUpdate();
-            //stmt2.execute();
         }
     }
 
@@ -54,9 +51,9 @@ public class RecordTableDB {
     private Connection createConnectionAndEnsureDatabase() throws SQLException {
         Connection conn = DriverManager.getConnection(this.databasePath, "sa", "");
         try {
-            //conn.prepareStatement("CREATE TABLE RecordTable (id int auto_increment primary key, name varchar(255), score int)").execute();
             conn.prepareStatement("CREATE TABLE RecordTable (id int primary key, name varchar(255), score int)").execute();
         } catch (SQLException t) {
+            System.out.println(t.getMessage());
         }
 
         return conn;
