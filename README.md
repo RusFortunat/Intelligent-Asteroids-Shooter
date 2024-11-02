@@ -22,15 +22,17 @@ The single player mode was inspired by the exercise that comes from [MOOC Java P
 
 ### Train Neural Networks with the Evolutionary Algorithm
 
+In our implementation, the neural network receives information about the ship surroundings and whether the ship is close to the screen edges where asteroids spawn. The neural network processes the input using regular forward-propagation with ReLU activation and produces probabilities of the ship to choose a certain orientation. 
+
 ![](https://github.com/RusFortunat/Intelligent-Asteroids-Shooter/blob/main/src/main/resources/root/intelligentasteroidsshooter/images/schematics.png)
 
-In our implementation, the neural network receives information about the ship surroundings and whether the ship is close to the screen edges where asteroids spawn. The neural network processes the input using regular forward-propagation with ReLU activation and produces probabilities of the ship to choose a certain orientation. We train the neural networks by using **Evolutionary Algorithm**:
-0. Create a collection of different networks with random parameters 
-1. Let the networks stir the ship and estimate their individual performance
-2. Select top 25% networks that perform better and discard the rest
-3. Generate new "child" networks via crossover: pick two successful "parents" and create a new set of parameters by randomly picking the same parameters from parent1 or parent2.
-4. Mutate the neural network parameters of all networks by some small amount
-5. Repeat 1-4
+We train the neural networks by using the following implementation of **Evolutionary Algorithm**:
+1. Create a collection of different networks with random parameters 
+2. Let the networks stir the ship and estimate their individual performance
+3. Select top 25% networks that perform better and discard the rest
+4. Generate new "child" networks via crossover: pick two successful "parents" and create a new set of parameters by randomly picking the same parameters from parent1 or parent2.
+5. Mutate the neural network parameters of all networks by some small amount
+6. Repeat 2-5
 
 If all works well, you should see the average performance of the network population steadily growing, as in this sample video:
 
