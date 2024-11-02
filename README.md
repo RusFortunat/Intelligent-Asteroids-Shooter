@@ -4,7 +4,7 @@ Classic ATARI-like asteroid shooter game with an AI twist -- in additional to Si
 
 ## Installation
 
-This is a Java desktop application that was written with JavaFX. Therefore, after cloning the project, to install and run the application you will need to have [Maven](https://maven.apache.org/download.cgi), [JDK 23](https://www.oracle.com/java/technologies/downloads/#jdk23-linux), and [JavaFX](https://gluonhq.com/products/javafx/) on your machine. Assuming you have all three (and added Maven & JDK to your PATH as well), use the following command to generate .jar file that is needed for app execution:
+This is a Java desktop application that was written with JavaFX. Therefore, to install and run the application after cloning the project, you will need to have [Maven](https://maven.apache.org/download.cgi), [JDK 23](https://www.oracle.com/java/technologies/downloads/#jdk23-linux), and [JavaFX](https://gluonhq.com/products/javafx/) on your machine. Assuming you have all three (and added Maven & JDK to your PATH as well), use the following command to generate .jar file that is needed for app execution:
 ```
 mvn install
 ```
