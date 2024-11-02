@@ -88,7 +88,7 @@ public class StoreTrainedNNsDB {
         try {
             // I will save the neural network to the DB in the following way
             // score, firstLayerWeights, firstLayerBiases, secondLayerWeights, secondLayerBiases
-            conn.prepareStatement("CREATE TABLE TrainedNNs (score int primary key, " +
+            conn.prepareStatement("CREATE TABLE IF NOT EXISTS TrainedNNs (score int primary key, " +
                     "firstLayerWeights varchar(10000), firstLayerBiases varchar(1000), " +
                     "secondLayerWeights varchar(10000), secondLayerBiases varchar(1000))").execute();
         } catch (SQLException t) {

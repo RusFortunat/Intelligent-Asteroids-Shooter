@@ -94,110 +94,110 @@ public class NNPLaysGameOnly {
                 }
 
                 // allow to act every 0.2sec +/- 0.1sec
-                int variationInActionTime = rng.nextInt(-100,100);
-                    if(Duration.between(forActions.getStart(), Instant.now()).toMillis() > 200 + variationInActionTime){
-                        forActions.setStart(Instant.now()); // reset action timer
+                int variationInActionTime = rng.nextInt(-50,50);
+                if(Duration.between(forActions.getStart(), Instant.now()).toMillis() > 100 + variationInActionTime){
+                    forActions.setStart(Instant.now()); // reset action timer
 
-                        // we provide asteroids locations as an input vector
-                        List<Hitbox> asteroidHitboxes = asteroids.stream().map(s -> s.getHitbox()).toList();
-                        double[] input = getObservation(asteroidHitboxes, ship.getHitbox(), loadedNetwork.getInputSize());
-                        inGameAction = loadedNetwork.forward(input); // pass observation to get new direction for motion
-                        // get speed to zero to prepare the ship to make a rotation
-                        for(int k = 0; k < 5; k++){
-                            ship.decelerate();
-                        }
-                    }else{ // repeat actions until neural network doesn't choose a new one
-                        // TODO: fix compact rotation code block below by removing ship's trembling / vibrating motion;
-                        // restrict angle values between 0 and 360 for the code below to work
-                        int delta = 2;
-                        /*double angle = ship.getImage().getRotate() % 360 >= 0 ?
-                                ship.getImage().getRotate() % 360 : ship.getImage().getRotate() % 360 + 360;
-                        ship.getImage().setRotate(angle);
-                        int chosenDirection = inGameAction*45;
-                        int oppositeEnd = inGameAction*45 + 180;
-                        // chooses shortest rotation path
-
-                        if(Math.abs(chosenDirection - angle) > delta) {
-                            if (angle < 180) {
-                                if (angle > chosenDirection && angle < oppositeEnd) {
-                                    ship.turnLeft(); // += -3 grad
-                                } else {
-                                    ship.turnRight(); // += 3 grad
-                                }
-                            } else {
-                                if (angle > chosenDirection || angle < oppositeEnd) {
-                                    ship.turnLeft(); // += -3 grad
-                                } else {
-                                    ship.turnRight(); // += 3 grad
-                                }
-                            }
-                        }*/
-                        double angle = ship.getImage().getRotate() % 360;
-                        if(angle < 0){
-                            ship.getImage().setRotate(angle + 360);
-                        }else{
-                            ship.getImage().setRotate(angle);
-                        }
-
-                        if (inGameAction == 0) { // turn to 0 degrees (along +X axis)
-                            if(angle < 180 && angle > delta){
-                                ship.turnRight();
-                            }else{
-                                ship.turnLeft();
-                            }
-                        }
-                        else if (inGameAction == 1){ // turn to +45 degrees (+X,+Y)
-                            if(angle > 45+delta && angle < 225){
-                                ship.turnRight();
-                            }else{
-                                ship.turnLeft();
-                            }
-                        }
-                        else if (inGameAction == 2) { // turn to +90 degrees (0,+Y)
-                            if(angle > 90+delta && angle < 270){
-                                ship.turnRight();
-                            }else{
-                                ship.turnLeft();
-                            }
-                        }
-                        else if (inGameAction == 3) { // turn to +135 degrees (-X,+Y)
-                            if(angle > 135 + delta && angle < 315){
-                                ship.turnRight();
-                            }else{
-                                ship.turnLeft();
-                            }
-                        }
-                        else if (inGameAction == 4) { // turn to +180 degrees (-X,0)
-                            if(angle > 180 + delta){
-                                ship.turnRight();
-                            }else{
-                                ship.turnLeft();
-                            }
-                        }
-                        else if (inGameAction == 5) { // turn to +225 degrees (-X,-Y)
-                            if(angle > 225 + delta || angle < 45 - delta){
-                                ship.turnRight();
-                            }else{
-                                ship.turnLeft();
-                            }
-                        }
-                        else if (inGameAction == 6) { // turn to +270 degrees (0,-Y)
-                            if(angle > 270 + delta || angle < 90 - delta){
-                                ship.turnRight();
-                            }else{
-                                ship.turnLeft();
-                            }
-                        }
-                        else if (inGameAction == 7) { // turn to +315 degrees (+X,-Y)
-                            if(angle > 315 + delta || angle < 135 - delta){
-                                ship.turnRight();
-                            }else{
-                                ship.turnLeft();
-                            }
-                        }
-
-                        ship.accelerate();
+                    // we provide asteroids locations as an input vector
+                    List<Hitbox> asteroidHitboxes = asteroids.stream().map(s -> s.getHitbox()).toList();
+                    double[] input = getObservation(asteroidHitboxes, ship.getHitbox(), loadedNetwork.getInputSize());
+                    inGameAction = loadedNetwork.forward(input); // pass observation to get new direction for motion
+                    // get speed to zero to prepare the ship to make a rotation
+                    for(int k = 0; k < 5; k++){
+                        ship.decelerate();
                     }
+                }else{ // repeat actions until neural network doesn't choose a new one
+                    // TODO: fix compact rotation code block below by removing ship's trembling / vibrating motion;
+                    // restrict angle values between 0 and 360 for the code below to work
+                    int delta = 2;
+                    /*double angle = ship.getImage().getRotate() % 360 >= 0 ?
+                            ship.getImage().getRotate() % 360 : ship.getImage().getRotate() % 360 + 360;
+                    ship.getImage().setRotate(angle);
+                    int chosenDirection = inGameAction*45;
+                    int oppositeEnd = inGameAction*45 + 180;
+                    // chooses shortest rotation path
+
+                    if(Math.abs(chosenDirection - angle) > delta) {
+                        if (angle < 180) {
+                            if (angle > chosenDirection && angle < oppositeEnd) {
+                                ship.turnLeft(); // += -3 grad
+                            } else {
+                                ship.turnRight(); // += 3 grad
+                            }
+                        } else {
+                            if (angle > chosenDirection || angle < oppositeEnd) {
+                                ship.turnLeft(); // += -3 grad
+                            } else {
+                                ship.turnRight(); // += 3 grad
+                            }
+                        }
+                    }*/
+                    double angle = ship.getImage().getRotate() % 360;
+                    if(angle < 0){
+                        ship.getImage().setRotate(angle + 360);
+                    }else{
+                        ship.getImage().setRotate(angle);
+                    }
+
+                    if (inGameAction == 0) { // turn to 0 degrees (along +X axis)
+                        if(angle < 180 && angle > delta){
+                            ship.turnRight();
+                        }else{
+                            ship.turnLeft();
+                        }
+                    }
+                    else if (inGameAction == 1){ // turn to +45 degrees (+X,+Y)
+                        if(angle > 45+delta && angle < 225){
+                            ship.turnRight();
+                        }else{
+                            ship.turnLeft();
+                        }
+                    }
+                    else if (inGameAction == 2) { // turn to +90 degrees (0,+Y)
+                        if(angle > 90+delta && angle < 270){
+                            ship.turnRight();
+                        }else{
+                            ship.turnLeft();
+                        }
+                    }
+                    else if (inGameAction == 3) { // turn to +135 degrees (-X,+Y)
+                        if(angle > 135 + delta && angle < 315){
+                            ship.turnRight();
+                        }else{
+                            ship.turnLeft();
+                        }
+                    }
+                    else if (inGameAction == 4) { // turn to +180 degrees (-X,0)
+                        if(angle > 180 + delta){
+                            ship.turnRight();
+                        }else{
+                            ship.turnLeft();
+                        }
+                    }
+                    else if (inGameAction == 5) { // turn to +225 degrees (-X,-Y)
+                        if(angle > 225 + delta || angle < 45 - delta){
+                            ship.turnRight();
+                        }else{
+                            ship.turnLeft();
+                        }
+                    }
+                    else if (inGameAction == 6) { // turn to +270 degrees (0,-Y)
+                        if(angle > 270 + delta || angle < 90 - delta){
+                            ship.turnRight();
+                        }else{
+                            ship.turnLeft();
+                        }
+                    }
+                    else if (inGameAction == 7) { // turn to +315 degrees (+X,-Y)
+                        if(angle > 315 + delta || angle < 135 - delta){
+                            ship.turnRight();
+                        }else{
+                            ship.turnLeft();
+                        }
+                    }
+
+                    ship.accelerate();
+                }
 
                 // network always shoots if it can
                 if (projectiles.size() < 5) {// limit number of projectiles present at the time to 10 (aka ammo capacity)
@@ -334,27 +334,31 @@ public class NNPLaysGameOnly {
     // input vector indices: 0 - X,Y; 1 - nextX,Y; 2 - nextX,nextY; 3 - X,nextY; 4 - prevX,nextY; 5 - prevX,Y; 6 - prevX,prevY,
     // 7 - X,prevY; 8 - nextX,prevY; 9 - left screen edge; 10 - bottom edge; 11 - right edge; 12 - top edge
     public double[] getObservation(List<Hitbox> asteroids, Hitbox ship, int inputSize){
-        int width = EvolutionarySearch.GameWindowWIDTH;
-        int height = EvolutionarySearch.GameWindowHEIGHT;
+        int fieldWidth = EvolutionarySearch.GameWindowWIDTH;
+        int fieldHeight = EvolutionarySearch.GameWindowHEIGHT;
 
         // determine ship's position
-        int x = (int) Math.abs(ship.getPolygon().getTranslateX());
-        int y = (int) Math.abs(ship.getPolygon().getTranslateY());
+        int x = (int) ship.getPolygon().getTranslateX() < 0 ? (int)
+                ship.getPolygon().getTranslateX() + fieldWidth : (int) ship.getPolygon().getTranslateX();
+        int y = (int) ship.getPolygon().getTranslateY() < 0 ? (int)
+                ship.getPolygon().getTranslateY() + fieldHeight : (int) ship.getPolygon().getTranslateY();
         int X = x / 100;
         int Y = y / 100;
         // look at 8 nearest neighbors, I will use periodic boundary conditions;
-        int prevX = X <= 0 ? (int)(width/100) - 1 : X - 1;
-        int prevY = Y <= 0 ? (int)(height/100) - 1 : Y - 1;
-        int nextX = X >= (int)(width/100) - 1 ? 0 : X + 1;
-        int nextY = Y >= (int)(height/100) - 1 ? 0 : Y + 1;
+        int prevX = X <= 0 ? fieldWidth/100 - 1 : X - 1;
+        int prevY = Y <= 0 ? fieldHeight/100 - 1 : Y - 1;
+        int nextX = X >= fieldWidth/100 - 1 ? 0 : X + 1;
+        int nextY = Y >= fieldHeight/100 - 1 ? 0 : Y + 1;
 
         double[] shipObservation = new double[inputSize];
 
         asteroids.stream().forEach(ast ->{
-            int xAst = (int) Math.abs(ast.getPolygon().getTranslateX());
-            int yAst = (int) Math.abs(ast.getPolygon().getTranslateY());
-            int astX = xAst / 100;
-            int astY = yAst / 100;
+            int xAst = (int) ast.getPolygon().getTranslateX() < 0 ? (int)
+                    ast.getPolygon().getTranslateX() + fieldWidth : (int) ast.getPolygon().getTranslateX();
+            int yAst = (int) ast.getPolygon().getTranslateY() < 0 ? (int)
+                    ast.getPolygon().getTranslateY() + fieldHeight : (int) ast.getPolygon().getTranslateY();
+            int astX = (int) Math.round(xAst / 100.0);
+            int astY = (int) Math.round(yAst / 100.0);
 
             if(astX == X && astY == Y){
                 shipObservation[0] = 1;
@@ -388,8 +392,8 @@ public class NNPLaysGameOnly {
         // ship should learn to stay away from edges
         if(X == 0 || prevX == 0) shipObservation[9] = 1;
         if(Y == 0 || prevY == 0) shipObservation[10] = 1;
-        if(X == (int)(width/100) - 1 || nextX == (int)(width/100) - 1) shipObservation[11] = 1;
-        if(Y == (int)(height/100) - 1 || nextY == (int)(height/100) - 1) shipObservation[12] = 1;
+        if(X == fieldWidth/100 - 1 || nextX == fieldWidth/100 - 1) shipObservation[11] = 1;
+        if(Y == fieldHeight/100 - 1 || nextY == fieldHeight/100 - 1) shipObservation[12] = 1;
 
         return shipObservation;
     }

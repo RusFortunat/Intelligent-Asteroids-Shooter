@@ -51,7 +51,7 @@ public class RecordTableDB {
     private Connection createConnectionAndEnsureDatabase() throws SQLException {
         Connection conn = DriverManager.getConnection(this.databasePath, "sa", "");
         try {
-            conn.prepareStatement("CREATE TABLE RecordTable (id int primary key, name varchar(255), score int)").execute();
+            conn.prepareStatement("CREATE TABLE IF NOT EXISTS RecordTable (id int primary key, name varchar(255), score int)").execute();
         } catch (SQLException t) {
             System.out.println(t.getMessage());
         }

@@ -546,23 +546,27 @@ public class EvolutionarySearch {
     // indices: 0 - X,Y; 1 - nextX,Y; 2 - nextX,nextY; 3 - X,nextY; 4 - prevX,nextY; 5 - prevX,Y; 6 - prevX,prevY, 7 - X,prevY; 8 - nextX,prevY
     public double[] getObservation(List<Hitbox> asteroids, Hitbox ship){
         // determine ship's position
-        int x = (int) Math.abs(ship.getPolygon().getTranslateX());
-        int y = (int) Math.abs(ship.getPolygon().getTranslateY());
+        int x = (int) ship.getPolygon().getTranslateX() < 0 ? (int)
+                ship.getPolygon().getTranslateX() + GameWindowWIDTH : (int) ship.getPolygon().getTranslateX();
+        int y = (int) ship.getPolygon().getTranslateY() < 0 ? (int)
+                ship.getPolygon().getTranslateY() + GameWindowHEIGHT : (int) ship.getPolygon().getTranslateY();
         int X = x / 100;
         int Y = y / 100;
         // look at 8 nearest neighbors, I will use periodic boundary conditions;
-        int prevX = X <= 0 ? (int)(GameWindowWIDTH/100) - 1 : X - 1;
-        int prevY = Y <= 0 ? (int)(GameWindowHEIGHT/100) - 1 : Y - 1;
-        int nextX = X >= (int)(GameWindowWIDTH/100) - 1 ? 0 : X + 1;
-        int nextY = Y >= (int)(GameWindowHEIGHT/100) - 1 ? 0 : Y + 1;
+        int prevX = X <= 0 ? GameWindowWIDTH/100 - 1 : X - 1;
+        int prevY = Y <= 0 ? GameWindowHEIGHT/100 - 1 : Y - 1;
+        int nextX = X >= GameWindowWIDTH/100 - 1 ? 0 : X + 1;
+        int nextY = Y >= GameWindowHEIGHT/100 - 1 ? 0 : Y + 1;
 
         double[] shipObservation = new double[inputSize];
 
         asteroids.stream().forEach(ast ->{
-            int xAst = (int) Math.abs(ast.getPolygon().getTranslateX());
-            int yAst = (int) Math.abs(ast.getPolygon().getTranslateY());
-            int astX = xAst / 100;
-            int astY = yAst / 100;
+            int xAst = (int) ast.getPolygon().getTranslateX() < 0 ? (int)
+                    ast.getPolygon().getTranslateX() + GameWindowWIDTH : (int) ast.getPolygon().getTranslateX();
+            int yAst = (int) ast.getPolygon().getTranslateY() < 0 ? (int)
+                    ast.getPolygon().getTranslateY() + GameWindowHEIGHT : (int) ast.getPolygon().getTranslateY();
+            int astX = (int) Math.round(xAst / 100.0);
+            int astY = (int) Math.round(yAst / 100.0);
 
             if(astX == X && astY == Y){
                 shipObservation[0] = 1;
@@ -596,8 +600,8 @@ public class EvolutionarySearch {
         // ship should learn to stay away from edges
         if(X == 0 || prevX == 0) shipObservation[9] = 1;
         if(Y == 0 || prevY == 0) shipObservation[10] = 1;
-        if(X == (int)(GameWindowWIDTH/100) - 1 || nextX == (int)(GameWindowWIDTH/100) - 1) shipObservation[11] = 1;
-        if(Y == (int)(GameWindowHEIGHT/100) - 1 || nextY == (int)(GameWindowHEIGHT/100) - 1) shipObservation[12] = 1;
+        if(X == GameWindowWIDTH/100 - 1 || nextX == GameWindowWIDTH/100 - 1) shipObservation[11] = 1;
+        if(Y == GameWindowHEIGHT/100 - 1 || nextY == GameWindowHEIGHT/100 - 1) shipObservation[12] = 1;
 
         return shipObservation;
     }
