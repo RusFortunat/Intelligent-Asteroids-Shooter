@@ -24,7 +24,7 @@ The single player mode was inspired by the exercise that comes from [MOOC Java P
 
 In our implementation, the neural network receives information about the ship surroundings and whether the ship is close to the screen edges where asteroids spawn. The neural network processes the input using regular forward-propagation with ReLU activation and produces probabilities of the ship to choose a certain orientation. 
 
-![](https://github.com/RusFortunat/Intelligent-Asteroids-Shooter/blob/main/src/main/resources/root/intelligentasteroidsshooter/images/schematics.png)
+![](https://github.com/RusFortunat/Intelligent-Asteroids-Shooter/blob/main/docs/schematics.png)
 
 We train the neural networks by using the following implementation of **Evolutionary Algorithm**:
 1. Create a collection of different networks with random parameters 
