@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="409.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.intelligentasteroidsshooter.StartViewController">
+   <children>
+      <Pane fx:id="startViewPane" layoutY="-2.0" prefHeight="409.0" prefWidth="409.0">
+         <children>
+            <Button fx:id="singlePlayerButton" layoutX="61.0" layoutY="325.0" mnemonicParsing="false" onAction="#onSinglePlayerButtonClick" text="Single Player">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Button>
+            <Button fx:id="trainAIButton" layoutX="238.0" layoutY="325.0" mnemonicParsing="false" onAction="#onTrainAIButtonClick" text="Train your AI">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Button>
+
+            <ChoiceBox fx:id="languageChoice" layoutX="355.0" layoutY="18.0" prefHeight="25.0" prefWidth="40.0" />
+      
+            <Label fx:id="language" layoutX="265.0" layoutY="17.0" text="Language">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="106.0" fitWidth="112.0" layoutX="244.0" layoutY="206.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/AIpic.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="110.0" fitWidth="112.0" layoutX="62.0" layoutY="205.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/pepega.jpg" />
+               </image>
+            </ImageView>
+      
+            <Label fx:id="chooseMode" layoutX="55.0" layoutY="150.0" minWidth="-Infinity" prefHeight="40.0" prefWidth="300.0" text="Choose the game mode">
+               <font>
+                  <Font size="28.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="87.0" fitWidth="364.0" layoutX="23.0" layoutY="60.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/main_title.png" />
+               </image>
+            </ImageView>
+         </children></Pane>
+
+   </children>
+</AnchorPane>
