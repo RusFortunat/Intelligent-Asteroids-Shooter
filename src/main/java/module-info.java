@@ -10,4 +10,10 @@ module root.intelligentasteroidsshooter {
 
     opens root.intelligentasteroidsshooter to javafx.fxml;
     exports root.intelligentasteroidsshooter;
+    exports root.intelligentasteroidsshooter.model;
+    opens root.intelligentasteroidsshooter.model to javafx.fxml;
+    exports root.intelligentasteroidsshooter.singlePlayer;
+    opens root.intelligentasteroidsshooter.singlePlayer to javafx.fxml;
+    exports root.intelligentasteroidsshooter.trainAI;
+    opens root.intelligentasteroidsshooter.trainAI to javafx.fxml;
 }

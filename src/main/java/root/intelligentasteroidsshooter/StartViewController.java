@@ -10,6 +10,8 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import root.intelligentasteroidsshooter.singlePlayer.ChooseFighterController;
+import root.intelligentasteroidsshooter.trainAI.AITrainingPaneController;
 
 import java.io.IOException;
 
