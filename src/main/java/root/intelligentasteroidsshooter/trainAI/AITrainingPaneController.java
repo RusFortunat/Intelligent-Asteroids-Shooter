@@ -161,8 +161,8 @@ public class AITrainingPaneController {
         loadList.getItems().clear();
 
         // load list of networks from our database
-        StoreTrainedNNsDB NNDataBase =
-                new StoreTrainedNNsDB("jdbc:h2:./src/main/resources/root/intelligentasteroidsshooter/trained-NNs-database");
+        StoreTrainedNNsDB NNDataBase = new StoreTrainedNNsDB(
+                "jdbc:h2:./src/main/resources/root/intelligentasteroidsshooter/DBs/trained-NNs-database");
         try{
             List<String> showAllSavedNNs = NNDataBase.getSavedList().stream()
                     .map(el->"Score: " + Integer.valueOf(el)).toList(); // 5000 is the max run time
@@ -192,8 +192,8 @@ public class AITrainingPaneController {
         System.out.println("score " + score);
         try{
             // get the neural network from the database
-            StoreTrainedNNsDB NNDataBase =
-                    new StoreTrainedNNsDB("jdbc:h2:./src/main/resources/root/intelligentasteroidsshooter/trained-NNs-database");
+            StoreTrainedNNsDB NNDataBase = new StoreTrainedNNsDB(
+                    "jdbc:h2:./src/main/resources/root/intelligentasteroidsshooter/DBs/trained-NNs-database");
             List<String> chosenNetwork = NNDataBase.toList(score); // get the desired network
 
             // list structure: score, firstLayerWeights, firstLayerBiases, secondLayerWeights, secondLayerBiases

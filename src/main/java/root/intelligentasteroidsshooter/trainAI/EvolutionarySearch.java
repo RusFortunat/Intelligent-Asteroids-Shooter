@@ -650,8 +650,8 @@ public class EvolutionarySearch {
     }
 
     public void saveNetworkParameters(List<NeuralNetwork> ourNNPopulation, int bestScore){
-        StoreTrainedNNsDB recordNNParameters =
-                new StoreTrainedNNsDB("jdbc:h2:./src/main/resources/root/intelligentasteroidsshooter/trained-NNs-database");
+        StoreTrainedNNsDB recordNNParameters = new StoreTrainedNNsDB(
+                "jdbc:h2:./src/main/resources/root/intelligentasteroidsshooter/DBs/trained-NNs-database");
         List<String> NNParameters = ourNNPopulation.get(0).NNParametersToList();
 
         // NN data stored in format: int score, Str firstLWeights, Str firstLBayeses, Str secondLWeights, Str secondLBiases

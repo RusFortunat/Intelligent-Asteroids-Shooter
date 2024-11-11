@@ -246,8 +246,8 @@ public class SinglePlayerView {
         restartController.setLabels(score);
 
         // get records database
-        RecordTableDB recordTableDB =
-                new RecordTableDB("jdbc:h2:./src/main/resources/root/intelligentasteroidsshooter/record-table-database");
+        RecordTableDB recordTableDB = new RecordTableDB(
+                "jdbc:h2:./src/main/resources/root/intelligentasteroidsshooter/DBs/record-table-database");
         try{
 
             // go through all DB entries and create sorted lists of names and records
