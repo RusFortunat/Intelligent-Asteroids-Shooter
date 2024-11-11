@@ -58,7 +58,7 @@ public class StartViewController {
     }
 
     @FXML
-    protected void setBackground() throws IOException{
+    public void setBackground() throws IOException{
         Image backgroundFile =
                 new Image(getClass().getResource("/root/intelligentasteroidsshooter/images/stars_moving.gif").toString());
         BackgroundImage myBI= new BackgroundImage(backgroundFile, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
